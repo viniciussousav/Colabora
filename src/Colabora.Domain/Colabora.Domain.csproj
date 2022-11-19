@@ -11,9 +11,4 @@
       <Compile Remove="Organizations.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Entities" />
-      <Folder Include="Shared" />
-    </ItemGroup>
-
 </Project>

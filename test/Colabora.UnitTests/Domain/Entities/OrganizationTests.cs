@@ -1,0 +1,42 @@
+﻿using System;
+using System.Linq;
+using Bogus;
+using Colabora.Domain.Entities;
+using Colabora.Domain.Enums;
+using FluentAssertions;
+using Xunit;
+
+namespace Colabora.UnitTests.Domain.Entities;
+
+public class OrganizationTests
+{
+    [Fact(DisplayName = "Given an new Organization, when instaall parameters are passed, it should be succeed")]
+    public void Given_A_New_Volunteer_Instance_When_All_Parameters_Are_Passed_It_Should_Be_Succeed()
+    {
+        // Arrange
+        var (id, name, email, state, interests, memberships, createdBy, createdAt) = (
+            Faker.Random.Int(),
+            Faker.Company.CompanyName(),
+            Faker.Person.Email,
+            Faker.Random.Enum(exclude: States.Undefined),
+            Faker.Random.EnumValues<Interests>().ToList(),
+            Enumerable.Empty<Membership>().ToList(),
+            Faker.Random.Int(),
+            DateTime.Now);
+
+        // Act
+        var organization = new Organization(id, name, email, state, interests, memberships, createdBy, createdAt);
+        
+        // Assert
+        organization.Id.Should().Be(id);
+        organization.Name.Should().Be(name);
+        organization.Email.Should().Be(email);
+        organization.State.Should().Be(state);
+        organization.Interests.Should().BeEquivalentTo(interests);
+        organization.Memberships.Should().BeEmpty();
+        organization.CreatedBy.Should().Be(createdBy);
+        organization.CreatedAt.Should().Be(createdAt);
+    }
+
+    private static readonly Faker Faker = new ();
+}
