@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new OrganizationEntityTypeConfiguration().Configure(modelBuilder.Entity<Organization>());
+        new VolunteerEntityTypeConfiguration().Configure(modelBuilder.Entity<Volunteer>());
     }
     
     public DbSet<Organization> Organizations { get; set; }

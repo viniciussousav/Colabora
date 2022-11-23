@@ -1,4 +1,6 @@
+using Colabora.Application.Handlers.Volunteers;
 using Colabora.Application.Handlers.Volunteers.GetVolunteers.Models;
+using Colabora.Application.Handlers.Volunteers.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +28,26 @@ public class VolunteerController : ControllerBase
 
             return result.IsValid  
                 ? Ok(result.Value)
-                : StatusCode(result.FailureStatusCode, result.Errors);
+                : StatusCode(result.FailureStatusCode, result.Error);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An exception was throw at {VolunteerController}", nameof(VolunteerController));
+            return Problem(detail: e.Message, statusCode: 500, title: "Internal Error");
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Post(RegisterVolunteerCommand command)
+    {
+        try
+        {
+            var result = await _mediator.Send(command);
+            
+            if (result.Error.Code == ErrorMessages.EmailAlreadyRegistered)
+                return Conflict(result.Error);
+            
+            return Ok(result.Value);
         }
         catch (Exception e)
         {

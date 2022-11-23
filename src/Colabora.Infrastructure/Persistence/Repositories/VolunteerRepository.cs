@@ -13,14 +13,14 @@ public class VolunteerRepository : IVolunteerRepository
         _contextFactory = contextFactory;
     }
     
-    public async Task<Volunteer> CreateVolunteer(Volunteer volunteer)
+    public async Task<Volunteer> CreateVolunteerAsync(Volunteer volunteer)
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         var entry = await ctx.Volunteers.AddAsync(volunteer);
         return entry.Entity;
     }
 
-    public async Task<Volunteer> GetVolunteerByEmail(string email)
+    public async Task<Volunteer> GetVolunteerByEmailAsync(string email)
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers
@@ -29,7 +29,7 @@ public class VolunteerRepository : IVolunteerRepository
 
     }
 
-    public async Task<List<Volunteer>> GetAllVolunteer()
+    public async Task<List<Volunteer>> GetAllVolunteersAsync()
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers

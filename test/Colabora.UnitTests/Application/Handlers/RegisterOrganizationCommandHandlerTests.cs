@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Colabora.Application.Commons;
 using Colabora.Application.Handlers.Organizations;
 using Colabora.Application.Handlers.Organizations.RegisterOrganization;
-using Colabora.Application.Handlers.Organizations.RegisterOrganization.Mappers;
+using Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using Mapster;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -35,7 +37,7 @@ public class RegisterOrganizationCommandHandlerTests
         var organization = FakerOrganization.Create(command);
 
         _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Task.FromResult(Organization.Empty));
-        _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
+        _organizationRepository.CreateOrganizationAsync(Arg.Any<Organization>()).Returns(organization);
 
         var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
 
@@ -43,8 +45,9 @@ public class RegisterOrganizationCommandHandlerTests
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
+        result.Error.Should().Be(Error.Empty);
         result.IsValid.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(organization.MapToResponse());
+        result.Value.Should().BeEquivalentTo(organization.Adapt<RegisterOrganizationResponse>());
     }
     
     [Fact(DisplayName = "Given a command, when it fails due conflict, then handler should return an error result")]
@@ -56,7 +59,7 @@ public class RegisterOrganizationCommandHandlerTests
         var organization = FakerOrganization.Create(command);
 
         _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(organization);
-        _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
+        _organizationRepository.CreateOrganizationAsync(Arg.Any<Organization>()).Returns(organization);
 
         var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
 
@@ -66,7 +69,7 @@ public class RegisterOrganizationCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Errors.Should().ContainEquivalentOf(ErrorMessages.CreateOrganizationConflict(command.Name));
+        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateEmailAlreadyExists(command.Name));
     }
     
     [Fact(DisplayName = "Given a command, when an exception occurs, then handler should return an error result")]
@@ -76,7 +79,7 @@ public class RegisterOrganizationCommandHandlerTests
         var command = FakeRegisterOrganizationCommand.Create();
         
         _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Organization.Empty);
-        _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
+        _organizationRepository.CreateOrganizationAsync(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
 
         var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
 
@@ -86,6 +89,6 @@ public class RegisterOrganizationCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Errors.Should().ContainEquivalentOf(ErrorMessages.CreateUnexpectedErrorMessage("error"));
+        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateUnexpectedError("error"));
     }
 }

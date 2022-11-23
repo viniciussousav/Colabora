@@ -4,8 +4,8 @@ namespace Colabora.Domain.Repositories;
 
 public interface IOrganizationRepository
 {
-    Task<Organization> CreateOrganization(Organization organization);
-    Task<List<Organization>> GetAllOrganizations();
+    Task<Organization> CreateOrganizationAsync(Organization organization);
+    Task<List<Organization>> GetAllOrganizationsAsync();
 
     Task<Organization> GetOrganizationByNameAndCreator(string name, int volunteerCreatorId);
 }

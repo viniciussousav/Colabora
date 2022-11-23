@@ -1,6 +1,7 @@
 ﻿using System;
 using Bogus;
 using Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
+using Colabora.Domain.Entities;
 
 namespace Colabora.TestCommons.Fakers;
 
@@ -8,9 +9,9 @@ public static class FakerOrganization
 {
     private static readonly Faker Faker = new();
 
-    public static Domain.Entities.Organization Create(RegisterOrganizationCommand command)
+    public static Organization Create(RegisterOrganizationCommand command)
     {
-        return new Domain.Entities.Organization(
+        return new Organization(
             id: Faker.Random.Int(),
             name: command.Name,
             email: command.Email,

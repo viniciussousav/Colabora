@@ -10,7 +10,7 @@ namespace Colabora.UnitTests.Domain.Entities;
 
 public class OrganizationTests
 {
-    [Fact(DisplayName = "Given an new Organization, when instaall parameters are passed, it should be succeed")]
+    [Fact(DisplayName = "Given an new Organization, when all parameters are passed, it should be succeed")]
     public void Given_A_New_Volunteer_Instance_When_All_Parameters_Are_Passed_It_Should_Be_Succeed()
     {
         // Arrange

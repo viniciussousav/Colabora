@@ -1,6 +1,7 @@
 ﻿using Colabora.Application.Commons;
 using Colabora.Application.Handlers.Volunteers.GetVolunteers.Models;
 using Colabora.Domain.Repositories;
+using Mapster;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Handlers.Volunteers.GetVolunteers;
@@ -16,19 +17,19 @@ public class GetVolunteersQueryHandler : IGetVolunteersQueryHandler
         _volunteerRepository = volunteerRepository;
     }
 
-    public async Task<Result<GetVolunteersResponse>> Handle(GetVolunteersQuery query, CancellationToken cancellationToken)
+    public async Task<Result<GetVolunteersResponse?>> Handle(GetVolunteersQuery query, CancellationToken cancellationToken)
     {
         try
         {
-            var volunteers = await _volunteerRepository.GetAllVolunteer();
-            var response = new GetVolunteersResponse(volunteers.Select(volunteer => volunteer.MapToGetVolunteerResponse()).ToList());
+            var volunteers = await _volunteerRepository.GetAllVolunteersAsync();
+            var response = new GetVolunteersResponse(volunteers.Select(volunteer => volunteer.Adapt<VolunteerResponse>()).ToList());
             
             return Result.Success(response);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {GetVolunteersQueryHandler}", nameof(GetVolunteersQueryHandler));
-            return Result.Fail<GetVolunteersResponse>(ErrorMessages.CreateInternalErrorException(e.Message));
+            return Result.Fail<GetVolunteersResponse>(ErrorMessages.CreateUnexpectedError(e.Message));
         }
     }
 }

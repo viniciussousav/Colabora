@@ -1,33 +1,23 @@
-﻿using System.Net;
+﻿using Colabora.Domain.Exceptions;
 
 namespace Colabora.Application.Commons;
 
 public partial class Result
 {
     protected Result() { }
-
-    protected Result(bool skip)
-    {
-        Skip = skip;
-    }
-
+    
     protected Result(Error error)
     {
-        Errors.Add(error);
+        Error = error;
     }
     
-    protected Result(Error error, HttpStatusCode failedStatusCode)
-    {
-        FailureStatusCode = (int)failedStatusCode;
-        Errors.Add(error);
-    }
-    
-    public int FailureStatusCode { get; } = (int)HttpStatusCode.InternalServerError;
+    public Error Error { get; } = Error.Empty;
 
-    public List<Error> Errors { get; } = new();
+    public bool IsValid => Error == Error.Empty;
 
-    public bool IsValid => !Errors.Any();
-    public bool Skip { get; }
+    public int FailureStatusCode => !IsValid
+        ? Error.StatusCode
+        : throw new ResultException("Valid result does not contain an error status code");
 }
 
 public class Result<T> : Result
@@ -37,14 +27,7 @@ public class Result<T> : Result
         Value = value;
     }
     
-    public Result(T? value, bool skip) : base(skip)
-    {
-        Value = value;
-    }
-
     public Result(Error error): base(error) {}
-    public Result(Error error, HttpStatusCode failedStatusCode) : base(error, failedStatusCode) {}
-    
     public T? Value { get; }
 
 }

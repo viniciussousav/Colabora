@@ -6,7 +6,7 @@ namespace Colabora.Infrastructure.Persistence.Configuration;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDatabases(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDatabasePersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
         {

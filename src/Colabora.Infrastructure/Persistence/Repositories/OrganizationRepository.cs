@@ -15,14 +15,14 @@ public class OrganizationRepository : IOrganizationRepository
         _contextFactory = contextFactory;
     }
 
-    public async Task<Organization> CreateOrganization(Organization organization)
+    public async Task<Organization> CreateOrganizationAsync(Organization organization)
     {
         await using var ctx = await _contextFactory.CreateDbContextAsync();
         var entry = await ctx.Organizations.AddAsync(organization);
         return entry.Entity;
     }
 
-    public async Task<List<Organization>> GetAllOrganizations()
+    public async Task<List<Organization>> GetAllOrganizationsAsync()
     {
         await using var ctx = await _contextFactory.CreateDbContextAsync();
         return ctx.Organizations.AsNoTracking().ToList();

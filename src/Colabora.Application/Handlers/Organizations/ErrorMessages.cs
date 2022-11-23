@@ -1,12 +1,16 @@
-﻿using Colabora.Application.Commons;
+﻿using System.Net;
+using Colabora.Application.Commons;
 
 namespace Colabora.Application.Handlers.Organizations;
 
 public static class ErrorMessages
 {
-    public static Error CreateUnexpectedErrorMessage(string message)
-        => new("Unexpected Error", message);
+    public const string UnexpectedErrorMessage = "An unexpected error happened";
+    public const string EmailAlreadyRegistered = "Already exist an organization {0} created by this user";
+    
+    public static Error CreateUnexpectedError(string? message)
+        => new(nameof(UnexpectedErrorMessage), HttpStatusCode.InternalServerError, message ?? "An unexpected error happened");
 
-    public static Error CreateOrganizationConflict(string name)
-        => new("Conflict", $"Already exist an organization {name} created by this user");
+    public static Error CreateEmailAlreadyExists(string name)
+        => new(nameof(EmailAlreadyRegistered), HttpStatusCode.Conflict, EmailAlreadyRegistered, name);
 }
