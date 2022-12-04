@@ -2,7 +2,7 @@
 using Colabora.Domain.Enums;
 using MediatR;
 
-namespace Colabora.Application.Handlers.Volunteers.RegisterVolunteer.Models;
+namespace Colabora.Application.Volunteers.RegisterVolunteer.Models;
 
 public record RegisterVolunteerCommand(
     string FirstName,

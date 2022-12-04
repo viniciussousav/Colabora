@@ -1,11 +1,11 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Application.Handlers.Volunteers.RegisterVolunteer.Models;
+using Colabora.Application.Volunteers.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Mapster;
 using Microsoft.Extensions.Logging;
 
-namespace Colabora.Application.Handlers.Volunteers.RegisterVolunteer;
+namespace Colabora.Application.Volunteers.RegisterVolunteer;
 
 public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
 {
@@ -18,7 +18,7 @@ public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
         _volunteerRepository = volunteerRepository;
     }
     
-    public async Task<Result<RegisterVolunteerResponse?>> Handle(RegisterVolunteerCommand command, CancellationToken cancellationToken)
+    public async Task<Result<RegisterVolunteerResponse>> Handle(RegisterVolunteerCommand command, CancellationToken cancellationToken)
     {
         try
         {

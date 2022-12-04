@@ -3,7 +3,7 @@ using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
 using MediatR;
 
-namespace Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
+namespace Colabora.Application.Organizations.RegisterOrganization.Models;
 
 public record RegisterOrganizationCommand(
     string Name,

@@ -1,11 +1,11 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
+using Colabora.Application.Organizations.RegisterOrganization.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Mapster;
 using Microsoft.Extensions.Logging;
 
-namespace Colabora.Application.Handlers.Organizations.RegisterOrganization;
+namespace Colabora.Application.Organizations.RegisterOrganization;
 
 public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHandler
 {
@@ -20,7 +20,7 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
         _organizationRepository = organizationRepository;
     }
 
-    public async Task<Result<RegisterOrganizationResponse?>> Handle(RegisterOrganizationCommand command, CancellationToken cancellationToken)
+    public async Task<Result<RegisterOrganizationResponse>> Handle(RegisterOrganizationCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -31,6 +31,7 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
             var createdOrganization = await _organizationRepository.CreateOrganizationAsync(organization);
             
             var response = createdOrganization.Adapt<RegisterOrganizationResponse>();
+
             return Result.Success(response);
         }
         catch (Exception e)

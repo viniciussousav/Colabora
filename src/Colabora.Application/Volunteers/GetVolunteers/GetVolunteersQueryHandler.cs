@@ -1,10 +1,10 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Application.Handlers.Volunteers.GetVolunteers.Models;
+using Colabora.Application.Volunteers.GetVolunteers.Models;
 using Colabora.Domain.Repositories;
 using Mapster;
 using Microsoft.Extensions.Logging;
 
-namespace Colabora.Application.Handlers.Volunteers.GetVolunteers;
+namespace Colabora.Application.Volunteers.GetVolunteers;
 
 public class GetVolunteersQueryHandler : IGetVolunteersQueryHandler
 {
@@ -17,7 +17,7 @@ public class GetVolunteersQueryHandler : IGetVolunteersQueryHandler
         _volunteerRepository = volunteerRepository;
     }
 
-    public async Task<Result<GetVolunteersResponse?>> Handle(GetVolunteersQuery query, CancellationToken cancellationToken)
+    public async Task<Result<GetVolunteersResponse>> Handle(GetVolunteersQuery query, CancellationToken cancellationToken)
     {
         try
         {

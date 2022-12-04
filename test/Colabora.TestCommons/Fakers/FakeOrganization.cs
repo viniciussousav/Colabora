@@ -1,6 +1,6 @@
 ﻿using System;
 using Bogus;
-using Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
+using Colabora.Application.Organizations.RegisterOrganization.Models;
 using Colabora.Domain.Entities;
 
 namespace Colabora.TestCommons.Fakers;

@@ -1,8 +1,8 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Application.Handlers.Volunteers.GetVolunteers.Models;
+using Colabora.Application.Volunteers.GetVolunteers.Models;
 using MediatR;
 
-namespace Colabora.Application.Handlers.Volunteers.GetVolunteers;
+namespace Colabora.Application.Volunteers.GetVolunteers;
 
 public interface IGetVolunteersQueryHandler : IRequestHandler<GetVolunteersQuery, Result<GetVolunteersResponse>>
 {

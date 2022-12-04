@@ -1,7 +1,7 @@
 ﻿using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
 
-namespace Colabora.Application.Handlers.Organizations.RegisterOrganization.Models;
+namespace Colabora.Application.Organizations.RegisterOrganization.Models;
 
 public record RegisterOrganizationResponse(
     int Id,

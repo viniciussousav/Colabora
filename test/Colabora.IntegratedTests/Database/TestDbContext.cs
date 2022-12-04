@@ -1,7 +1,7 @@
 ﻿using Colabora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Colabora.IntegratedTests.Database;
+namespace Colabora.IntegrationTests.Database;
 
 public class TestDbContext : AppDbContext
 {

@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Handlers.Volunteers;
-using Colabora.Application.Handlers.Volunteers.RegisterVolunteer;
-using Colabora.Application.Handlers.Volunteers.RegisterVolunteer.Models;
+using Colabora.Application.Volunteers;
+using Colabora.Application.Volunteers.RegisterVolunteer;
+using Colabora.Application.Volunteers.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;

@@ -1,8 +1,8 @@
 ﻿using Colabora.Domain.Enums;
 
-namespace Colabora.Application.Handlers.Volunteers;
+namespace Colabora.Application.Volunteers.RegisterVolunteer.Models;
 
-public record VolunteerResponse(
+public record RegisterVolunteerResponse(
     int Id,
     string FirstName,
     string LastName,
