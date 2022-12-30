@@ -39,5 +39,4 @@ public class Volunteer
     public States State { get; }
     public DateTime CreateAt { get; }
     public string Email { get; }
-    
 }

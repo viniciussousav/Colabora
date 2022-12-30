@@ -8,6 +8,10 @@ public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunte
 {
     public void Configure(EntityTypeBuilder<Volunteer> builder)
     {
-        throw new NotImplementedException();
+        builder.ToTable("VOLUNTEER");
+
+        builder.HasKey(volunteer => volunteer.Id);
+        builder.Property(volunteer => volunteer.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.HasAlternateKey(volunteer => volunteer.Email);
     }
 }

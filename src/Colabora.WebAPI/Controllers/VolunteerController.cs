@@ -1,6 +1,6 @@
-using Colabora.Application.Volunteers;
-using Colabora.Application.Volunteers.GetVolunteers.Models;
-using Colabora.Application.Volunteers.RegisterVolunteer.Models;
+using Colabora.Application.Shared;
+using Colabora.Application.UseCases.GetVolunteers.Models;
+using Colabora.Application.UseCases.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@ public class VolunteerController : ControllerBase
         {
             var result = await _mediator.Send(command);
             
-            if (result.Error.Code == ErrorMessages.EmailAlreadyRegistered)
+            if (result.Error.Code == ErrorMessages.VolunteerEmailAlreadyRegistered)
                 return Conflict(result.Error);
             
             return Ok(result.Value);
@@ -52,7 +52,7 @@ public class VolunteerController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {VolunteerController}", nameof(VolunteerController));
-            return Problem(detail: e.Message, statusCode: 500, title: "Internal Error");
+            return Problem(statusCode: StatusCodes.Status500InternalServerError, title: ErrorMessages.InternalError, detail: e.Message);
         }
     }
 }

@@ -8,10 +8,10 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
 {
     public void Configure(EntityTypeBuilder<Organization> builder)
     {
-        builder.ToTable("Organizations");
+        builder.ToTable("ORGANIZATION");
 
         builder.HasKey(organization => organization.Id);
         builder.Property(organization => organization.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.HasOne<Volunteer>().WithMany().HasForeignKey(organization => organization.CreatedBy);
+        builder.HasAlternateKey(organization => organization.Email);
     }
 }

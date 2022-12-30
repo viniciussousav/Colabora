@@ -4,7 +4,8 @@ namespace Colabora.Domain.Repositories;
 
 public interface IVolunteerRepository
 {
-    Task<Volunteer> CreateVolunteerAsync(Volunteer volunteer);
-    Task<Volunteer> GetVolunteerByEmailAsync(string email);
-    Task<List<Volunteer>> GetAllVolunteersAsync();
+    Task<Volunteer> CreateVolunteer(Volunteer volunteer);
+    Task<Volunteer> GetVolunteerByEmail(string email);
+    Task<List<Volunteer>> GetAllVolunteers();
+    Task<Volunteer> GetVolunteerById(int volunteerId);
 }

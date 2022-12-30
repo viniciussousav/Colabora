@@ -9,6 +9,6 @@ public class TestDbContext : AppDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseInMemoryDatabase("ColaboraTest");
+        optionsBuilder.UseSqlServer("ColaboraDatabase");
     }
 }

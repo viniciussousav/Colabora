@@ -13,14 +13,14 @@ public class VolunteerRepository : IVolunteerRepository
         _contextFactory = contextFactory;
     }
     
-    public async Task<Volunteer> CreateVolunteerAsync(Volunteer volunteer)
+    public async Task<Volunteer> CreateVolunteer(Volunteer volunteer)
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         var entry = await ctx.Volunteers.AddAsync(volunteer);
         return entry.Entity;
     }
 
-    public async Task<Volunteer> GetVolunteerByEmailAsync(string email)
+    public async Task<Volunteer> GetVolunteerByEmail(string email)
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers
@@ -28,8 +28,16 @@ public class VolunteerRepository : IVolunteerRepository
             .FirstOrDefaultAsync(v => v.Email == email) ?? Volunteer.Empty;
 
     }
-
-    public async Task<List<Volunteer>> GetAllVolunteersAsync()
+    
+    public async Task<Volunteer> GetVolunteerById(int volunteerId)
+    {
+        var ctx = await _contextFactory.CreateDbContextAsync();
+        return await ctx.Volunteers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(v => v.Id == volunteerId) ?? Volunteer.Empty;
+    }
+    
+    public async Task<List<Volunteer>> GetAllVolunteers()
     {
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers

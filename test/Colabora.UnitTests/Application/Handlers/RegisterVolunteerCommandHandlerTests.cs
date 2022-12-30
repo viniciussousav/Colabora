@@ -2,14 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Volunteers;
-using Colabora.Application.Volunteers.RegisterVolunteer;
-using Colabora.Application.Volunteers.RegisterVolunteer.Models;
+using Colabora.Application.Shared;
+using Colabora.Application.Shared.Mappers;
+using Colabora.Application.UseCases.RegisterVolunteer;
+using Colabora.Application.UseCases.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
-using Mapster;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -33,10 +33,10 @@ public class RegisterVolunteerCommandHandlerTests
     {
         // Assert
         var command = FakeRegisterVolunteerCommand.Create();
-        _volunteerRepository.GetVolunteerByEmailAsync(command.Email).Returns(Volunteer.Empty);
+        _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(Volunteer.Empty);
 
         var volunteer = FakeVolunteer.Create(command);
-        _volunteerRepository.CreateVolunteerAsync(Arg.Is<Volunteer>(v => v.Email == command.Email)).Returns(volunteer);
+        _volunteerRepository.CreateVolunteer(Arg.Is<Volunteer>(v => v.Email == command.Email)).Returns(volunteer);
 
         var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
 
@@ -45,7 +45,7 @@ public class RegisterVolunteerCommandHandlerTests
         
         // Assert
         result.IsValid.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(volunteer.Adapt<RegisterVolunteerResponse>());
+        result.Value.Should().BeEquivalentTo(volunteer.MapToRegisterVolunteerResponse());
         result.Error.Should().Be(Error.Empty);
     }
     
@@ -55,7 +55,7 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         var command = FakeRegisterVolunteerCommand.Create();
         var volunteer = FakeVolunteer.Create();
-        _volunteerRepository.GetVolunteerByEmailAsync(command.Email).Returns(volunteer);
+        _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(volunteer);
         
         var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
 
@@ -65,7 +65,7 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateEmailAlreadyExists(command.Email));
+        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
     }
     
     [Fact(DisplayName = "Given a command, when an exception occurs, the it should return error")]
@@ -73,7 +73,7 @@ public class RegisterVolunteerCommandHandlerTests
     {
         // Assert
         var command = FakeRegisterVolunteerCommand.Create();
-        _volunteerRepository.GetVolunteerByEmailAsync(command.Email).Throws(new Exception("Hello Exception"));
+        _volunteerRepository.GetVolunteerByEmail(command.Email).Throws(new Exception("Hello Exception"));
         
         var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
 
@@ -83,6 +83,6 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateUnexpectedError("Hello Exception"));
+        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

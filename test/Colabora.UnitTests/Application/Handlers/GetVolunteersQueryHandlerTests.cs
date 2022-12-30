@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Volunteers;
-using Colabora.Application.Volunteers.GetVolunteers;
-using Colabora.Application.Volunteers.GetVolunteers.Models;
+using Colabora.Application.Shared;
+using Colabora.Application.UseCases.GetVolunteers;
+using Colabora.Application.UseCases.GetVolunteers.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
@@ -41,7 +41,7 @@ public class GetVolunteersQueryHandlerTests
             FakeVolunteer.Create(),
         };
 
-        _volunteerRepository.GetAllVolunteersAsync().Returns(response);
+        _volunteerRepository.GetAllVolunteers().Returns(response);
 
         var handler = new GetVolunteersQueryHandler(_logger, _volunteerRepository);
 
@@ -63,7 +63,7 @@ public class GetVolunteersQueryHandlerTests
 
         var response = new List<Volunteer>();
 
-        _volunteerRepository.GetAllVolunteersAsync().Returns(response);
+        _volunteerRepository.GetAllVolunteers().Returns(response);
 
         var handler = new GetVolunteersQueryHandler(_logger, _volunteerRepository);
 
@@ -82,7 +82,7 @@ public class GetVolunteersQueryHandlerTests
     {
         // Arrange
         var query = new GetVolunteersQuery();
-        _volunteerRepository.GetAllVolunteersAsync().Throws(new OperationCanceledException("Timeout to database"));
+        _volunteerRepository.GetAllVolunteers().Throws(new OperationCanceledException("Timeout to database"));
 
         var handler = new GetVolunteersQueryHandler(_logger, _volunteerRepository);
 
@@ -91,7 +91,7 @@ public class GetVolunteersQueryHandlerTests
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateUnexpectedError("Timeout to database"));
+        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Timeout to database"));
         result.Value.Should().BeNull();
     }
 }

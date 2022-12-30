@@ -1,0 +1,32 @@
+﻿using Colabora.Application.UseCases.RegisterOrganization.Models;
+using Colabora.Domain.Entities;
+
+namespace Colabora.Application.Shared.Mappers;
+
+public static class OrganizationMapper
+{
+    public static RegisterOrganizationResponse MapToResponse(this Organization organization)
+    {
+        return new RegisterOrganizationResponse(
+            Id: organization.Id,
+            Name: organization.Name,
+            State: organization.State,
+            Interests: organization.Interests,
+            Memberships: organization.Memberships,
+            CreatedBy: organization.CreatedBy,
+            CreatedAt: organization.CreatedAt);
+    }
+    
+    public static Organization MapToOrganization(this RegisterOrganizationCommand organization)
+    {
+        return new Organization(
+            id: default,
+            name: organization.Name,
+            email: organization.Email,
+            state: organization.State,
+            interests: organization.Interests,
+            memberships: organization.Memberships,
+            createdBy: organization.CreatedBy,
+            createdAt: DateTime.Now);
+    }
+}
