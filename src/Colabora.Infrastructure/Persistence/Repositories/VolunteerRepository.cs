@@ -25,7 +25,7 @@ public class VolunteerRepository : IVolunteerRepository
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers
             .AsNoTracking()
-            .FirstOrDefaultAsync(v => v.Email == email) ?? Volunteer.Empty;
+            .FirstOrDefaultAsync(v => v.Email == email) ?? Volunteer.None;
 
     }
     
@@ -34,7 +34,7 @@ public class VolunteerRepository : IVolunteerRepository
         var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Volunteers
             .AsNoTracking()
-            .FirstOrDefaultAsync(v => v.Id == volunteerId) ?? Volunteer.Empty;
+            .FirstOrDefaultAsync(v => v.Id == volunteerId) ?? Volunteer.None;
     }
     
     public async Task<List<Volunteer>> GetAllVolunteers()

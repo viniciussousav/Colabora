@@ -38,8 +38,8 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
     }
 
     private async Task<bool> VolunteerExists(int volunteerId) =>
-        await _volunteerRepository.GetVolunteerById(volunteerId) == Volunteer.Empty;
+        await _volunteerRepository.GetVolunteerById(volunteerId) == Volunteer.None;
 
     private async Task<bool> OrganizationExists(int organizationId) =>
-        await _organizationRepository.GetOrganizationById(organizationId) == Organization.Empty;
+        await _organizationRepository.GetOrganizationById(organizationId) == Organization.None;
 }

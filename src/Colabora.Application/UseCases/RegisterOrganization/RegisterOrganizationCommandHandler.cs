@@ -43,6 +43,6 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
     }
     
     private async Task<bool> OrganizationAlreadyExist(string name, int volunteerCreatorId)
-        => await _organizationRepository.GetOrganizationByNameAndCreator(name,volunteerCreatorId) != Organization.Empty;
+        => await _organizationRepository.GetOrganizationByNameAndCreator(name,volunteerCreatorId) != Organization.None;
 
 }

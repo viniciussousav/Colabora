@@ -1,7 +1,6 @@
 using Colabora.Application.Shared;
-using Colabora.Infrastructure.Persistence;
 using Colabora.Infrastructure.Persistence.Extensions;
-using Microsoft.EntityFrameworkCore;
+using Colabora.WebAPI.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +15,6 @@ builder.Services.AddSwaggerGen();
     
 var app = builder.Build();
 
-// Apply migration to database
-using (var scope = app.Services.CreateScope())
-{
-    var service = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await service.Database.MigrateAsync();
-}
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -36,4 +28,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.ApplyMigration();
+
 app.Run();
+
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Program { }

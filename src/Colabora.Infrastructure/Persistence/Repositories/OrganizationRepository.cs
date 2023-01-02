@@ -2,8 +2,6 @@
 using Colabora.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-#pragma warning disable CS8634
-
 namespace Colabora.Infrastructure.Persistence.Repositories;
 
 public class OrganizationRepository : IOrganizationRepository
@@ -33,7 +31,7 @@ public class OrganizationRepository : IOrganizationRepository
         await using var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Organizations
             .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.Name == name && o.CreatedBy == volunteerCreatorId) ?? Organization.Empty;
+            .FirstOrDefaultAsync(o => o.Name == name && o.CreatedBy == volunteerCreatorId) ?? Organization.None;
     }
 
     public async Task<Organization> GetOrganizationById(int organizationId)
@@ -41,6 +39,6 @@ public class OrganizationRepository : IOrganizationRepository
         await using var ctx = await _contextFactory.CreateDbContextAsync();
         return await ctx.Organizations
             .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.Empty;
+            .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.None;
     }
 }

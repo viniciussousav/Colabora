@@ -7,9 +7,9 @@ namespace Colabora.Application.UseCases.CreateSocialAction.Models;
 
 public record CreateSocialActionCommand(
         string Title,
-        Interests Fields,
+        List<Interests> Fields,
         DateTime OccurrenceDate,
-        string State,
+        States State,
         string Description,
         int OrganizationId,
         int VolunteerCreatorId,

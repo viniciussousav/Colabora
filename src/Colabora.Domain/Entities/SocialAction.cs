@@ -4,12 +4,16 @@ namespace Colabora.Domain.Entities;
 
 public class SocialAction
 {
+    private static readonly SocialAction None = new();
+    
+    private SocialAction() { }
+    
     public SocialAction(
         int id,
         string title,
-        Interests fields,
+        List<Interests> fields,
         DateTime occurrenceDate,
-        string state,
+        States state,
         string description,
         int organizationId,
         int volunteerCreatorId,
@@ -32,9 +36,9 @@ public class SocialAction
 
     public int Id { get; }
     public string Title { get; }
-    public Interests Fields { get; }
+    public List<Interests> Fields { get; }
     public DateTime OccurrenceDate { get; }
-    public string State { get; }
+    public States State { get; }
     public string Description { get; }
     public int OrganizationId { get; }
     public int VolunteerCreatorId { get; }

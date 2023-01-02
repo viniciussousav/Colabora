@@ -2,14 +2,21 @@
 
 public class Membership
 {
-    public Membership(int volunteerId, DateTime initialDate, DateTime finishDate)
+    private static readonly Membership None = new();
+    private Membership() { }
+    
+    public Membership(int organizationId, int volunteerId, bool active, DateTime createdAt)
     {
+        OrganizationId = organizationId;
         VolunteerId = volunteerId;
-        InitialDate = initialDate;
-        FinishDate = finishDate;
+        Active = active;
+        CreatedAt = createdAt;
     }
 
+    public int MembershipId { get; }
+    public int OrganizationId { get; }
     public int VolunteerId { get; }
-    public DateTime InitialDate { get; }
-    public DateTime FinishDate { get; }
+    public bool Active { get; }
+    public DateTime CreatedAt { get; }
+
 }

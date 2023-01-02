@@ -6,7 +6,7 @@ public class Organization
 {
     private Organization() { }
 
-    public static readonly Organization Empty = new ();
+    public static readonly Organization None = new ();
 
     public Organization(
         int id,

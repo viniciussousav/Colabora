@@ -36,7 +36,7 @@ public class RegisterOrganizationCommandHandlerTests
 
         var organization = FakerOrganization.Create(command);
 
-        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Task.FromResult(Organization.Empty));
+        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Task.FromResult(Organization.None));
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
         var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
@@ -78,7 +78,7 @@ public class RegisterOrganizationCommandHandlerTests
         // Arrange
         var command = FakeRegisterOrganizationCommand.Create();
         
-        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Organization.Empty);
+        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Organization.None);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
 
         var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);

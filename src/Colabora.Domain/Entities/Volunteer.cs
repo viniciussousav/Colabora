@@ -4,7 +4,7 @@ namespace Colabora.Domain.Entities;
 
 public class Volunteer
 {
-    public static readonly Volunteer Empty = new();
+    public static readonly Volunteer None = new();
 
     private Volunteer() { }
     

@@ -2,9 +2,10 @@ version: "3.2"
 services:
   sql-server:
     container_name: sql-server
-    image: microsoft/mssql-server-linux:2019-latest
+    network_mode: bridge
+    image: mcr.microsoft.com/mssql/server:2019-latest
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "Test"
-      ACCEPT_EULA: "Y"
+      - "MSSQL_SA_PASSWORD=Pass@word"
+      - "ACCEPT_EULA=Y"

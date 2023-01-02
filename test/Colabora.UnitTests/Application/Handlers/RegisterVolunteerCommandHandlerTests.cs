@@ -33,7 +33,7 @@ public class RegisterVolunteerCommandHandlerTests
     {
         // Assert
         var command = FakeRegisterVolunteerCommand.Create();
-        _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(Volunteer.Empty);
+        _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(Volunteer.None);
 
         var volunteer = FakeVolunteer.Create(command);
         _volunteerRepository.CreateVolunteer(Arg.Is<Volunteer>(v => v.Email == command.Email)).Returns(volunteer);
