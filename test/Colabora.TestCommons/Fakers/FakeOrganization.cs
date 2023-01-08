@@ -19,7 +19,6 @@ public static class FakerOrganization
             email: Faker.Person.Email,
             state: Faker.Random.Enum(exclude: States.Undefined),
             interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
-            memberships: Array.Empty<Membership>().ToList(),
             createdBy: Faker.Random.Int(min: 1),
             createdAt: DateTime.Now);
     }
@@ -32,7 +31,6 @@ public static class FakerOrganization
             email: command.Email,
             state: command.State,
             interests: command.Interests,
-            memberships: command.Memberships,
             createdBy: command.CreatedBy,
             createdAt: DateTime.Now);
     }

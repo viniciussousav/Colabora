@@ -6,38 +6,34 @@ namespace Colabora.Infrastructure.Persistence.Repositories;
 
 public class OrganizationRepository : IOrganizationRepository
 {
-    private readonly IDbContextFactory<AppDbContext> _contextFactory;
+    private readonly AppDbContext _appDbContext;
 
-    public OrganizationRepository(IDbContextFactory<AppDbContext> contextFactory)
+    public OrganizationRepository(AppDbContext appDbContext)
     {
-        _contextFactory = contextFactory;
+        _appDbContext = appDbContext;
     }
 
     public async Task<Organization> CreateOrganization(Organization organization)
     {
-        await using var ctx = await _contextFactory.CreateDbContextAsync();
-        var entry = await ctx.Organizations.AddAsync(organization);
+        var entry = await _appDbContext.Organizations.AddAsync(organization);
         return entry.Entity;
     }
 
     public async Task<List<Organization>> GetAllOrganizations()
     {
-        await using var ctx = await _contextFactory.CreateDbContextAsync();
-        return ctx.Organizations.AsNoTracking().ToList();
+        return await _appDbContext.Organizations.AsNoTracking().ToListAsync();
     }
 
     public async Task<Organization> GetOrganizationByNameAndCreator(string name, int volunteerCreatorId)
     {
-        await using var ctx = await _contextFactory.CreateDbContextAsync();
-        return await ctx.Organizations
+        return await _appDbContext.Organizations
             .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Name == name && o.CreatedBy == volunteerCreatorId) ?? Organization.None;
     }
 
     public async Task<Organization> GetOrganizationById(int organizationId)
     {
-        await using var ctx = await _contextFactory.CreateDbContextAsync();
-        return await ctx.Organizations
+        return await _appDbContext.Organizations
             .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.None;
     }

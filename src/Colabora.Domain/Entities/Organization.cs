@@ -4,7 +4,7 @@ namespace Colabora.Domain.Entities;
 
 public class Organization
 {
-    private Organization() { }
+    protected Organization() { }
 
     public static readonly Organization None = new ();
 
@@ -14,7 +14,6 @@ public class Organization
         string email,
         States state,
         List<Interests> interests,
-        List<Membership> memberships,
         int createdBy,
         DateTime createdAt)
     {
@@ -25,7 +24,6 @@ public class Organization
         Interests = interests;
         CreatedBy = createdBy;
         CreatedAt = createdAt;
-        Memberships = memberships;
     }
 
     public int Id { get; }
@@ -33,7 +31,6 @@ public class Organization
     public string Email { get; }
     public States State { get; }
     public List<Interests> Interests { get; }
-    public List<Membership> Memberships { get; }
     public int CreatedBy { get; }
     public DateTime CreatedAt { get; }
 }

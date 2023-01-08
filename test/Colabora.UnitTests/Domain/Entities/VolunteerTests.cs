@@ -32,7 +32,7 @@ public class VolunteerTests
         var volunteer = new Volunteer(id, firstName, lastName, email, dateOfBirth, gender, interests, state, createdAt);
         
         // Assert
-        volunteer.Id.Should().Be(id);
+        volunteer.VolunteerId.Should().Be(id);
         volunteer.FirstName.Should().Be(firstName);
         volunteer.LastName.Should().Be(lastName);
         volunteer.Gender.Should().Be(gender);

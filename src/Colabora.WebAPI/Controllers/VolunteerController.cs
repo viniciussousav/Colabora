@@ -37,7 +37,7 @@ public class VolunteerController : ControllerBase
         }
     }
     
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> Post(RegisterVolunteerCommand command)
     {
         try

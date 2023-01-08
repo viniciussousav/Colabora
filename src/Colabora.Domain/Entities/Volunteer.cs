@@ -9,7 +9,7 @@ public class Volunteer
     private Volunteer() { }
     
     public Volunteer(
-        int id,
+        int volunteerId,
         string firstName, 
         string lastName, 
         string email,
@@ -19,7 +19,7 @@ public class Volunteer
         States state,
         DateTime createAt)
     {
-        Id = id;
+        VolunteerId = volunteerId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
@@ -30,7 +30,7 @@ public class Volunteer
         CreateAt = createAt;
     }
 
-    public int Id { get; }
+    public int VolunteerId { get; }
     public string FirstName { get; }
     public string LastName { get; }
     public DateTime Birthdate { get; }

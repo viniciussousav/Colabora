@@ -10,6 +10,5 @@ public record RegisterOrganizationCommand(
     string Email,
     States State,
     List<Interests> Interests,
-    List<Membership> Memberships,
     int CreatedBy
 ) : IRequest<Result<RegisterOrganizationResponse>>;

@@ -8,6 +8,5 @@ public record RegisterOrganizationResponse(
     string Name,
     States State,
     List<Interests> Interests,
-    List<Membership> Memberships,
     int CreatedBy,
     DateTime CreatedAt);

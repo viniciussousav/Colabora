@@ -12,7 +12,6 @@ public static class OrganizationMapper
             Name: organization.Name,
             State: organization.State,
             Interests: organization.Interests,
-            Memberships: organization.Memberships,
             CreatedBy: organization.CreatedBy,
             CreatedAt: organization.CreatedAt);
     }
@@ -25,7 +24,6 @@ public static class OrganizationMapper
             email: organization.Email,
             state: organization.State,
             interests: organization.Interests,
-            memberships: organization.Memberships,
             createdBy: organization.CreatedBy,
             createdAt: DateTime.Now);
     }

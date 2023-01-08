@@ -10,6 +10,6 @@ public static class DatabaseMigrationConfiguration
         using var scope = app.Services.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        service.Database.MigrateAsync();
+        service.Database.Migrate();
     }
 }

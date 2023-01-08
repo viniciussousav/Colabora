@@ -11,7 +11,6 @@ namespace Colabora.IntegrationTests;
 
 public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -27,7 +26,8 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
         // Apply migration to database
         builder.Configure(configureApp: applicationBuilder =>
         {
-            var service = applicationBuilder.ApplicationServices.GetRequiredService<AppDbContext>();
+            using var scope = applicationBuilder.ApplicationServices.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             service.Database.Migrate();
         });
     }

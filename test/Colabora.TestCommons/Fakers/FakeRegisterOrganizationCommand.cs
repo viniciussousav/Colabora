@@ -17,7 +17,6 @@ public static class FakeRegisterOrganizationCommand
             Email: Faker.Person.Email,
             State: Faker.Random.Enum(exclude: States.Undefined),
             Interests: Faker.Random.EnumValues<Interests>().ToList(),
-            Memberships: Enumerable.Empty<Membership>().ToList(),
             CreatedBy: Faker.Random.Int());
     }
 }

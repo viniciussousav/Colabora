@@ -14,7 +14,7 @@ public static class FakeVolunteer
     public static Volunteer Create()
     {
         return new Volunteer(
-            id: Faker.Random.Int(),
+            volunteerId: Faker.Random.Int(),
             firstName: Faker.Person.FirstName,
             lastName: Faker.Person.LastName,
             email: Faker.Person.Email,
@@ -27,7 +27,7 @@ public static class FakeVolunteer
     public static Volunteer Create(RegisterVolunteerCommand command)
     {
         return new Volunteer(
-            id: Faker.Random.Int(),
+            volunteerId: Faker.Random.Int(),
             firstName: command.FirstName,
             lastName: command.LastName,
             email: command.Email,

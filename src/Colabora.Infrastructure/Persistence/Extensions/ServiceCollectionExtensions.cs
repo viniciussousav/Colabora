@@ -12,18 +12,17 @@ public static class ServiceCollectionExtensions
 {
     private static void AddDatabasePersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContextFactory<AppDbContext>(options =>
+        services.AddDbContext<AppDbContext>(options =>
         {
             var sqlConnectionString = configuration.GetConnectionString("ColaboraDatabase");
             options.UseSqlServer(sqlConnectionString);
-        }, ServiceLifetime.Scoped);
+        });
     }
 
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
-        services.AddScoped<ISocialActionRepository, SocialActionRepository>();
     }
 
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
