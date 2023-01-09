@@ -14,24 +14,20 @@ public static class FakerOrganization
     public static Organization Create()
     {
         return new Organization(
-            id: Faker.Random.Int(),
             name: Faker.Random.Word(),
             email: Faker.Person.Email,
             state: Faker.Random.Enum(exclude: States.Undefined),
             interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
-            createdBy: Faker.Random.Int(min: 1),
-            createdAt: DateTime.Now);
+            createdBy: Faker.Random.Int(min: 1));
     }
     
     public static Organization Create(RegisterOrganizationCommand command)
     {
         return new Organization(
-            id: Faker.Random.Int(),
             name: command.Name,
             email: command.Email,
             state: command.State,
             interests: command.Interests,
-            createdBy: command.CreatedBy,
-            createdAt: DateTime.Now);
+            createdBy: command.CreatedBy);
     }
 }

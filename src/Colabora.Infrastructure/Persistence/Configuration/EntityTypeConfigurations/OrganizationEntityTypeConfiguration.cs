@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Entities;
+using Colabora.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +12,28 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
         builder.ToTable("ORGANIZATION");
 
         builder.HasKey(organization => organization.Id);
-        // builder.Property(organization => organization.Id).IsRequired().ValueGeneratedOnAdd();
-        // builder.HasAlternateKey(organization => organization.Email);
+        builder.Property(organization => organization.Id).IsRequired().ValueGeneratedOnAdd();
+
+        builder.HasAlternateKey(organization => organization.Email);
+        builder.Property(organization => organization.Email).IsRequired();
+
+        builder.Property(organization => organization.Name).IsRequired();
+        
+        builder.Property(organization => organization.State)
+            .IsRequired()
+            .HasConversion(  
+                s => s.ToString(), 
+                s => (States)Enum.Parse(typeof(States), s));
+
+        builder.Property(organization => organization.Interests)
+            .IsRequired()
+            .HasConversion(
+                interests => string.Join(",", interests.Select(i => i.ToString())),
+                interests => interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
+
+        builder.Property(organization => organization.CreatedBy).IsRequired();
+        
+        builder.Property(organization => organization.CreatedAt)
+            .HasDefaultValueSql("GETDATE()");
     }
 }

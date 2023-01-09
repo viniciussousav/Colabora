@@ -26,7 +26,7 @@ public class OrganizationTests
             DateTime.Now);
 
         // Act
-        var organization = new Organization(id, name, email, state, interests, createdBy, createdAt);
+        var organization = new Organization(name, email, state, interests, createdBy);
         
         // Assert
         organization.Id.Should().Be(id);

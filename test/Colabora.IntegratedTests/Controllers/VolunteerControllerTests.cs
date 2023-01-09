@@ -19,13 +19,14 @@ public class VolunteerControllerTests :
     public VolunteerControllerTests(TestWebApplicationFactory<Program> factory)
     {
         _factory = factory;
-        _client = factory.CreateClient();
+        
     }
     
     [Fact]
     public async Task Test()
     {
         // Arrange - Act
+        
         var getRequest = await _client.GetAsync("volunteers");
         
         // Assert

@@ -4,26 +4,22 @@ namespace Colabora.Domain.Entities;
 
 public class Organization
 {
-    protected Organization() { }
-
     public static readonly Organization None = new ();
-
+    
+    private Organization() { }
+    
     public Organization(
-        int id,
         string name,
         string email,
         States state,
         List<Interests> interests,
-        int createdBy,
-        DateTime createdAt)
-    {
-        Id = id;
+        int createdBy)
+    { 
         Name = name;
         Email = email;
         State = state;
         Interests = interests;
         CreatedBy = createdBy;
-        CreatedAt = createdAt;
     }
 
     public int Id { get; }

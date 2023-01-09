@@ -29,7 +29,7 @@ public class VolunteerTests
             DateTime.Now);
                     
         // Act
-        var volunteer = new Volunteer(id, firstName, lastName, email, dateOfBirth, gender, interests, state, createdAt);
+        var volunteer = new Volunteer(firstName, lastName, email, dateOfBirth, gender, interests, state);
         
         // Assert
         volunteer.VolunteerId.Should().Be(id);

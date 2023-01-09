@@ -37,14 +37,12 @@ public static class VolunteerMapper
     public static Volunteer MapToVolunteer(this RegisterVolunteerCommand command)
     {
         return new Volunteer(
-            volunteerId: default,
             firstName: command.FirstName,
             lastName: command.LastName,
             email: command.Email,
             state: command.State,
             gender: command.Gender,
             interests: command.Interests,
-            birthdate: command.Birthdate,
-            createAt: DateTime.Now);
+            birthdate: command.Birthdate);
     }
 }

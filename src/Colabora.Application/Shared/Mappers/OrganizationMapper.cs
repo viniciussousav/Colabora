@@ -19,12 +19,10 @@ public static class OrganizationMapper
     public static Organization MapToOrganization(this RegisterOrganizationCommand organization)
     {
         return new Organization(
-            id: default,
             name: organization.Name,
             email: organization.Email,
             state: organization.State,
             interests: organization.Interests,
-            createdBy: organization.CreatedBy,
-            createdAt: DateTime.Now);
+            createdBy: organization.CreatedBy);
     }
 }
