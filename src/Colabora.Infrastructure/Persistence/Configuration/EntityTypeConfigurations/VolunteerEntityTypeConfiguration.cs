@@ -37,7 +37,10 @@ public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunte
             .IsRequired()
             .HasConversion(
                 interests => string.Join(",", interests.Select(i => i.ToString())),
-                interests => interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
+                interests => 
+                    string.IsNullOrWhiteSpace(interests)
+                    ? new List<Interests>()
+                    : interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
         
         builder.Property(volunteer => volunteer.CreateAt)
             .HasDefaultValueSql("GETDATE()");

@@ -1,5 +1,4 @@
-﻿using Colabora.Domain.Entities;
-using Colabora.Domain.Enums;
+﻿using Colabora.Domain.Enums;
 
 namespace Colabora.Application.UseCases.RegisterOrganization.Models;
 

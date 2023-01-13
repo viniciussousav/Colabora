@@ -1,5 +1,4 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
 using MediatR;
 

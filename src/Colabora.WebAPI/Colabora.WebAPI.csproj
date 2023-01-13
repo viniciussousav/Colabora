@@ -6,8 +6,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
-
+    
     <ItemGroup>
+        <InternalsVisibleTo Include="Colabora.WebAPI" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.12">
           <PrivateAssets>all</PrivateAssets>
@@ -20,6 +26,12 @@
     <ItemGroup>
       <ProjectReference Include="..\Colabora.Application\Colabora.Application.csproj" />
       <ProjectReference Include="..\Colabora.Infrastructure\Colabora.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="appsettings.Test.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

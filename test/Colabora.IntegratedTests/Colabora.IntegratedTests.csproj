@@ -31,12 +31,7 @@
       <ProjectReference Include="..\..\src\Colabora.Application\Colabora.Application.csproj" />
       <ProjectReference Include="..\..\src\Colabora.Infrastructure\Colabora.Infrastructure.csproj" />
       <ProjectReference Include="..\..\src\Colabora.WebAPI\Colabora.WebAPI.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="appsettings.Test.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <ProjectReference Include="..\Colabora.TestCommons\Colabora.TestCommons.csproj" />
     </ItemGroup>
 
 </Project>

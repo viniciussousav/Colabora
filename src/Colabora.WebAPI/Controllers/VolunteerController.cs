@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Colabora.WebAPI.Controllers;
 
 [ApiController]
-[Route("volunteers")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/volunteers")]
 public class VolunteerController : ControllerBase
 {
     private readonly ILogger<VolunteerController> _logger;
@@ -33,7 +34,7 @@ public class VolunteerController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {VolunteerController}", nameof(VolunteerController));
-            return Problem(detail: e.Message, statusCode: 500, title: "Internal Error");
+            return Problem(statusCode: StatusCodes.Status500InternalServerError, title: ErrorMessages.InternalError, detail: e.Message);
         }
     }
     

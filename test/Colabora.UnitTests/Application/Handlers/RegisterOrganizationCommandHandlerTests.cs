@@ -5,7 +5,6 @@ using Colabora.Application.Commons;
 using Colabora.Application.Shared;
 using Colabora.Application.Shared.Mappers;
 using Colabora.Application.UseCases.RegisterOrganization;
-using Colabora.Application.UseCases.RegisterOrganization.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
