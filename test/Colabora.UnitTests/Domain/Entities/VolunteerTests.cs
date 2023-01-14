@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Bogus;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
@@ -17,22 +16,19 @@ public class VolunteerTests
     public void Given_A_New_Volunteer_Instance_When_All_Parameters_Are_Passed_It_Should_Be_Succeed()
     {
         // Arrange
-        var (id, firstName, lastName, email, dateOfBirth,gender, interests, state, createdAt) = (
-            Faker.Random.Int(),
+        var (firstName, lastName, email, dateOfBirth,gender, interests, state) = (
             Faker.Person.FirstName,
             Faker.Person.LastName,
             Faker.Person.Email,
             Faker.Person.DateOfBirth,
             Faker.Random.Enum(exclude: Gender.Undefined),
             Faker.Random.EnumValues<Interests>().ToList(),
-            Faker.Random.Enum(exclude: States.Undefined),
-            DateTime.Now);
+            Faker.Random.Enum(exclude: States.Undefined));
                     
         // Act
         var volunteer = new Volunteer(firstName, lastName, email, dateOfBirth, gender, interests, state);
         
         // Assert
-        volunteer.VolunteerId.Should().Be(id);
         volunteer.FirstName.Should().Be(firstName);
         volunteer.LastName.Should().Be(lastName);
         volunteer.Gender.Should().Be(gender);
@@ -40,6 +36,5 @@ public class VolunteerTests
         volunteer.Email.Should().Be(email);
         volunteer.State.Should().Be(state);
         volunteer.Birthdate.Should().Be(dateOfBirth);
-        volunteer.CreateAt.Should().Be(createdAt);
     }
 }
