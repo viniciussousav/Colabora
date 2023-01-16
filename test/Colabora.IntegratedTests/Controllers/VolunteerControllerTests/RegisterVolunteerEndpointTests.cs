@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+#pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 
@@ -32,7 +33,7 @@ public partial class VolunteerControllerTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var content = await response.Content.ReadAsStringAsync();
-        var createVolunteerResponse = _helperFixture.DeserializeToObject<RegisterVolunteerResponse>(content);
+        var createVolunteerResponse = await response.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
         createVolunteerResponse.Id.Should().BePositive();
         createVolunteerResponse.FirstName.Should().Be(command.FirstName);
@@ -62,7 +63,7 @@ public partial class VolunteerControllerTests
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
 
         var content = await response.Content.ReadAsStringAsync();
-        var errorResponse = _helperFixture.DeserializeToObject<Error>(content);
+        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
 
         errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
     }
@@ -95,7 +96,7 @@ public partial class VolunteerControllerTests
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
         var content = await response.Content.ReadAsStringAsync();
-        var errorResponse = _helperFixture.DeserializeToObject<Error>(content);
+        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
 
         errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello"));
     }

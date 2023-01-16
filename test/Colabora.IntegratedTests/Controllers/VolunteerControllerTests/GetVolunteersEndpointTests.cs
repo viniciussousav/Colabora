@@ -27,12 +27,10 @@ public partial class VolunteerControllerTests :
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
-    private readonly HelperFixture _helperFixture;
 
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory, HelperFixture helperFixture)
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
-        _helperFixture = helperFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
@@ -143,6 +141,7 @@ public partial class VolunteerControllerTests :
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
         var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
+        errorResponse.Should().NotBeNull();
         errorResponse.Code.Should().Be("InternalError");
         errorResponse.Message.Should().Be("Hello Exception");
     }

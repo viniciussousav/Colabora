@@ -12,6 +12,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
+#pragma warning disable CS8602
+
 namespace Colabora.IntegrationTests.Controllers.OrganizationControllerTests;
 
 public class RegisterOrganizationEndpointTests : 
@@ -36,7 +38,7 @@ public class RegisterOrganizationEndpointTests :
 
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
-        var command = FakeRegisterOrganizationCommand.Create(volunteer?.Id);
+        var command = FakeRegisterOrganizationCommand.Create(volunteer.Id);
         
         // Act
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
