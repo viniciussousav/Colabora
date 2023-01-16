@@ -23,6 +23,6 @@ public static class OrganizationMapper
             email: organization.Email,
             state: organization.State,
             interests: organization.Interests,
-            createdBy: organization.CreatedBy);
+            createdBy: organization.VolunteerCreatorId);
     }
 }

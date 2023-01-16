@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Colabora.WebAPI.Configuration;
 
+[ExcludeFromCodeCoverage]
 public static class ApiVersioningConfiguration
 {
     public static void AddApiVersioningConfiguration(this IServiceCollection services)

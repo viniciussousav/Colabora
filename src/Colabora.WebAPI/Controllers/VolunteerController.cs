@@ -1,4 +1,3 @@
-using Colabora.Application.Shared;
 using Colabora.Application.UseCases.GetVolunteers.Models;
 using Colabora.Application.UseCases.RegisterVolunteer.Models;
 using MediatR;
@@ -11,49 +10,30 @@ namespace Colabora.WebAPI.Controllers;
 [Route("api/v{version:apiVersion}/volunteers")]
 public class VolunteerController : ControllerBase
 {
-    private readonly ILogger<VolunteerController> _logger;
     private readonly IMediator _mediator;
     
-    public VolunteerController(ILogger<VolunteerController> logger, IMediator mediator)
+    public VolunteerController(IMediator mediator)
     {
-        _logger = logger;
         _mediator = mediator;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetVolunteers()
     {
-        try
-        {
-            var result = await _mediator.Send(new GetVolunteersQuery());
+        var result = await _mediator.Send(new GetVolunteersQuery());
 
-            return result.IsValid  
-                ? Ok(result.Value)
-                : StatusCode(result.FailureStatusCode, result.Error);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An exception was throw at {VolunteerController}", nameof(VolunteerController));
-            return Problem(statusCode: StatusCodes.Status500InternalServerError, title: ErrorMessages.InternalError, detail: e.Message);
-        }
+        return result.IsValid  
+            ? Ok(result.Value)
+            : StatusCode(result.FailureStatusCode, result.Error);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Post(RegisterVolunteerCommand command)
+    public async Task<IActionResult> RegisterVolunteer(RegisterVolunteerCommand command)
     {
-        try
-        {
-            var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
             
-            if (result.Error.Code == ErrorMessages.VolunteerEmailAlreadyRegistered)
-                return Conflict(result.Error);
-            
-            return Ok(result.Value);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An exception was throw at {VolunteerController}", nameof(VolunteerController));
-            return Problem(statusCode: StatusCodes.Status500InternalServerError, title: ErrorMessages.InternalError, detail: e.Message);
-        }
+        return result.IsValid  
+            ? Ok(result.Value)
+            : StatusCode(result.FailureStatusCode, result.Error);
     }
 }

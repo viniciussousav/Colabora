@@ -4,7 +4,7 @@ namespace Colabora.Application.Commons;
 
 public class Error
 {
-    private Error() { }
+    public Error() { }
     
     public static readonly Error Empty = new();
 
@@ -22,9 +22,9 @@ public class Error
         StatusCode = (int) statusCode;
     }
     
-    public string Code { get; }
-    public string Message { get; }
-    public int StatusCode { get; }
+    public string Code { get; set; }
+    public string Message { get; set; }
+    public int StatusCode { get; set; }
 
 
 }

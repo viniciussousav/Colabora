@@ -27,6 +27,6 @@ public static class FakerOrganization
             email: command.Email,
             state: command.State,
             interests: command.Interests,
-            createdBy: command.CreatedBy);
+            createdBy: command.VolunteerCreatorId);
     }
 }

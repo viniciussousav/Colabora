@@ -34,4 +34,7 @@ app.ApplyMigration();
 app.Run();
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public partial class Program { }
+namespace Colabora.WebAPI
+{
+    public partial class Program { }
+}

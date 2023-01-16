@@ -20,11 +20,13 @@ public class RegisterOrganizationCommandHandlerTests
 {
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
+    private readonly IVolunteerRepository _volunteerRepository;
     
     public RegisterOrganizationCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<RegisterOrganizationCommandHandler>>();
         _organizationRepository = Substitute.For<IOrganizationRepository>();
+        _volunteerRepository = Substitute.For<IVolunteerRepository>();
     }
     
     [Fact(DisplayName = "Given a command, when it succeeds, then handler should return the organization created")]
@@ -35,10 +37,12 @@ public class RegisterOrganizationCommandHandlerTests
 
         var organization = FakerOrganization.Create(command);
 
-        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Task.FromResult(Organization.None));
+        _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
+        
+        _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Task.FromResult(Organization.None));
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -56,11 +60,13 @@ public class RegisterOrganizationCommandHandlerTests
         var command = FakeRegisterOrganizationCommand.Create();
 
         var organization = FakerOrganization.Create(command);
+        
+        _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
 
-        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(organization);
+        _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(organization);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -77,10 +83,12 @@ public class RegisterOrganizationCommandHandlerTests
         // Arrange
         var command = FakeRegisterOrganizationCommand.Create();
         
-        _organizationRepository.GetOrganizationByNameAndCreator(command.Name, command.CreatedBy).Returns(Organization.None);
+        _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
+
+        _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Organization.None);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

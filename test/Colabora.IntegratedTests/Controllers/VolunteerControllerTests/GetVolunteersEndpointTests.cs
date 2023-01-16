@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Colabora.Application.Commons;
 using Colabora.Application.UseCases.GetVolunteers.Models;
 using Colabora.Application.UseCases.RegisterVolunteer.Models;
 using Colabora.Domain.Repositories;
-using Colabora.IntegrationTests.Database;
+using Colabora.IntegrationTests.Fixtures;
 using Colabora.TestCommons.Fakers;
+using Colabora.WebAPI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -18,33 +19,35 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
 
-namespace Colabora.IntegrationTests.Controllers;
+namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 
-public class VolunteerControllerTests : 
+public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
+    IClassFixture<HelperFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
-    
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory)
+    private readonly HelperFixture _helperFixture;
+
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory, HelperFixture helperFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
-        _jsonSerializerOptions = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
+        _helperFixture = helperFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
     public async Task Given_A_Get_Volunteers_Request_When_Any_Volunteer_Is_Registered_Then_It_Should_Return_An_Empty_Array_Of_Volunteers()
     {
-        // Arrange - Act
+        // Arrange 
         var client = _factory.CreateClient();
+        
+        // Act
         var response = await client.GetAsync("api/v1/volunteers");
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var content = await response.Content.ReadAsStringAsync();
-        var getVolunteersResponse = JsonSerializer.Deserialize<GetVolunteersResponse>(content, _jsonSerializerOptions);
+        var getVolunteersResponse = await response.Content.ReadFromJsonAsync<GetVolunteersResponse>();
         
         getVolunteersResponse.Should().NotBeNull();
         getVolunteersResponse.Volunteers.Should().BeEmpty();
@@ -65,8 +68,7 @@ public class VolunteerControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var content = await response.Content.ReadAsStringAsync();
-        var getVolunteersResponse = JsonSerializer.Deserialize<GetVolunteersResponse>(content, _jsonSerializerOptions);
+        var getVolunteersResponse = await  response.Content.ReadFromJsonAsync<GetVolunteersResponse>();
         
         getVolunteersResponse.Should().NotBeNull();
         getVolunteersResponse.Volunteers.Should().NotBeEmpty();
@@ -106,20 +108,18 @@ public class VolunteerControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var content = await response.Content.ReadAsStringAsync();
-        var getVolunteersResponse = JsonSerializer.Deserialize<GetVolunteersResponse>(content, _jsonSerializerOptions);
+        var getVolunteersResponse = await response.Content.ReadFromJsonAsync<GetVolunteersResponse>();
         getVolunteersResponse.Should().NotBeNull();
         getVolunteersResponse.Volunteers.Should().NotBeEmpty();
 
         volunteersRegistered.Should().AllSatisfy(itemResponse =>
-            getVolunteersResponse.Volunteers.Should().Contain(command => command.Email == itemResponse.Email));
+            getVolunteersResponse.Volunteers.Should().Contain(item => item.Email == itemResponse.Email));
     }
 
     [Fact(DisplayName = "Given a get volunteers request, when an exception occurs, then it should return an internal server error")]
     public async Task Given_A_Get_Volunteers_Request_When_An_Exceptions_Occurs_Then_It_Should_Return_An_Internal_Server_Error()
     {
         // Arrange
-        
         var client = _factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureServices(services =>
@@ -127,7 +127,7 @@ public class VolunteerControllerTests :
                 var dbContextDescriptor = services.Single(service => service.ServiceType == typeof(IVolunteerRepository));
                 services.Remove(dbContextDescriptor);
                 
-                services.AddScoped<IVolunteerRepository>(s =>
+                services.AddScoped<IVolunteerRepository>(_ =>
                 {
                     var volunteerRepositoryMock = Substitute.For<IVolunteerRepository>();
                     volunteerRepositoryMock.GetAllVolunteers().Throws(new Exception("Hello Exception"));
@@ -142,15 +142,19 @@ public class VolunteerControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var content = await response.Content.ReadAsStringAsync();
-        content.Should().Contain("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
+        errorResponse.Code.Should().Be("InternalError");
+        errorResponse.Message.Should().Be("Hello Exception");
     }
     
     public async Task InitializeAsync()
     {
+        await DatabaseFixture.ApplyMigration();
         await DatabaseFixture.ClearDatabase();
     }
 
-    public Task DisposeAsync() => Task.CompletedTask;
-    
+    public async Task DisposeAsync()
+    {
+        await DatabaseFixture.ClearDatabase();
+    }
 }

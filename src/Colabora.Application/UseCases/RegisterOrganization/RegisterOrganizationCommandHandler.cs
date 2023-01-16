@@ -12,21 +12,27 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
 {
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
+    private readonly IVolunteerRepository _volunteerRepository;
 
     public RegisterOrganizationCommandHandler(
         ILogger<RegisterOrganizationCommandHandler> logger,
-        IOrganizationRepository organizationRepository)
+        IOrganizationRepository organizationRepository, 
+        IVolunteerRepository volunteerRepository)
     {
         _logger = logger;
         _organizationRepository = organizationRepository;
+        _volunteerRepository = volunteerRepository;
     }
 
     public async Task<Result<RegisterOrganizationResponse>> Handle(RegisterOrganizationCommand command, CancellationToken cancellationToken)
     {
         try
         {
-            if (await OrganizationAlreadyExist(command.Name, command.CreatedBy))
+            if (await OrganizationEmailAlreadyExist(command.Name, command.Email, command.VolunteerCreatorId))
                 return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateOrganizationEmailAlreadyExists(command.Name));
+
+            if (await VolunteerCreatorNotExists(command.VolunteerCreatorId))
+                return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateVolunteerNotFound());
 
             var organization = command.MapToOrganization();
             var createdOrganization = await _organizationRepository.CreateOrganization(organization);
@@ -41,8 +47,11 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
             return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateInternalError(e.Message));
         }
     }
+
+    private async Task<bool> VolunteerCreatorNotExists(int volunteerId)
+        => await _volunteerRepository.GetVolunteerById(volunteerId) == Volunteer.None;
     
-    private async Task<bool> OrganizationAlreadyExist(string name, int volunteerCreatorId)
-        => await _organizationRepository.GetOrganizationByNameAndCreator(name,volunteerCreatorId) != Organization.None;
+    private async Task<bool> OrganizationEmailAlreadyExist(string name, string email, int volunteerCreator)
+        => await _organizationRepository.GetOrganization(name, email, volunteerCreator) != Organization.None;
 
 }

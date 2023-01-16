@@ -16,6 +16,7 @@ public class OrganizationRepository : IOrganizationRepository
     public async Task<Organization> CreateOrganization(Organization organization)
     {
         var entry = await _appDbContext.Organizations.AddAsync(organization);
+        await _appDbContext.SaveChangesAsync();
         return entry.Entity;
     }
 
@@ -23,8 +24,8 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return await _appDbContext.Organizations.AsNoTracking().ToListAsync();
     }
-
-    public async Task<Organization> GetOrganizationByNameAndCreator(string name, int volunteerCreatorId)
+    
+    public async Task<Organization> GetOrganization(string name, string email, int volunteerCreatorId)
     {
         return await _appDbContext.Organizations
             .AsNoTracking()

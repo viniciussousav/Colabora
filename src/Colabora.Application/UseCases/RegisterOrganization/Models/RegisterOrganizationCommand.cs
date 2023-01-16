@@ -9,5 +9,5 @@ public record RegisterOrganizationCommand(
     string Email,
     States State,
     List<Interests> Interests,
-    int CreatedBy
+    int VolunteerCreatorId
 ) : IRequest<Result<RegisterOrganizationResponse>>;
