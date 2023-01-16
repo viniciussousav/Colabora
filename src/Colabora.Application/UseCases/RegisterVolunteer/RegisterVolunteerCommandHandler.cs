@@ -38,5 +38,6 @@ public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
         }
     }
 
-    private async Task<bool> IsEmailRegistered(string email) => await _volunteerRepository.GetVolunteerByEmail(email) != Volunteer.None;
+    private async Task<bool> IsEmailRegistered(string email) => 
+        await _volunteerRepository.GetVolunteerByEmail(email) != Volunteer.None;
 }

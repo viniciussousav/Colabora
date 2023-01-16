@@ -35,7 +35,7 @@ public partial class VolunteerControllerTests
         var content = await response.Content.ReadAsStringAsync();
         var createVolunteerResponse = await response.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
-        createVolunteerResponse.Id.Should().BePositive();
+        createVolunteerResponse.VolunteerId.Should().BePositive();
         createVolunteerResponse.FirstName.Should().Be(command.FirstName);
         createVolunteerResponse.LastName.Should().Be(command.LastName);
         createVolunteerResponse.Email.Should().Be(command.Email);

@@ -72,7 +72,7 @@ public partial class VolunteerControllerTests :
         getVolunteersResponse.Volunteers.Should().NotBeEmpty();
 
         var registeredVolunteer = getVolunteersResponse.Volunteers.First();
-        registeredVolunteer.Id.Should().BePositive();
+        registeredVolunteer.VolunteerId.Should().BePositive();
         registeredVolunteer.Email.Should().Be(command.Email);
         registeredVolunteer.FirstName.Should().Be(command.FirstName);
         registeredVolunteer.LastName.Should().Be(command.LastName);

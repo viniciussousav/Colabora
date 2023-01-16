@@ -3,7 +3,7 @@
 namespace Colabora.Application.UseCases.GetVolunteers.Models;
 
 public record GetVolunteersItemResponse(
-    int Id,
+    int VolunteerId,
     string FirstName,
     string LastName,
     string Email,

@@ -9,7 +9,7 @@ public static class VolunteerMapper
     public static GetVolunteersItemResponse MapToGetVolunteerItemResponse(this Volunteer volunteer)
     {
         return new GetVolunteersItemResponse(
-            Id: volunteer.VolunteerId,
+            VolunteerId: volunteer.VolunteerId,
             FirstName: volunteer.FirstName,
             LastName: volunteer.LastName,
             Email: volunteer.Email,
@@ -23,7 +23,7 @@ public static class VolunteerMapper
     public static RegisterVolunteerResponse MapToRegisterVolunteerResponse(this Volunteer volunteer)
     {
         return new RegisterVolunteerResponse(
-            Id: volunteer.VolunteerId,
+            VolunteerId: volunteer.VolunteerId,
             FirstName: volunteer.FirstName,
             LastName: volunteer.LastName,
             Email: volunteer.Email,

@@ -38,7 +38,7 @@ public class RegisterOrganizationEndpointTests :
 
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
-        var command = FakeRegisterOrganizationCommand.Create(volunteer.Id);
+        var command = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
         
         // Act
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
@@ -49,10 +49,10 @@ public class RegisterOrganizationEndpointTests :
         var registerOrganizationResponse = await result.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
 
         registerOrganizationResponse.Should().NotBeNull();
-        registerOrganizationResponse.Id.Should().BeGreaterThan(0);
+        registerOrganizationResponse.OrganizationId.Should().BeGreaterThan(0);
         registerOrganizationResponse.Name.Should().BeEquivalentTo(command.Name);
         registerOrganizationResponse.State.Should().Be(command.State);
-        registerOrganizationResponse.CreatedBy.Should().Be(command.VolunteerCreatorId).And.Be(volunteer.Id);
+        registerOrganizationResponse.CreatedBy.Should().Be(command.VolunteerCreatorId).And.Be(volunteer.VolunteerId);
         registerOrganizationResponse.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
         registerOrganizationResponse.Interests.Should().BeEquivalentTo(command.Interests);
     }
@@ -86,7 +86,7 @@ public class RegisterOrganizationEndpointTests :
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
-        var command = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.Id);
+        var command = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.VolunteerId);
         
         // Act
         await client.PostAsJsonAsync("/api/v1.0/organizations", command);

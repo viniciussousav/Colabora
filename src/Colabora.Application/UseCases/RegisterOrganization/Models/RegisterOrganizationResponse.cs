@@ -3,7 +3,7 @@
 namespace Colabora.Application.UseCases.RegisterOrganization.Models;
 
 public record RegisterOrganizationResponse(
-    int Id,
+    int OrganizationId,
     string Name,
     States State,
     List<Interests> Interests,

@@ -21,6 +21,9 @@ public static class ErrorMessages
     
     public static Error CreateVolunteerNotFound()
         => new(nameof(VolunteerNotFound), HttpStatusCode.NotFound, VolunteerNotFound);
+    
+    public static Error CreateOrganizationNotFound()
+        => new(nameof(OrganizationNotFound), HttpStatusCode.NotFound, OrganizationNotFound);
 
     public static Error CreateInternalError(string? message)
         => new(nameof(InternalError), HttpStatusCode.InternalServerError, message ?? "An unexpected error happened");

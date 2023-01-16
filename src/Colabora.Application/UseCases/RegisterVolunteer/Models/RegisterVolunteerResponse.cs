@@ -3,7 +3,7 @@
 namespace Colabora.Application.UseCases.RegisterVolunteer.Models;
 
 public record RegisterVolunteerResponse(
-    int Id,
+    int VolunteerId,
     string FirstName,
     string LastName,
     string Email,

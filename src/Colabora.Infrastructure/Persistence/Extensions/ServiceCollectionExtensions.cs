@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+        services.AddScoped<ISocialActionRepository, SocialActionRepository>();
     }
 
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

@@ -18,4 +18,5 @@ public class AppDbContext : DbContext
     
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<Volunteer> Volunteers { get; set; }
+    public DbSet<SocialAction> SocialActions { get; set; }
 }
