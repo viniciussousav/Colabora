@@ -22,7 +22,7 @@ public static class DatabaseFixture
                 .Options);
     }
 
-    public static async Task ClearDatabase()
+    private static async Task ClearDatabase()
     {
         try
         {
@@ -30,6 +30,7 @@ public static class DatabaseFixture
         
             appDbContext.RemoveRange(appDbContext.Volunteers);
             appDbContext.RemoveRange(appDbContext.Organizations);
+            appDbContext.RemoveRange(appDbContext.SocialActions);
 
             await appDbContext.SaveChangesAsync();
             await appDbContext.DisposeAsync();
@@ -40,7 +41,7 @@ public static class DatabaseFixture
         }
     }
     
-    public static async Task ApplyMigration()
+    private static async Task ApplyMigration()
     {
         try
         {
@@ -52,5 +53,11 @@ public static class DatabaseFixture
         {
             // Ignore if database already exists
         }
+    }
+
+    public static async Task ResetDatabase()
+    {
+        await ApplyMigration();
+        await ClearDatabase();
     }
 }

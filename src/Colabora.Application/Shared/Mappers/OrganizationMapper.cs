@@ -8,7 +8,7 @@ public static class OrganizationMapper
     public static RegisterOrganizationResponse MapToResponse(this Organization organization)
     {
         return new RegisterOrganizationResponse(
-            OrganizationId: organization.Id,
+            OrganizationId: organization.OrganizationId,
             Name: organization.Name,
             State: organization.State,
             Interests: organization.Interests,

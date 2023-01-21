@@ -7,7 +7,6 @@ namespace Colabora.WebAPI.Controllers;
 [ApiController]
 [Route("api/v{version:apiVersion}/actions")]
 [ApiVersion("1.0")]
-
 public class SocialActionController : ControllerBase
 {
     private readonly IMediator _mediator;

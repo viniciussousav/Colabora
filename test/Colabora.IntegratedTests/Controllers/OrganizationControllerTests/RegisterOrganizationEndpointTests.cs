@@ -104,12 +104,11 @@ public class RegisterOrganizationEndpointTests :
 
     public async Task InitializeAsync()
     {
-        await DatabaseFixture.ApplyMigration();
-        await DatabaseFixture.ClearDatabase();
+        await DatabaseFixture.ResetDatabase();
     }
 
     public async Task DisposeAsync()
     {
-        await DatabaseFixture.ClearDatabase();
+        await DatabaseFixture.ResetDatabase();
     }
 }

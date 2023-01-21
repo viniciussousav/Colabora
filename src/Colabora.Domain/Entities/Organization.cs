@@ -22,7 +22,7 @@ public class Organization
         CreatedBy = createdBy;
     }
 
-    public int Id { get; }
+    public int OrganizationId { get; }
     public string Name { get; }
     public string Email { get; }
     public States State { get; }

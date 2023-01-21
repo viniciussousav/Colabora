@@ -13,12 +13,12 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                 name: "ORGANIZATION",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    OrganizationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ORGANIZATION", x => x.Id);
+                    table.PrimaryKey("PK_ORGANIZATION", x => x.OrganizationId);
                 });
 
             migrationBuilder.CreateTable(

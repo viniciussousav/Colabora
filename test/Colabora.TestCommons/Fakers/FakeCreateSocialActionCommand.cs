@@ -9,13 +9,13 @@ public static class FakeCreateSocialActionCommand
 {
     private static readonly Faker Faker = new();
     
-    public static CreateSocialActionCommand Create()
+    public static CreateSocialActionCommand Create(int? organizationId = null, int? volunteerCreatorId = null)
     {
         return new CreateSocialActionCommand(
             Title: Faker.Random.Word(),
             Description: Faker.Random.Word(),
-            OrganizationId: Faker.Random.Int(min: 1),
-            VolunteerCreatorId: Faker.Random.Int(min: 1),
+            OrganizationId: organizationId ?? Faker.Random.Int(min: 1),
+            VolunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int(min: 1),
             State: Faker.Random.Enum(exclude: States.Undefined),
             Interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
             OccurrenceDate: Faker.Date.Future());

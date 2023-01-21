@@ -61,6 +61,52 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                     b.ToTable("ORGANIZATION", (string)null);
                 });
 
+            modelBuilder.Entity("Colabora.Domain.Entities.SocialAction", b =>
+                {
+                    b.Property<int>("SocialActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SocialActionId"), 1L, 1);
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("OccurrenceDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VolunteerCreatorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SocialActionId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("VolunteerCreatorId");
+
+                    b.ToTable("SOCIAL_ACTIONS", (string)null);
+                });
+
             modelBuilder.Entity("Colabora.Domain.Entities.Volunteer", b =>
                 {
                     b.Property<int>("VolunteerId")
@@ -106,6 +152,30 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                     b.HasAlternateKey("Email");
 
                     b.ToTable("VOLUNTEER", (string)null);
+                });
+
+            modelBuilder.Entity("Colabora.Domain.Entities.SocialAction", b =>
+                {
+                    b.HasOne("Colabora.Domain.Entities.Organization", "Organization")
+                        .WithMany("SocialActions")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ORGANIZATION");
+
+                    b.HasOne("Colabora.Domain.Entities.Volunteer", null)
+                        .WithMany()
+                        .HasForeignKey("VolunteerCreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_VOLUNTEER");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Colabora.Domain.Entities.Organization", b =>
+                {
+                    b.Navigation("SocialActions");
                 });
 #pragma warning restore 612, 618
         }

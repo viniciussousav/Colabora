@@ -11,8 +11,8 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
     {
         builder.ToTable("ORGANIZATION");
 
-        builder.HasKey(organization => organization.Id);
-        builder.Property(organization => organization.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.HasKey(organization => organization.OrganizationId);
+        builder.Property(organization => organization.OrganizationId).IsRequired().ValueGeneratedOnAdd();
 
         builder.HasAlternateKey(organization => organization.Email);
         builder.Property(organization => organization.Email).IsRequired();

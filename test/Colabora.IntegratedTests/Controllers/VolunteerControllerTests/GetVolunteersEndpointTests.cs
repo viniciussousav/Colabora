@@ -23,7 +23,6 @@ namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 
 public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
-    IClassFixture<HelperFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
@@ -148,12 +147,11 @@ public partial class VolunteerControllerTests :
     
     public async Task InitializeAsync()
     {
-        await DatabaseFixture.ApplyMigration();
-        await DatabaseFixture.ClearDatabase();
+        await DatabaseFixture.ResetDatabase();
     }
 
     public async Task DisposeAsync()
     {
-        await DatabaseFixture.ClearDatabase();
+        await DatabaseFixture.ResetDatabase();
     }
 }

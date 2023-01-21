@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     {
         new OrganizationEntityTypeConfiguration().Configure(modelBuilder.Entity<Organization>());
         new VolunteerEntityTypeConfiguration().Configure(modelBuilder.Entity<Volunteer>());
+        new SocialActionEntityTypeConfiguration().Configure(modelBuilder.Entity<SocialAction>());
     }
     
     public DbSet<Organization> Organizations { get; set; }

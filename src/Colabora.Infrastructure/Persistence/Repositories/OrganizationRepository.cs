@@ -36,6 +36,6 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return await _appDbContext.Organizations
             .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.None;
+            .FirstOrDefaultAsync(o => o.OrganizationId == organizationId) ?? Organization.None;
     }
 }
