@@ -1,13 +1,15 @@
-﻿using Colabora.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using Colabora.Domain.Entities;
 using Colabora.Infrastructure.Persistence.Configuration.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CS8618
+
 namespace Colabora.Infrastructure.Persistence;
 
+[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 public class AppDbContext : DbContext
 {
-    public AppDbContext() { }
-    
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

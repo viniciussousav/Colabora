@@ -15,7 +15,7 @@ public class SocialAction
         int organizationId,
         int volunteerCreatorId,
         States state,
-        Interests interests,
+        List<Interests> interests,
         DateTimeOffset occurrenceDate,
         DateTimeOffset createdAt)
     {
@@ -33,9 +33,10 @@ public class SocialAction
     public string Title { get; }
     public string Description { get; }
     public int OrganizationId { get; }
+    public Organization Organization { get; }
     public int VolunteerCreatorId { get; }
     public States State { get; }
-    public Interests Interests { get; }
+    public List<Interests> Interests { get; }
     public DateTimeOffset OccurrenceDate { get; }
     public DateTimeOffset CreatedAt { get; }
 }

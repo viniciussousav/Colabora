@@ -10,6 +10,6 @@ public record CreateSocialActionCommand(
     int OrganizationId,
     int VolunteerCreatorId,
     States State,
-    Interests Interests,
+    List<Interests> Interests,
     DateTimeOffset OccurrenceDate
     ) : IRequest<Result<CreateSocialActionResponse>>;

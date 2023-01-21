@@ -1,6 +1,5 @@
 ﻿using Colabora.Application.UseCases.CreateSocialAction.Models;
 using Colabora.Domain.Entities;
-using Colabora.Domain.Enums;
 
 namespace Colabora.Application.Shared.Mappers;
 

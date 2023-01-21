@@ -9,6 +9,6 @@ public record CreateSocialActionResponse(
     int OrganizationId,
     int VolunteerCreatorId,
     States State,
-    Interests Interests,
+    List<Interests> Interests,
     DateTimeOffset OccurrenceDate,
     DateTimeOffset CreatedAt);

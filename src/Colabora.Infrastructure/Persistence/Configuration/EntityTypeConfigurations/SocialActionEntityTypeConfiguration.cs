@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Entities;
+using Colabora.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,5 +11,20 @@ public class SocialActionEntityTypeConfiguration : IEntityTypeConfiguration<Soci
     {
         builder.HasKey(action => action.SocialActionId);
         builder.Property(action => action.SocialActionId).ValueGeneratedOnAdd();
+
+        builder
+            .HasOne<Organization>(action => action.Organization)
+            .WithMany(organization => organization.SocialActions)
+            .HasForeignKey(action => action.OrganizationId)
+            .HasConstraintName("FK_ORGANIZATION");
+        
+        
+        
+        builder.Property(organization => organization.Interests)
+            .IsRequired()
+            .HasConversion(
+                interests => string.Join(",", interests.Select(i => i.ToString())),
+                interests => interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
+
     }
 }

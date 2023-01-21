@@ -29,4 +29,5 @@ public class Organization
     public List<Interests> Interests { get; }
     public int CreatedBy { get; }
     public DateTime CreatedAt { get; }
+    public IEnumerable<SocialAction> SocialActions { get; }
 }
