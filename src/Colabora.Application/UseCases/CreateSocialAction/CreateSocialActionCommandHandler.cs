@@ -47,6 +47,7 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
             return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateInternalError(e.Message));
         }
     }
+    
     private async Task<bool> OrganizationNotExists(int organizationId) =>
         await _organizationRepository.GetOrganizationById(organizationId) == Organization.None;
 
