@@ -12,10 +12,10 @@ public class GetSocialActionsQueryHandler : IGetSocialActionsQueryHandler
     private readonly ILogger<GetSocialActionsQueryHandler> _logger;
     private readonly ISocialActionRepository _socialActionRepository;
 
-    public GetSocialActionsQueryHandler(ISocialActionRepository socialActionRepository, ILogger<GetSocialActionsQueryHandler> logger)
+    public GetSocialActionsQueryHandler(ILogger<GetSocialActionsQueryHandler> logger, ISocialActionRepository socialActionRepository)
     {
-        _socialActionRepository = socialActionRepository;
         _logger = logger;
+        _socialActionRepository = socialActionRepository;
     }
 
     public async Task<Result<GetSocialActionsResponse>> Handle(GetSocialActionsQuery request, CancellationToken cancellationToken)
