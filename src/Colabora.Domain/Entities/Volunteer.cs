@@ -1,5 +1,7 @@
 ﻿using Colabora.Domain.Enums;
 
+#pragma warning disable CS8618
+
 namespace Colabora.Domain.Entities;
 
 public class Volunteer
