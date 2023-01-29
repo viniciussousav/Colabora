@@ -47,7 +47,7 @@ public class GetSocialActionsQueryHandlerTests
     public async Task Given_A_Query_When_There_Are_Social_Actions_Then_It_Should_Return_A_List_With_Social_Actions()
     {
         // Arrange
-        var socialActions = new List<SocialAction>()
+        var socialActions = new List<SocialAction>
         {
             FakeSocialAction.Create(),
             FakeSocialAction.Create()

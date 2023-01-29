@@ -28,9 +28,9 @@ public class SocialActionController : ControllerBase
     } 
     
     [HttpGet]
-    public async Task<IActionResult> GetSocialActions(GetSocialActionsQuery query)
+    public async Task<IActionResult> GetSocialActions()
     {
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(new GetSocialActionsQuery());
 
         return result.IsValid
             ? Ok(result.Value)

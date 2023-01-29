@@ -9,6 +9,7 @@ using Colabora.IntegrationTests.Fixtures;
 using Colabora.TestCommons.Fakers;
 using Colabora.WebAPI;
 using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
@@ -18,13 +19,16 @@ namespace Colabora.IntegrationTests.Controllers.OrganizationControllerTests;
 
 public class RegisterOrganizationEndpointTests : 
     IClassFixture<WebApplicationFactory<Program>>, 
+    IClassFixture<DatabaseFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
-
-    public RegisterOrganizationEndpointTests(WebApplicationFactory<Program> factory)
+    private readonly DatabaseFixture _databaseFixture;
+    
+    public RegisterOrganizationEndpointTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
     {
-        _factory = factory;
+        _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+        _databaseFixture = databaseFixture;
     }
 
     [Fact]
@@ -98,17 +102,11 @@ public class RegisterOrganizationEndpointTests :
         var errorResponse = await result.Content.ReadFromJsonAsync<Error>();
         errorResponse.Should().NotBeNull();
         errorResponse.Code.Should().Be("CreateOrganizationConflict");
-        errorResponse.Message.Should().Be($"Already exist an organization with same name and email created by this user");
+        errorResponse.Message.Should().Be("Already exist an organization with same name and email created by this user");
     }
+    
+    public async Task InitializeAsync() => await _databaseFixture.ResetDatabase();
 
-
-    public async Task InitializeAsync()
-    {
-        await DatabaseFixture.ResetDatabase();
-    }
-
-    public async Task DisposeAsync()
-    {
-        await DatabaseFixture.ResetDatabase();
-    }
+    public async Task DisposeAsync() => await _databaseFixture.ResetDatabase();
+    
 }

@@ -36,5 +36,5 @@ app.Run();
 // ReSharper disable once ClassNeverInstantiated.Global
 namespace Colabora.WebAPI
 {
-    public partial class Program { }
+    public class Program { }
 }

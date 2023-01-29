@@ -23,13 +23,16 @@ namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 
 public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
+    IClassFixture<DatabaseFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
+    private readonly DatabaseFixture _databaseFixture;
 
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory)
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+        _databaseFixture = databaseFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
@@ -70,16 +73,16 @@ public partial class VolunteerControllerTests :
         getVolunteersResponse.Should().NotBeNull();
         getVolunteersResponse.Volunteers.Should().NotBeEmpty();
 
-        var registeredVolunteer = getVolunteersResponse.Volunteers.First();
-        registeredVolunteer.VolunteerId.Should().BePositive();
-        registeredVolunteer.Email.Should().Be(command.Email);
-        registeredVolunteer.FirstName.Should().Be(command.FirstName);
-        registeredVolunteer.LastName.Should().Be(command.LastName);
-        registeredVolunteer.State.Should().Be(command.State);
-        registeredVolunteer.Interests.Should().BeEquivalentTo(command.Interests);
-        registeredVolunteer.Birthdate.Should().Be(command.Birthdate);
-        registeredVolunteer.Gender.Should().Be(command.Gender);
-        registeredVolunteer.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        var getVolunteersItemResponse = getVolunteersResponse.Volunteers.First();
+        getVolunteersItemResponse.VolunteerId.Should().BePositive();
+        getVolunteersItemResponse.Email.Should().Be(command.Email);
+        getVolunteersItemResponse.FirstName.Should().Be(command.FirstName);
+        getVolunteersItemResponse.LastName.Should().Be(command.LastName);
+        getVolunteersItemResponse.State.Should().Be(command.State);
+        getVolunteersItemResponse.Interests.Should().BeEquivalentTo(command.Interests);
+        getVolunteersItemResponse.Birthdate.Should().Be(command.Birthdate);
+        getVolunteersItemResponse.Gender.Should().Be(command.Gender);
+        getVolunteersItemResponse.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
     }
     
     [Theory(DisplayName = "Given a get volunteers request, when there are volunteers registered, then it should return an array with registered volunteers")]
@@ -145,13 +148,7 @@ public partial class VolunteerControllerTests :
         errorResponse.Message.Should().Be("Hello Exception");
     }
     
-    public async Task InitializeAsync()
-    {
-        await DatabaseFixture.ResetDatabase();
-    }
+    public async Task InitializeAsync() => await _databaseFixture.ResetDatabase();
 
-    public async Task DisposeAsync()
-    {
-        await DatabaseFixture.ResetDatabase();
-    }
+    public async Task DisposeAsync() => await _databaseFixture.ResetDatabase();
 }

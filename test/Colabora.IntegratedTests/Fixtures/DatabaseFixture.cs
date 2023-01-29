@@ -1,13 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Colabora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Colabora.IntegrationTests.Fixtures;
 
-public static class DatabaseFixture
+public class DatabaseFixture
 {
+    private readonly AppDbContext _appDbContext;
+    public DatabaseFixture()
+    {
+        _appDbContext = CreateContext();
+    }
+    
     private static IConfiguration GetConfiguration() =>
         new ConfigurationBuilder()
             .AddJsonFile("appsettings.Test.json")
@@ -21,43 +26,9 @@ public static class DatabaseFixture
                 .UseSqlServer(connectionString)
                 .Options);
     }
-
-    private static async Task ClearDatabase()
-    {
-        try
-        {
-            var appDbContext = CreateContext();
-        
-            appDbContext.RemoveRange(appDbContext.Volunteers);
-            appDbContext.RemoveRange(appDbContext.Organizations);
-            appDbContext.RemoveRange(appDbContext.SocialActions);
-
-            await appDbContext.SaveChangesAsync();
-            await appDbContext.DisposeAsync();
-        }
-        catch (Exception)
-        {
-            // Ignore if database is already empty
-        }
-    }
     
-    private static async Task ApplyMigration()
+    public async Task ResetDatabase()
     {
-        try
-        {
-            var appDbContext = CreateContext();
-            await appDbContext.Database.MigrateAsync();
-            await appDbContext.DisposeAsync();
-        }
-        catch (Exception)
-        {
-            // Ignore if database already exists
-        }
-    }
-
-    public static async Task ResetDatabase()
-    {
-        await ApplyMigration();
-        await ClearDatabase();
+        await _appDbContext.Database.EnsureDeletedAsync();
     }
 }
