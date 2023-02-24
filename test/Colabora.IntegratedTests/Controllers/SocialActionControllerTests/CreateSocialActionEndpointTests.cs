@@ -31,7 +31,6 @@ public partial class SocialActionControllerTests :
     private readonly WebApplicationFactory<Program> _factory;
     private readonly DatabaseFixture _databaseFixture;
 
-    
     public SocialActionControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));

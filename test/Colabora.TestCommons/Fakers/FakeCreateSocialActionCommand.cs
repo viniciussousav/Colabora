@@ -17,7 +17,7 @@ public static class FakeCreateSocialActionCommand
             OrganizationId: organizationId ?? Faker.Random.Int(min: 1),
             VolunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int(min: 1),
             State: Faker.Random.Enum(exclude: States.Undefined),
-            Interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
+            Interests: Faker.Random.EnumValues(exclude: Interests.Undefined, count: Faker.Random.Int(min: 1, max: 4)).ToList(),
             OccurrenceDate: Faker.Date.Future());
     }
 }
