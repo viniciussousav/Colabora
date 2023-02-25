@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Colabora.Application.Shared;
 using Colabora.Infrastructure.Persistence.Extensions;
 using Colabora.WebAPI.Configuration;
@@ -5,7 +7,12 @@ using Colabora.WebAPI.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationDependencies();
 
