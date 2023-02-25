@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Shared.Mappers;
-using Colabora.Application.UseCases.GetSocialActions;
-using Colabora.Application.UseCases.GetSocialActions.Models;
+using Colabora.Application.Features.GetSocialActions;
+using Colabora.Application.Features.GetSocialActions.Models;
+using Colabora.Application.Mappers;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
@@ -40,7 +40,7 @@ public class GetSocialActionsQueryHandlerTests
         // Assert
         result.IsValid.Should().BeTrue();
         result.Value.Should().NotBeNull();
-        result.Value.SocialActions.Should().BeEmpty();
+        result.Value!.SocialActions.Should().BeEmpty();
     }
     
     [Fact]
@@ -62,7 +62,7 @@ public class GetSocialActionsQueryHandlerTests
         // Assert
         result.IsValid.Should().BeTrue();
         result.Value.Should().NotBeNull();
-        result.Value.SocialActions.Should().HaveCount(2);
+        result.Value!.SocialActions.Should().HaveCount(2);
         result.Value.SocialActions[0].Should().BeEquivalentTo(socialActions[0].MapToGetSocialActionsItem());
         result.Value.SocialActions[1].Should().BeEquivalentTo(socialActions[1].MapToGetSocialActionsItem());
     }

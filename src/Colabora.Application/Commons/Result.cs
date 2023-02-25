@@ -1,6 +1,4 @@
-﻿using Colabora.Domain.Exceptions;
-
-namespace Colabora.Application.Commons;
+﻿namespace Colabora.Application.Commons;
 
 public partial class Result
 {

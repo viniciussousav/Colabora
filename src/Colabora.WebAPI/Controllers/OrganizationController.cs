@@ -1,4 +1,4 @@
-﻿using Colabora.Application.UseCases.RegisterOrganization.Models;
+﻿using Colabora.Application.Features.RegisterOrganization.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,7 @@
 ﻿using System.Net;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable CS8618
 
 namespace Colabora.Application.Commons;
 
@@ -21,7 +24,7 @@ public class Error
         Message = string.Format(message, args);
         StatusCode = (int) statusCode;
     }
-    
+
     public string Code { get; set; }
     public string Message { get; set; }
     public int StatusCode { get; set; }

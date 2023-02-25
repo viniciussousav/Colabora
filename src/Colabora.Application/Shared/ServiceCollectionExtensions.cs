@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Colabora.Application.UseCases.CreateSocialAction.Models;
-using Colabora.Application.UseCases.GetVolunteers.Models;
-using Colabora.Application.UseCases.RegisterOrganization.Models;
-using Colabora.Application.UseCases.RegisterVolunteer.Models;
+using Colabora.Application.Features.CreateSocialAction.Models;
+using Colabora.Application.Features.GetVolunteers.Models;
+using Colabora.Application.Features.RegisterOrganization.Models;
+using Colabora.Application.Features.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

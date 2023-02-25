@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.UseCases.GetSocialActions.Models;
-using Colabora.Application.UseCases.RegisterOrganization.Models;
-using Colabora.Application.UseCases.RegisterVolunteer.Models;
+using Colabora.Application.Features.GetSocialActions.Models;
+using Colabora.Application.Features.RegisterOrganization.Models;
+using Colabora.Application.Features.RegisterVolunteer.Models;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+#pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;
 

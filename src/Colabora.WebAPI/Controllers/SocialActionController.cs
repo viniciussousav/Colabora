@@ -1,5 +1,5 @@
-﻿using Colabora.Application.UseCases.CreateSocialAction.Models;
-using Colabora.Application.UseCases.GetSocialActions.Models;
+﻿using Colabora.Application.Features.CreateSocialAction.Models;
+using Colabora.Application.Features.GetSocialActions.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

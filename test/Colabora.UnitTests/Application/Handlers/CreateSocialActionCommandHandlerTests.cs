@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Colabora.Application.Features.CreateSocialAction;
+using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Application.Shared.Mappers;
-using Colabora.Application.UseCases.CreateSocialAction;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;

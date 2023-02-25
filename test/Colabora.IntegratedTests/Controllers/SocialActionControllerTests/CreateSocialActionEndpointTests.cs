@@ -4,10 +4,10 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
+using Colabora.Application.Features.CreateSocialAction.Models;
+using Colabora.Application.Features.RegisterOrganization.Models;
+using Colabora.Application.Features.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
-using Colabora.Application.UseCases.CreateSocialAction.Models;
-using Colabora.Application.UseCases.RegisterOrganization.Models;
-using Colabora.Application.UseCases.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.IntegrationTests.Fixtures;
@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+#pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;
 
