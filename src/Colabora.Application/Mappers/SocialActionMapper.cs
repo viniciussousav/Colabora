@@ -1,6 +1,7 @@
 ﻿using Colabora.Application.Features.CreateSocialAction.Models;
 using Colabora.Application.Features.GetSocialActions.Models;
 using Colabora.Domain.Entities;
+using Colabora.Domain.ValueObjects;
 
 namespace Colabora.Application.Mappers;
 
@@ -14,6 +15,7 @@ public static class SocialActionMapper
             volunteerCreatorId: command.VolunteerCreatorId,
             state: command.State,
             interests: command.Interests,
+            participations: new List<Participation>(),
             occurrenceDate: command.OccurrenceDate,
             createdAt: DateTimeOffset.Now);
     

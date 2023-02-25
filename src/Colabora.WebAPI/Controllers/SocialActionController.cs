@@ -1,5 +1,7 @@
 ﻿using Colabora.Application.Features.CreateSocialAction.Models;
 using Colabora.Application.Features.GetSocialActions.Models;
+using Colabora.Application.Features.JoinSocialAction;
+using Colabora.Application.Features.JoinSocialAction.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +34,19 @@ public class SocialActionController : ControllerBase
     {
         var result = await _mediator.Send(new GetSocialActionsQuery());
 
+        return result.IsValid
+            ? Ok(result.Value)
+            : StatusCode(result.FailureStatusCode, result.Error);
+    }
+    
+    [HttpPut("{id:int}/join")]
+    public async Task<IActionResult> JoinSocialAction([FromRoute]int id, [FromBody] JoinSocialActionCommand command)
+    {
+        if (id != command.SocialActionId)
+            return BadRequest();
+        
+        var result = await _mediator.Send(command);
+        
         return result.IsValid
             ? Ok(result.Value)
             : StatusCode(result.FailureStatusCode, result.Error);

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
+using Colabora.Domain.ValueObjects;
 
 namespace Colabora.TestCommons.Fakers;
 
@@ -19,6 +21,7 @@ public static class FakeSocialAction
             volunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int(min: 1),
             state: Faker.Random.Enum(exclude: States.Undefined),
             interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
+            participations: new List<Participation>(),
             occurrenceDate: Faker.Date.Future(),
             createdAt: DateTimeOffset.Now);
     }

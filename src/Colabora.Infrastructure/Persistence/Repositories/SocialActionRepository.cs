@@ -24,4 +24,13 @@ public class SocialActionRepository : ISocialActionRepository
     {
         return await _dbContext.SocialActions.AsNoTracking().ToListAsync();
     }
+    
+    public async Task<SocialAction> GetSocialActionById(int id, CancellationToken cancellationToken)
+    {
+        return await _dbContext.SocialActions
+            .AsNoTracking()
+            .Include(action => action.Participations)
+                .ThenInclude(participation => participation.Volunteer)
+            .FirstOrDefaultAsync(action => action.SocialActionId == id, cancellationToken) ?? SocialAction.None;
+    }
 }

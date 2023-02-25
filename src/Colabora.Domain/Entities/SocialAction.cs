@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Enums;
+using Colabora.Domain.ValueObjects;
 
 #pragma warning disable CS8618
 
@@ -17,6 +18,7 @@ public class SocialAction
         int volunteerCreatorId,
         States state,
         List<Interests> interests,
+        List<Participation> participations,
         DateTimeOffset occurrenceDate,
         DateTimeOffset createdAt)
     {
@@ -26,6 +28,7 @@ public class SocialAction
         VolunteerCreatorId = volunteerCreatorId;
         State = state;
         Interests = interests;
+        Participations = participations;
         OccurrenceDate = occurrenceDate;
         CreatedAt = createdAt;
     }
@@ -38,6 +41,13 @@ public class SocialAction
     public int VolunteerCreatorId { get; }
     public States State { get; }
     public List<Interests> Interests { get; }
+    public List<Participation> Participations { get; }
     public DateTimeOffset OccurrenceDate { get; }
     public DateTimeOffset CreatedAt { get; }
+
+    public void AddParticipation(Participation participation)
+    {
+        Participations.Add(participation);
+    }
+    
 }
