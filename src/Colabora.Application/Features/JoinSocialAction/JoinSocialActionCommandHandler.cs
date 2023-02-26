@@ -36,8 +36,10 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
             if(!await VolunteerExists(command.VolunteerId))
                 return Result.Fail<JoinSocialActionResponse>(ErrorMessages.CreateVolunteerNotFound());
 
-            var participation = new Participation(command.SocialActionId, command.VolunteerId, DateTimeOffset.Now);
-            socialAction.AddParticipation(participation);
+            if (socialAction.Participations.Exists(p => p.VolunteerId == command.VolunteerId))
+                return Result.Fail<JoinSocialActionResponse>(ErrorMessages.CreateJoinSocialActionConflict());
+
+            await CreateParticipation(socialAction, command.VolunteerId);
 
             return Result.Success(new JoinSocialActionResponse());
         }
@@ -50,4 +52,11 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
     
     private async Task<bool> VolunteerExists(int volunteerId)
         => await _volunteerRepository.GetVolunteerById(volunteerId) != Volunteer.None;
+
+    private async Task CreateParticipation(SocialAction socialAction, int volunteerId)
+    {
+        var participation = new Participation(socialAction.SocialActionId, volunteerId, DateTimeOffset.Now);
+        socialAction.AddParticipation(participation);
+        await _socialActionRepository.UpdateSocialAction(socialAction);
+    }
 }

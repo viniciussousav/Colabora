@@ -7,6 +7,7 @@ public static class ErrorMessages
 {
     public const string CreateOrganizationConflict = "Already exist an organization with same name and email created by this user";
     public const string VolunteerEmailConflict = "Already exist an volunteer with email {0} registered";
+    public const string JoinSocialActionConflict = "Volunteer is already registered";
     
     public const string VolunteerNotFound = "Volunteer not found";
     public const string OrganizationNotFound = "Organization not found";
@@ -31,4 +32,7 @@ public static class ErrorMessages
 
     public static Error CreateSocialActionNotFound()
         => new(nameof(SocialActionNotFound), HttpStatusCode.NotFound, SocialActionNotFound);
+
+    public static Error CreateJoinSocialActionConflict()
+        => new(nameof(JoinSocialActionConflict), HttpStatusCode.Conflict, JoinSocialActionConflict);
 }

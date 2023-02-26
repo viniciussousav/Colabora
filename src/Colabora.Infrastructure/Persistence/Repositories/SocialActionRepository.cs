@@ -33,4 +33,10 @@ public class SocialActionRepository : ISocialActionRepository
                 .ThenInclude(participation => participation.Volunteer)
             .FirstOrDefaultAsync(action => action.SocialActionId == id, cancellationToken) ?? SocialAction.None;
     }
+
+    public async Task UpdateSocialAction(SocialAction socialAction)
+    {
+        _dbContext.SocialActions.Update(socialAction);
+        await _dbContext.SaveChangesAsync();
+    }
 }
