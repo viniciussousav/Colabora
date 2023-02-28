@@ -6,6 +6,7 @@ using Colabora.Application.Features.JoinSocialAction.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
+using Colabora.Domain.ValueObjects;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -66,7 +67,7 @@ public class JoinSocialActionCommandHandlerTests
     }
     
     [Fact]
-    public async Task Given_A_Join_Social_Action_Command_When_Succeeds_Then_It_Should_Return_An_Error()
+    public async Task Given_A_Join_Social_Action_Command_When_Succeeds_Then_It_Should_A_Valid_Result()
     {
         // Arrange
         var socialAction = FakeSocialAction.Create();
@@ -96,7 +97,7 @@ public class JoinSocialActionCommandHandlerTests
         
         _socialActionRepository.GetSocialActionById(socialAction.SocialActionId, CancellationToken.None).Returns(socialAction);
         _volunteerRepository.GetVolunteerById(command.VolunteerId).Returns(volunteer);
-        _socialActionRepository.UpdateSocialAction(socialAction).Throws(new TaskCanceledException("Timeout"));
+        _socialActionRepository.CreateParticipation(socialAction.SocialActionId, Arg.Any<Participation>()).Throws(new TaskCanceledException("Timeout"));
         
         var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository);
 

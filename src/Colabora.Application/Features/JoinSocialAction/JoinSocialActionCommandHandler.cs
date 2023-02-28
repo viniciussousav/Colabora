@@ -32,16 +32,23 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
         
             if(socialAction == SocialAction.None)
                 return Result.Fail<JoinSocialActionResponse>(ErrorMessages.CreateSocialActionNotFound());
+
+            var volunteer = await _volunteerRepository.GetVolunteerById(command.VolunteerId);
             
-            if(!await VolunteerExists(command.VolunteerId))
+            if(volunteer == Volunteer.None)
                 return Result.Fail<JoinSocialActionResponse>(ErrorMessages.CreateVolunteerNotFound());
 
             if (socialAction.Participations.Exists(p => p.VolunteerId == command.VolunteerId))
                 return Result.Fail<JoinSocialActionResponse>(ErrorMessages.CreateJoinSocialActionConflict());
 
-            await CreateParticipation(socialAction, command.VolunteerId);
+            var participation = await CreateParticipation(socialAction.SocialActionId, command.VolunteerId);
 
-            return Result.Success(new JoinSocialActionResponse());
+            var response = new JoinSocialActionResponse(
+                VolunteerName: $"{volunteer.FirstName} {volunteer.LastName}",
+                SocialActionName: socialAction.Title,
+                participation.JoinedAt);
+            
+            return Result.Success(response);
         }
         catch (Exception e)
         {
@@ -50,13 +57,10 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
         }
     }
     
-    private async Task<bool> VolunteerExists(int volunteerId)
-        => await _volunteerRepository.GetVolunteerById(volunteerId) != Volunteer.None;
-
-    private async Task CreateParticipation(SocialAction socialAction, int volunteerId)
+    private async Task<Participation> CreateParticipation(int socialActionId, int volunteerId)
     {
-        var participation = new Participation(socialAction.SocialActionId, volunteerId, DateTimeOffset.Now);
-        socialAction.AddParticipation(participation);
-        await _socialActionRepository.UpdateSocialAction(socialAction);
+        var participation = new Participation(socialActionId, volunteerId, DateTimeOffset.Now);
+        await _socialActionRepository.CreateParticipation(socialActionId, participation);
+        return participation;
     }
 }

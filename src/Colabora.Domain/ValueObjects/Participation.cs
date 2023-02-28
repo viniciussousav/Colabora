@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Entities;
+#pragma warning disable CS8618
 
 namespace Colabora.Domain.ValueObjects;
 
@@ -15,8 +16,8 @@ public class Participation
         JoinedAt = joinedAt;
     }
     
+    public SocialAction SocialAction { get; }
     public int SocialActionId { get; }
-    
     public Volunteer Volunteer { get; }
     public int VolunteerId { get; }
     public DateTimeOffset JoinedAt { get; }

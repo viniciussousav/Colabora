@@ -39,7 +39,7 @@ public class SocialActionController : ControllerBase
             : StatusCode(result.FailureStatusCode, result.Error);
     }
     
-    [HttpPut("{id:int}/join")]
+    [HttpPost("{id:int}/join")]
     public async Task<IActionResult> JoinSocialAction([FromRoute]int id, [FromBody] JoinSocialActionCommand command)
     {
         if (id != command.SocialActionId)

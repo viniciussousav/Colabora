@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Enums;
+using Colabora.Domain.ValueObjects;
 
 #pragma warning disable CS8618
 
@@ -36,5 +37,6 @@ public class Volunteer
     public Gender Gender { get; }
     public List<Interests> Interests { get; }
     public States State { get; }
+    public List<Participation> Participations { get; }
     public DateTime CreateAt { get; }
 }

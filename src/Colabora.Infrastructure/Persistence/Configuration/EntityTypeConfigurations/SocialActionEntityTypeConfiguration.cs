@@ -9,7 +9,7 @@ public class SocialActionEntityTypeConfiguration : IEntityTypeConfiguration<Soci
 {
     public void Configure(EntityTypeBuilder<SocialAction> builder)
     {
-        builder.ToTable("SOCIAL_ACTIONS");
+        builder.ToTable("SOCIAL_ACTION");
 
         builder.HasKey(action => action.SocialActionId);
         builder.Property(action => action.SocialActionId).ValueGeneratedOnAdd();
@@ -44,5 +44,10 @@ public class SocialActionEntityTypeConfiguration : IEntityTypeConfiguration<Soci
                 interests => string.Join(",", interests.Select(i => i.ToString())),
                 interests => interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
 
+        builder
+            .HasMany(p => p.Participations)
+            .WithOne(participation => participation.SocialAction)
+            .HasForeignKey(participation => participation.SocialActionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

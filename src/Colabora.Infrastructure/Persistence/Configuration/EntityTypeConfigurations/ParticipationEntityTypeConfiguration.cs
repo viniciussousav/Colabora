@@ -1,5 +1,4 @@
-﻿using Colabora.Domain.Entities;
-using Colabora.Domain.ValueObjects;
+﻿using Colabora.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,20 +8,22 @@ public class ParticipationEntityTypeConfiguration : IEntityTypeConfiguration<Par
 {
     public void Configure(EntityTypeBuilder<Participation> builder)
     {
+        builder.ToTable("PARTICIPATION");
+        
         builder.HasKey(participation => new {participation.SocialActionId, participation.VolunteerId});
-        
+
         builder
-            .HasOne<Volunteer>()
-            .WithMany()
+            .HasOne(v => v.Volunteer)
+            .WithMany(volunteer => volunteer.Participations)
             .HasForeignKey(participation => participation.VolunteerId)
-            .HasConstraintName("FK_VOLUNTEER");
-        
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder
-            .HasOne<SocialAction>()
-            .WithMany()
+            .HasOne(v => v.SocialAction)
+            .WithMany(action => action.Participations)
             .HasForeignKey(participation => participation.SocialActionId)
-            .HasConstraintName("FK_SOCIAL_ACTION");
-        
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(participation => participation.JoinedAt).IsRequired();
     }
 }

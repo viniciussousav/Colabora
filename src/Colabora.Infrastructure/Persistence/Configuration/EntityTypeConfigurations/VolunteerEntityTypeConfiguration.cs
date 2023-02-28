@@ -41,6 +41,12 @@ public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunte
                     string.IsNullOrWhiteSpace(interests)
                     ? new List<Interests>()
                     : interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
+
+        builder
+            .HasMany(volunteer => volunteer.Participations)
+            .WithOne(participation => participation.Volunteer)
+            .HasForeignKey(participation => participation.VolunteerId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(volunteer => volunteer.CreateAt)
             .HasDefaultValueSql("GETDATE()");
