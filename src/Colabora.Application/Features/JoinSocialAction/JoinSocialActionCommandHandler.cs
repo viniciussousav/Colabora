@@ -44,7 +44,7 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
             var participation = await CreateParticipation(socialAction.SocialActionId, command.VolunteerId);
 
             var response = new JoinSocialActionResponse(
-                VolunteerName: $"{volunteer.FirstName} {volunteer.LastName}",
+                VolunteerName: volunteer.FullName,
                 SocialActionName: socialAction.Title,
                 participation.JoinedAt);
             

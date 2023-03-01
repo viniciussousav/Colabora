@@ -32,6 +32,7 @@ public class Volunteer
     public int VolunteerId { get; }
     public string FirstName { get; }
     public string LastName { get; }
+    public string FullName => $"{FirstName} {LastName}";
     public string Email { get; }
     public DateTime Birthdate { get; }
     public Gender Gender { get; }

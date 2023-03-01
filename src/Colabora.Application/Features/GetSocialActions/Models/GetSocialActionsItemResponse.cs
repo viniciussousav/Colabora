@@ -2,7 +2,7 @@
 
 namespace Colabora.Application.Features.GetSocialActions.Models;
 
-public record GetSocialActionsItem(
+public record GetSocialActionsItemResponse(
     int SocialActionId,
     string Title,
     string Description,

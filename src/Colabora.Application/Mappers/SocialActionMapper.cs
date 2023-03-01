@@ -1,4 +1,5 @@
 ﻿using Colabora.Application.Features.CreateSocialAction.Models;
+using Colabora.Application.Features.GetSocialActionById.Models;
 using Colabora.Application.Features.GetSocialActions.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.ValueObjects;
@@ -31,7 +32,7 @@ public static class SocialActionMapper
             OccurrenceDate: socialAction.OccurrenceDate,
             CreatedAt: socialAction.CreatedAt);
     
-    public static GetSocialActionsItem MapToGetSocialActionsItem(this SocialAction socialAction)
+    public static GetSocialActionsItemResponse MapToGetSocialActionsItem(this SocialAction socialAction)
         => new (
             SocialActionId: socialAction.SocialActionId,
             Title: socialAction.Title,
@@ -42,4 +43,21 @@ public static class SocialActionMapper
             Interests: socialAction.Interests,
             OccurrenceDate: socialAction.OccurrenceDate,
             CreatedAt: socialAction.CreatedAt);
+    
+    public static GetSocialActionByIdResponse MapToGetSocialActionByIdResponse(this SocialAction socialAction)
+        => new (
+            SocialActionId: socialAction.SocialActionId,
+            Title: socialAction.Title,
+            Description: socialAction.Description,
+            OrganizationId: socialAction.OrganizationId,
+            VolunteerCreatorId: socialAction.VolunteerCreatorId,
+            State: socialAction.State,
+            Interests: socialAction.Interests,
+            OccurrenceDate: socialAction.OccurrenceDate,
+            CreatedAt: socialAction.CreatedAt,
+            Participations: socialAction.Participations.Select(
+                p => new ParticipationDetails(
+                    VolunteerId: p.VolunteerId, 
+                    FullName: $"{p.Volunteer.FullName}",
+                    JoinedAt: p.JoinedAt)).ToList());
 }
