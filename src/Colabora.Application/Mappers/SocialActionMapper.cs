@@ -56,7 +56,7 @@ public static class SocialActionMapper
             OccurrenceDate: socialAction.OccurrenceDate,
             CreatedAt: socialAction.CreatedAt,
             Participations: socialAction.Participations.Select(
-                p => new ParticipationDetails(
+                p => new ParticipationDetailsResponse(
                     VolunteerId: p.VolunteerId, 
                     FullName: $"{p.Volunteer.FullName}",
                     JoinedAt: p.JoinedAt)).ToList());

@@ -31,10 +31,10 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
     {
         try
         {
-            if (await OrganizationNotExists(command.OrganizationId))
+            if (!await OrganizationExists(command.OrganizationId))
                 return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateOrganizationNotFound());
         
-            if (await VolunteerCreatorNotExists(command.VolunteerCreatorId))
+            if (!await VolunteerCreatorExists(command.VolunteerCreatorId))
                 return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateVolunteerNotFound());
 
             var socialAction = await _socialActionRepository.CreateSocialAction(command.MapToSocialAction());
@@ -48,9 +48,9 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
         }
     }
     
-    private async Task<bool> OrganizationNotExists(int organizationId) =>
-        await _organizationRepository.GetOrganizationById(organizationId) == Organization.None;
+    private async Task<bool> OrganizationExists(int organizationId) =>
+        await _organizationRepository.GetOrganizationById(organizationId) != Organization.None;
 
-    private async Task<bool> VolunteerCreatorNotExists(int volunteerId) =>
-        await _volunteerRepository.GetVolunteerById(volunteerId) == Volunteer.None;
+    private async Task<bool> VolunteerCreatorExists(int volunteerId) =>
+        await _volunteerRepository.GetVolunteerById(volunteerId) != Volunteer.None;
 }
