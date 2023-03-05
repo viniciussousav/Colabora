@@ -1,3 +1,4 @@
+using Colabora.Application.Features.GetVolunteerById.Models;
 using Colabora.Application.Features.GetVolunteers.Models;
 using Colabora.Application.Features.RegisterVolunteer.Models;
 using MediatR;
@@ -21,6 +22,16 @@ public class VolunteerController : ControllerBase
     public async Task<IActionResult> GetVolunteers()
     {
         var result = await _mediator.Send(new GetVolunteersQuery());
+
+        return result.IsValid  
+            ? Ok(result.Value)
+            : StatusCode(result.FailureStatusCode, result.Error);
+    }
+    
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetVolunteerById([FromRoute] int id)
+    {
+        var result = await _mediator.Send(new GetVolunteerByIdQuery(id));
 
         return result.IsValid  
             ? Ok(result.Value)

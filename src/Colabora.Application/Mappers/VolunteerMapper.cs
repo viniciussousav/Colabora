@@ -1,4 +1,5 @@
-﻿using Colabora.Application.Features.GetVolunteers.Models;
+﻿using Colabora.Application.Features.GetVolunteerById.Models;
+using Colabora.Application.Features.GetVolunteers.Models;
 using Colabora.Application.Features.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 
@@ -44,5 +45,25 @@ public static class VolunteerMapper
             gender: command.Gender,
             interests: command.Interests,
             birthdate: command.Birthdate);
+    }
+    
+    public static GetVolunteerByIdResponse MapToGetVolunteerByIdResponse(this Volunteer volunteer)
+    {
+        return new GetVolunteerByIdResponse(
+            VolunteerId: volunteer.VolunteerId,
+            FirstName: volunteer.FirstName,
+            LastName: volunteer.LastName,
+            Email: volunteer.Email,
+            State: volunteer.State,
+            Gender: volunteer.Gender,
+            Interests: volunteer.Interests,
+            Birthdate: volunteer.Birthdate,
+            CreatedAt: volunteer.CreateAt,
+            Participations: volunteer.Participations.Select(
+                participation => new VolunteerParticipationDetails(
+                    SocialActionId: participation.SocialActionId,
+                    SocialActionTitle: participation.SocialAction.Title,
+                    JoinedAt: participation.JoinedAt,
+                    OccurrenceDate: participation.SocialAction.OccurrenceDate)).ToList());
     }
 }

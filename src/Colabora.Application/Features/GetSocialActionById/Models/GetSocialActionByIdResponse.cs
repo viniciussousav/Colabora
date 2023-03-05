@@ -12,9 +12,9 @@ public record GetSocialActionByIdResponse(
     List<Interests> Interests,
     DateTimeOffset OccurrenceDate,
     DateTimeOffset CreatedAt,
-    List<ParticipationDetailsResponse> Participations);
+    List<SocialActionParticipationDetails> Participations);
 
-public record ParticipationDetailsResponse(
+public record SocialActionParticipationDetails(
     int VolunteerId,
     string FullName,
     DateTimeOffset JoinedAt);

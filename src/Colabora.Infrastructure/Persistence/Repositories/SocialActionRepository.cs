@@ -43,7 +43,7 @@ public class SocialActionRepository : ISocialActionRepository
                                .FirstOrDefaultAsync(action => action.SocialActionId == socialActionId)
             ?? throw new InvalidSocialActionException($"Social action with id {socialActionId} not exists");
 
-        socialAction.Participations.Add(participation);
+        socialAction.AddParticipation(participation);
         await _dbContext.SaveChangesAsync();
     }
 }
