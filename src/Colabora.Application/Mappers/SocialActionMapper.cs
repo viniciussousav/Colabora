@@ -57,6 +57,6 @@ public static class SocialActionMapper
             Participations: socialAction.Participations.Select(
                 p => new SocialActionParticipationDetails(
                     VolunteerId: p.VolunteerId, 
-                    FullName: $"{p.Volunteer.FullName}",
+                    FullName: p.Volunteer.FullName,
                     JoinedAt: p.JoinedAt)).ToList());
 }

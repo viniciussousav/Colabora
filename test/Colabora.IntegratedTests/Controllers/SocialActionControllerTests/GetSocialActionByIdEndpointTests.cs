@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Colabora.Application.Commons;
 using Colabora.Application.Features.CreateSocialAction.Models;
 using Colabora.Application.Features.GetSocialActionById.Models;
+using Colabora.Application.Features.JoinSocialAction.Models;
 using Colabora.Application.Features.RegisterOrganization.Models;
 using Colabora.Application.Features.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
@@ -55,6 +57,54 @@ public partial class SocialActionControllerTests
         getSocialActionBodyResponse.CreatedAt.Should().Be(socialAction.CreatedAt);
         getSocialActionBodyResponse.OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
         getSocialActionBodyResponse.Interests.Should().BeEquivalentTo(socialAction.Interests);
+    }
+    
+    [Fact]
+    public async Task Given_A_GetSocialActionById_Request_When_Social_Action_Exists_And_Has_Participations_Then_It_Should_Return_The_Existing_Social_Action_With_200_StatusCode()
+    {
+        // Arrange
+        var client = _factory.CreateClient();
+
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
+        var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
+        
+        var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.VolunteerId);
+        var organizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
+        var organization = await organizationResponse.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
+        
+        var createSocialActionCommand = FakeCreateSocialActionCommand.Create(volunteerCreatorId: volunteer.VolunteerId, organizationId: organization.OrganizationId);
+        var socialActionResponse = await client.PostAsJsonAsync("api/v1.0/actions/", createSocialActionCommand);
+        var socialAction = await socialActionResponse.Content.ReadFromJsonAsync<CreateSocialActionResponse>();
+        
+        var registerVolunteerForParticipationCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerForParticipationResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerForParticipationCommand);
+        var volunteerForParticipation = await registerVolunteerForParticipationResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
+        
+        var joinSocialActionCommand = new JoinSocialActionCommand(socialAction.SocialActionId, volunteerForParticipation.VolunteerId);
+        await client.PostAsJsonAsync($"api/v1.0/actions/{socialAction.SocialActionId}/join", joinSocialActionCommand);
+        
+        // Act
+        var response = await client.GetAsync($"api/v1.0/actions/{socialAction.SocialActionId}");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var getSocialActionBodyResponse = await response.Content.ReadFromJsonAsync<GetSocialActionByIdResponse>();
+        getSocialActionBodyResponse.SocialActionId.Should().Be(socialAction.SocialActionId);
+        getSocialActionBodyResponse.OrganizationId.Should().Be(socialAction.OrganizationId);
+        getSocialActionBodyResponse.Description.Should().Be(socialAction.Description);
+        getSocialActionBodyResponse.Title.Should().Be(socialAction.Title);
+        getSocialActionBodyResponse.VolunteerCreatorId.Should().Be(socialAction.VolunteerCreatorId);
+        getSocialActionBodyResponse.State.Should().Be(socialAction.State);
+        getSocialActionBodyResponse.CreatedAt.Should().Be(socialAction.CreatedAt);
+        getSocialActionBodyResponse.OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
+        getSocialActionBodyResponse.Interests.Should().BeEquivalentTo(socialAction.Interests);
+        getSocialActionBodyResponse.Participations.Should().HaveCount(1);
+        
+        var participation = getSocialActionBodyResponse.Participations.First();
+        participation.VolunteerId.Should().Be(volunteerForParticipation.VolunteerId);
+        participation.JoinedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        participation.FullName.Should().Be($"{volunteerForParticipation.FirstName} {volunteerForParticipation.LastName}");
     }
     
     [Fact]
