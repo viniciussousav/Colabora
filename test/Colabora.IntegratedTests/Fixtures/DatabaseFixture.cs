@@ -9,7 +9,6 @@ namespace Colabora.IntegrationTests.Fixtures;
 
 public class DatabaseFixture
 {
-    private readonly AppDbContext _appDbContext;
     private readonly IConfigurationRoot _configuration;
     public DatabaseFixture()
     {
@@ -17,7 +16,6 @@ public class DatabaseFixture
             .AddJsonFile("appsettings.Test.json")
             .Build();
         
-        _appDbContext = CreateContext();
     }
     
     private AppDbContext CreateContext()
@@ -31,6 +29,8 @@ public class DatabaseFixture
     
     public async Task ResetDatabase()
     {
-        await _appDbContext.Database.EnsureDeletedAsync();
+        var ctx = CreateContext();
+        await ctx.Database.EnsureDeletedAsync();
+        await ctx.DisposeAsync();
     }
 }
