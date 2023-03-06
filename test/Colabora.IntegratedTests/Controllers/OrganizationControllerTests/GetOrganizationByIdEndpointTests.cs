@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
 using Colabora.Application.Features.CreateSocialAction.Models;
-using Colabora.Application.Features.GetOrganizationById;
 using Colabora.Application.Features.GetOrganizationById.Models;
 using Colabora.Application.Features.RegisterOrganization.Models;
 using Colabora.Application.Features.RegisterVolunteer.Models;
