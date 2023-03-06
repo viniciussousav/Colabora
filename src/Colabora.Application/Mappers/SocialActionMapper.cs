@@ -2,7 +2,6 @@
 using Colabora.Application.Features.GetSocialActionById.Models;
 using Colabora.Application.Features.GetSocialActions.Models;
 using Colabora.Domain.Entities;
-using Colabora.Domain.ValueObjects;
 
 namespace Colabora.Application.Mappers;
 

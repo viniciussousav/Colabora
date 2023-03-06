@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Colabora.IntegrationTests.Controllers.OrganizationControllerTests;
 
-public class RegisterOrganizationEndpointTests : 
+public partial class RegisterOrganizationEndpointTests : 
     IClassFixture<WebApplicationFactory<Program>>, 
     IClassFixture<DatabaseFixture>,
     IAsyncLifetime

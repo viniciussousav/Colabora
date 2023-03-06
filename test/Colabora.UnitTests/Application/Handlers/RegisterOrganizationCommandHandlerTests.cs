@@ -50,7 +50,7 @@ public class RegisterOrganizationCommandHandlerTests
         // Assert
         result.Error.Should().Be(Error.Empty);
         result.IsValid.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(organization.MapToResponse());
+        result.Value.Should().BeEquivalentTo(organization.MapToRegisterOrganizationResponse());
     }
     
     [Fact(DisplayName = "Given a command, when it fails due conflict, then handler should return an error result")]

@@ -32,8 +32,16 @@ public class OrganizationRepository : IOrganizationRepository
             .FirstOrDefaultAsync(o => o.Name == name && o.CreatedBy == volunteerCreatorId) ?? Organization.None;
     }
 
-    public async Task<Organization> GetOrganizationById(int organizationId)
+    public async Task<Organization> GetOrganizationById(int organizationId, bool includeSocialActions = false)
     {
+        if (includeSocialActions)
+        {
+            return await _appDbContext.Organizations
+                .AsNoTracking()
+                .Include(organization => organization.SocialActions)
+                .FirstOrDefaultAsync(o => o.OrganizationId == organizationId) ?? Organization.None;
+        }
+        
         return await _appDbContext.Organizations
             .AsNoTracking()
             .FirstOrDefaultAsync(o => o.OrganizationId == organizationId) ?? Organization.None;

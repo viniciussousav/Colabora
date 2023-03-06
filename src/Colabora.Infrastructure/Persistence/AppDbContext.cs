@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Colabora.Domain.Entities;
-using Colabora.Domain.ValueObjects;
 using Colabora.Infrastructure.Persistence.Configuration.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
 

@@ -6,7 +6,6 @@ using Colabora.Application.Features.JoinSocialAction.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
-using Colabora.Domain.ValueObjects;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;

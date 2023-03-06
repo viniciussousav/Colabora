@@ -1,7 +1,6 @@
 ﻿using Colabora.Domain.Entities;
 using Colabora.Domain.Exceptions;
 using Colabora.Domain.Repositories;
-using Colabora.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Colabora.Infrastructure.Persistence.Repositories;

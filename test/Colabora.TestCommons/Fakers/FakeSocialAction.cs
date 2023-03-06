@@ -4,7 +4,6 @@ using System.Linq;
 using Bogus;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
-using Colabora.Domain.ValueObjects;
 
 namespace Colabora.TestCommons.Fakers;
 

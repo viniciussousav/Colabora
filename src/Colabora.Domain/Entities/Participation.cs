@@ -1,7 +1,6 @@
-﻿using Colabora.Domain.Entities;
-#pragma warning disable CS8618
+﻿#pragma warning disable CS8618
 
-namespace Colabora.Domain.ValueObjects;
+namespace Colabora.Domain.Entities;
 
 public class Participation
 {

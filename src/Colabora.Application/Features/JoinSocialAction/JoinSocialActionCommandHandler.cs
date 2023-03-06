@@ -3,7 +3,6 @@ using Colabora.Application.Features.JoinSocialAction.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
-using Colabora.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.JoinSocialAction;

@@ -1,4 +1,4 @@
-﻿using Colabora.Domain.ValueObjects;
+﻿using Colabora.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -37,7 +37,7 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
             var organization = command.MapToOrganization();
             var createdOrganization = await _organizationRepository.CreateOrganization(organization);
             
-            var response = createdOrganization.MapToResponse();
+            var response = createdOrganization.MapToRegisterOrganizationResponse();
 
             return Result.Success(response);
         }
