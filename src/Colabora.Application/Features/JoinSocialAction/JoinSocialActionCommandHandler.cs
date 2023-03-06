@@ -59,7 +59,7 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
     
     private async Task<Participation> CreateParticipation(int socialActionId, int volunteerId)
     {
-        var participation = new Participation(socialActionId, volunteerId, DateTimeOffset.Now);
+        var participation = new Participation(socialActionId, volunteerId, DateTimeOffset.UtcNow);
         await _socialActionRepository.CreateParticipation(socialActionId, participation);
         return participation;
     }

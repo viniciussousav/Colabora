@@ -10,8 +10,8 @@ public record GetVolunteerByIdResponse(
     States State,
     Gender Gender,
     List<Interests> Interests,
-    DateTime Birthdate,
-    DateTime CreatedAt,
+    DateTimeOffset Birthdate,
+    DateTimeOffset CreatedAt,
     List<VolunteerParticipationDetails> Participations);
 
 public record VolunteerParticipationDetails(
