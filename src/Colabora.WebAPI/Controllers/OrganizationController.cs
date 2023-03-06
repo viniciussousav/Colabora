@@ -1,4 +1,5 @@
 ﻿using Colabora.Application.Features.GetOrganizationById;
+using Colabora.Application.Features.GetOrganizationById.Models;
 using Colabora.Application.Features.RegisterOrganization.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 ﻿using Colabora.Domain.Enums;
 
-namespace Colabora.Application.Features.GetOrganizationById;
+namespace Colabora.Application.Features.GetOrganizationById.Models;
 
 public record GetOrganizationByIdResponse(
     int OrganizationId,

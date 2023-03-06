@@ -1,4 +1,5 @@
 ﻿using Colabora.Application.Commons;
+using Colabora.Application.Features.GetOrganizationById.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
