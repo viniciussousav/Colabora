@@ -11,8 +11,4 @@
       <Compile Remove="Organizations.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="ValueObjects" />
-    </ItemGroup>
-
 </Project>
