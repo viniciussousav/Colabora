@@ -1,0 +1,21 @@
+﻿using Colabora.Domain.Enums;
+
+namespace Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
+
+public record GetVolunteerByIdResponse(
+    int VolunteerId,
+    string FirstName,
+    string LastName,
+    string Email,
+    States State,
+    Gender Gender,
+    List<Interests> Interests,
+    DateTimeOffset Birthdate,
+    DateTimeOffset CreatedAt,
+    List<VolunteerParticipationDetails> Participations);
+
+public record VolunteerParticipationDetails(
+    int SocialActionId,
+    string SocialActionTitle,
+    DateTimeOffset JoinedAt,
+    DateTimeOffset OccurrenceDate);

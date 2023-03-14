@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Features.RegisterOrganization;
+using Colabora.Application.Features.Organization.RegisterOrganization;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;

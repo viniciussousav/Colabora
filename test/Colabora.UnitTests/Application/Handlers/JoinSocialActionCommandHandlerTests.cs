@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Features.JoinSocialAction;
-using Colabora.Application.Features.JoinSocialAction.Models;
+using Colabora.Application.Features.SocialAction.JoinSocialAction;
+using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;

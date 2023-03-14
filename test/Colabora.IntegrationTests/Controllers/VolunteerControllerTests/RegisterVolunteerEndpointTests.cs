@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Commons;
-using Colabora.Application.Features.RegisterVolunteer.Models;
+using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;

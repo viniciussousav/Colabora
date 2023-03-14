@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Features.GetSocialActions;
-using Colabora.Application.Features.GetSocialActions.Models;
+using Colabora.Application.Features.SocialAction.GetSocialActions;
+using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Mappers;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Features.CreateSocialAction;
+using Colabora.Application.Features.SocialAction.CreateSocialAction;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;

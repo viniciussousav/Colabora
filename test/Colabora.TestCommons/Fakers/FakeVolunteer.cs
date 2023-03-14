@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Bogus;
-using Colabora.Application.Features.RegisterVolunteer.Models;
+using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
 

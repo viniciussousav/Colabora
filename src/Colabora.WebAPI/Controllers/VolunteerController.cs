@@ -1,6 +1,6 @@
-using Colabora.Application.Features.GetVolunteerById.Models;
-using Colabora.Application.Features.GetVolunteers.Models;
-using Colabora.Application.Features.RegisterVolunteer.Models;
+using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
+using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
+using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

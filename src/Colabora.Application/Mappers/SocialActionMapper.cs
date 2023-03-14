@@ -1,6 +1,6 @@
-﻿using Colabora.Application.Features.CreateSocialAction.Models;
-using Colabora.Application.Features.GetSocialActionById.Models;
-using Colabora.Application.Features.GetSocialActions.Models;
+﻿using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
+using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
+using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Domain.Entities;
 
 namespace Colabora.Application.Mappers;

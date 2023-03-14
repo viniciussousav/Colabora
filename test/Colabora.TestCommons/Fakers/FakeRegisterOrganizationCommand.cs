@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Bogus;
-using Colabora.Application.Features.RegisterOrganization.Models;
+using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Domain.Enums;
 
 namespace Colabora.TestCommons.Fakers;
