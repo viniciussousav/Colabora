@@ -11,6 +11,7 @@ using Colabora.Application.Shared;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;

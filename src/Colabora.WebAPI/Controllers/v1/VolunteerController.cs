@@ -4,10 +4,10 @@ using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Colabora.WebAPI.Controllers;
+namespace Colabora.WebAPI.Controllers.v1;
 
 [ApiController]
-[ApiVersion("1.0")]
+[ApiVersion("1")]
 [Route("api/v{version:apiVersion}/volunteers")]
 public class VolunteerController : ControllerBase
 {

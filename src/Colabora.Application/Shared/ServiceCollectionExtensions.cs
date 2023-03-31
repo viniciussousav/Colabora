@@ -3,6 +3,7 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
+using Colabora.Infrastructure.Auth.Google;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,8 +20,14 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(typeof(CreateSocialActionCommand));
     }
 
+    private static void AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+    }
+    
     public static void AddApplicationDependencies(this IServiceCollection services)
     {
         services.AddMediatrAssemblies();
+        services.AddServices();
     }
 }

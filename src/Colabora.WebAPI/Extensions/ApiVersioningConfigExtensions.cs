@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Colabora.WebAPI.Configuration;
+namespace Colabora.WebAPI.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static class ApiVersioningConfiguration
+public static class ApiVersioningConfigExtensions
 {
     public static void AddApiVersioningConfiguration(this IServiceCollection services)
     {

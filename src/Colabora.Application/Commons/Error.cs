@@ -1,4 +1,5 @@
 ﻿using System.Net;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CS8618
