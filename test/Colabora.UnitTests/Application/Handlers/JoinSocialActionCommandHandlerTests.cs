@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.SocialAction.JoinSocialAction;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Shared;
@@ -8,6 +7,8 @@ using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -20,12 +21,14 @@ public class JoinSocialActionCommandHandlerTests
     private readonly ILogger<JoinSocialActionCommandHandler> _logger;
     private readonly ISocialActionRepository _socialActionRepository;
     private readonly IVolunteerRepository _volunteerRepository;
-    
+    private readonly IValidator<JoinSocialActionCommand> _validator;
+
     public JoinSocialActionCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<JoinSocialActionCommandHandler>>();
         _socialActionRepository = Substitute.For<ISocialActionRepository>();
         _volunteerRepository = Substitute.For<IVolunteerRepository>();
+        _validator = Substitute.For<IValidator<JoinSocialActionCommand>>();
     }
     
     [Fact]
@@ -35,14 +38,16 @@ public class JoinSocialActionCommandHandlerTests
         var command = new JoinSocialActionCommand(1, 2);
         _socialActionRepository.GetSocialActionById(command.SocialActionId, CancellationToken.None).Returns(SocialAction.None);
 
-        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository);
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+        
+        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
+        result.Errors.Should().ContainEquivalentOf(ErrorMessages.CreateSocialActionNotFound());
     }
     
     [Fact]
@@ -52,17 +57,19 @@ public class JoinSocialActionCommandHandlerTests
         var socialAction = FakeSocialAction.Create();
         var command = new JoinSocialActionCommand(socialAction.SocialActionId, 2);
         
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         _socialActionRepository.GetSocialActionById(socialAction.SocialActionId, CancellationToken.None).Returns(socialAction);
         _volunteerRepository.GetVolunteerById(command.VolunteerId).Returns(Volunteer.None);
         
-        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository);
+        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        result.Errors.Should().ContainEquivalentOf(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]
@@ -72,18 +79,20 @@ public class JoinSocialActionCommandHandlerTests
         var socialAction = FakeSocialAction.Create();
         var volunteer = FakeVolunteer.Create();
         var command = new JoinSocialActionCommand(socialAction.SocialActionId, volunteer.VolunteerId);
-        
+
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         _socialActionRepository.GetSocialActionById(socialAction.SocialActionId, CancellationToken.None).Returns(socialAction);
         _volunteerRepository.GetVolunteerById(command.VolunteerId).Returns(volunteer);
         
-        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository);
+        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeTrue();
-        result.Error.Should().Be(Error.Empty);
+        result.Errors.Should().BeEmpty();
     }
     
     [Fact]
@@ -94,17 +103,22 @@ public class JoinSocialActionCommandHandlerTests
         var volunteer = FakeVolunteer.Create();
         var command = new JoinSocialActionCommand(socialAction.SocialActionId, volunteer.VolunteerId);
         
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         _socialActionRepository.GetSocialActionById(socialAction.SocialActionId, CancellationToken.None).Returns(socialAction);
         _volunteerRepository.GetVolunteerById(command.VolunteerId).Returns(volunteer);
         _socialActionRepository.CreateParticipation(socialAction.SocialActionId, Arg.Any<Participation>()).Throws(new TaskCanceledException("Timeout"));
         
-        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository);
+        var handler = new JoinSocialActionCommandHandler(_logger, _socialActionRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Timeout"));
+        result.Errors.Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(ErrorMessages.CreateInternalError("Timeout"));
     }
 }

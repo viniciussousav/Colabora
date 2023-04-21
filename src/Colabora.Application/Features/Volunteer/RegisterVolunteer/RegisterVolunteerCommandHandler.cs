@@ -3,6 +3,8 @@ using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.Volunteer.RegisterVolunteer;
@@ -11,19 +13,31 @@ public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
 {
     private readonly ILogger<RegisterVolunteerCommandHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
-    
-    public RegisterVolunteerCommandHandler( ILogger<RegisterVolunteerCommandHandler> logger, IVolunteerRepository volunteerRepository)
+    private readonly IValidator<RegisterVolunteerCommand> _validator;
+
+    public RegisterVolunteerCommandHandler( 
+        ILogger<RegisterVolunteerCommandHandler> logger, 
+        IVolunteerRepository volunteerRepository, 
+        IValidator<RegisterVolunteerCommand> validator)
     {
         _logger = logger;
         _volunteerRepository = volunteerRepository;
+        _validator = validator;
     }
     
     public async Task<Result<RegisterVolunteerResponse>> Handle(RegisterVolunteerCommand command, CancellationToken cancellationToken)
     {
         try
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return Result.Fail<RegisterVolunteerResponse>(validationResult.Errors);
+            
             if (await IsEmailRegistered(command.Email))
-                return Result.Fail<RegisterVolunteerResponse>(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
+                return Result.Fail<RegisterVolunteerResponse>(
+                    error: ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email),
+                    failureStatusCode: StatusCodes.Status409Conflict);
             
             var volunteer = command.MapToVolunteer();
             var createdVolunteer = await _volunteerRepository.CreateVolunteer(volunteer);
@@ -33,7 +47,9 @@ public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {IRegisterVolunteerCommandHandler}", nameof(IRegisterVolunteerCommandHandler));
-            return Result.Fail<RegisterVolunteerResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<RegisterVolunteerResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
 

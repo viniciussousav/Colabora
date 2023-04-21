@@ -3,6 +3,7 @@ using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.Volunteer.GetVolunteers;
@@ -30,7 +31,9 @@ public class GetVolunteersQueryHandler : IGetVolunteersQueryHandler
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {GetVolunteersQueryHandler}", nameof(GetVolunteersQueryHandler));
-            return Result.Fail<GetVolunteersResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<GetVolunteersResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
 }

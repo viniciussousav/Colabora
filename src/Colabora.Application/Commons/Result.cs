@@ -1,21 +1,43 @@
-﻿namespace Colabora.Application.Commons;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
+
+namespace Colabora.Application.Commons;
 
 public partial class Result
 {
-    protected Result() { }
-    
-    protected Result(Error error)
+    private readonly int _failureStatusCode;
+
+    protected Result()
     {
-        Error = error;
     }
-    
-    public Error Error { get; } = Error.Empty;
 
-    public bool IsValid => Error == Error.Empty;
+    protected Result(Error error, int failureStatusCode)
+    {
+        Errors = new List<Error> {error};
+        FailureStatusCode = failureStatusCode;
+    }
 
-    public int FailureStatusCode => !IsValid
-        ? Error.StatusCode
-        : throw new ResultException("Valid result does not contain an error status code");
+    protected Result(IEnumerable<ValidationFailure> validationFailures)
+    {
+        FailureStatusCode = StatusCodes.Status400BadRequest;
+        Errors = validationFailures.Select(f => Error.Create(f.PropertyName, f.ErrorMessage));
+    }
+
+    public IEnumerable<Error> Errors { get; } = Enumerable.Empty<Error>();
+
+    public bool IsValid => !Errors.Any();
+
+    public int FailureStatusCode
+    {
+        get
+        {
+            if (IsValid || _failureStatusCode == default)
+                throw new ResultException("Valid result does not contains failure Status Code");
+
+            return _failureStatusCode;
+        }
+        private init => _failureStatusCode = value;
+    }
 }
 
 public class Result<T> : Result
@@ -24,8 +46,14 @@ public class Result<T> : Result
     {
         Value = value;
     }
-    
-    public Result(Error error): base(error) {}
-    public T? Value { get; }
 
+    public Result(Error error, int failureStatusCode) : base(error, failureStatusCode)
+    {
+    }
+
+    public Result(IEnumerable<ValidationFailure> validationErrors) : base(validationErrors)
+    {
+    }
+
+    public T? Value { get; }
 }

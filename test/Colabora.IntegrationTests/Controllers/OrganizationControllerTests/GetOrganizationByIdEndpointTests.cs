@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -34,8 +35,8 @@ public partial class RegisterOrganizationEndpointTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var error = await response.Content.ReadFromJsonAsync<Error>();
-        error.Should().BeEquivalentTo(ErrorMessages.CreateOrganizationNotFound());
+        var error = await response.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        error.Should().ContainEquivalentOf(ErrorMessages.CreateOrganizationNotFound());
     }
     
     [Fact]
@@ -154,7 +155,7 @@ public partial class RegisterOrganizationEndpointTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var error = await response.Content.ReadFromJsonAsync<Error>();
-        error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
+        var error = await response.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        error.Should().ContainEquivalentOf(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

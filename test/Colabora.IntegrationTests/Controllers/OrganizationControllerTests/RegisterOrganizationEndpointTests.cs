@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -74,7 +76,9 @@ public partial class RegisterOrganizationEndpointTests :
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-        var errorResponse = await result.Content.ReadFromJsonAsync<Error>();
+        var errors = await result.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        var errorResponse = errors!.First();
+        
         errorResponse.Should().NotBeNull();
         errorResponse.Code.Should().Be("VolunteerNotFound");
         errorResponse.Message.Should().Be("Volunteer not found");
@@ -99,7 +103,8 @@ public partial class RegisterOrganizationEndpointTests :
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Conflict);
 
-        var errorResponse = await result.Content.ReadFromJsonAsync<Error>();
+        var errors = await result.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        var errorResponse = errors!.First();
         errorResponse.Should().NotBeNull();
         errorResponse.Code.Should().Be("CreateOrganizationConflict");
         errorResponse.Message.Should().Be("Already exist an organization with same name and email created by this user");

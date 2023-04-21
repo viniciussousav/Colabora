@@ -26,7 +26,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     } 
     
     [HttpGet]
@@ -36,7 +36,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpGet("{Id:int}")]
@@ -46,7 +46,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpPost("{id:int}/join")]
@@ -59,6 +59,6 @@ public class SocialActionController : ControllerBase
         
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     } 
 }

@@ -1,6 +1,4 @@
-﻿using Colabora.Infrastructure.Auth.Shared;
-
-namespace Colabora.Infrastructure.Auth;
+﻿namespace Colabora.Infrastructure.Auth;
 
 public interface IAuthService
 {

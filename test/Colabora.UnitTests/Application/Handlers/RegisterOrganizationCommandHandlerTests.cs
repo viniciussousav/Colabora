@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.Organization.RegisterOrganization;
+using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -21,12 +23,14 @@ public class RegisterOrganizationCommandHandlerTests
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IVolunteerRepository _volunteerRepository;
-    
+    private readonly IValidator<RegisterOrganizationCommand> _validator;
+
     public RegisterOrganizationCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<RegisterOrganizationCommandHandler>>();
         _organizationRepository = Substitute.For<IOrganizationRepository>();
         _volunteerRepository = Substitute.For<IVolunteerRepository>();
+        _validator = Substitute.For<IValidator<RegisterOrganizationCommand>>();
     }
     
     [Fact(DisplayName = "Given a command, when it succeeds, then handler should return the organization created")]
@@ -34,21 +38,22 @@ public class RegisterOrganizationCommandHandlerTests
     {
         // Arrange
         var command = FakeRegisterOrganizationCommand.Create();
-
         var organization = FakerOrganization.Create(command);
+
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
 
         _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
         
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Task.FromResult(Organization.None));
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
-        result.Error.Should().Be(Error.Empty);
+        result.Errors.Should().BeEmpty();
         result.IsValid.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(organization.MapToRegisterOrganizationResponse());
     }
@@ -58,15 +63,16 @@ public class RegisterOrganizationCommandHandlerTests
     {
         // Arrange
         var command = FakeRegisterOrganizationCommand.Create();
-
         var organization = FakerOrganization.Create(command);
         
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
 
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(organization);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -74,7 +80,10 @@ public class RegisterOrganizationCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateOrganizationEmailAlreadyExists(command.Name));
+        result.Errors.Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(ErrorMessages.CreateOrganizationEmailAlreadyExists(command.Name));
     }
     
     [Fact(DisplayName = "Given a command, when an exception occurs, then handler should return an error result")]
@@ -83,12 +92,14 @@ public class RegisterOrganizationCommandHandlerTests
         // Arrange
         var command = FakeRegisterOrganizationCommand.Create();
         
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
 
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Organization.None);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -96,6 +107,9 @@ public class RegisterOrganizationCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("error"));
+        result.Errors.Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(ErrorMessages.CreateInternalError("error"));
     }
 }

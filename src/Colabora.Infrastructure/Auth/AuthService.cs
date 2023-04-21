@@ -28,7 +28,7 @@ public class AuthService : IAuthService
                 AuthProvider.Google => await _googleAuthService.Authenticate(token),
                 AuthProvider.Undefined or _ => throw new InvalidAuthProviderException("The given provider is invalid")
             };
-
+            
             var jwt = new JwtSecurityToken(
                 issuer: _jwtSettings.JwtIssuer,
                 audience: _jwtSettings.JwtAudience,

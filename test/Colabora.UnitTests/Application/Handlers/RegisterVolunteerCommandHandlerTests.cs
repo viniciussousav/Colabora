@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer;
+using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -20,11 +22,13 @@ public class RegisterVolunteerCommandHandlerTests
 {
     private readonly ILogger<RegisterVolunteerCommandHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IValidator<RegisterVolunteerCommand> _validator;
 
     public RegisterVolunteerCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<RegisterVolunteerCommandHandler>>();
         _volunteerRepository = Substitute.For<IVolunteerRepository>();
+        _validator = Substitute.For<IValidator<RegisterVolunteerCommand>>();
     }
     
     [Fact(DisplayName = "Given a command, when it succeeds, then it should return the created volunteer")]
@@ -37,7 +41,9 @@ public class RegisterVolunteerCommandHandlerTests
         var volunteer = FakeVolunteer.Create(command);
         _volunteerRepository.CreateVolunteer(Arg.Is<Volunteer>(v => v.Email == command.Email)).Returns(volunteer);
 
-        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+        
+        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -45,7 +51,7 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         result.IsValid.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(volunteer.MapToRegisterVolunteerResponse());
-        result.Error.Should().Be(Error.Empty);
+        result.Errors.Should().BeEmpty();
     }
     
     [Fact(DisplayName = "Given a command, when exists a volunteer registered with same email, the it should return error")]
@@ -53,10 +59,13 @@ public class RegisterVolunteerCommandHandlerTests
     {
         // Assert
         var command = FakeRegisterVolunteerCommand.Create();
+        
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
         var volunteer = FakeVolunteer.Create();
         _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(volunteer);
         
-        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
+        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -64,7 +73,10 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
+        result.Errors.Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
     }
     
     [Fact(DisplayName = "Given a command, when an exception occurs, the it should return error")]
@@ -74,7 +86,9 @@ public class RegisterVolunteerCommandHandlerTests
         var command = FakeRegisterVolunteerCommand.Create();
         _volunteerRepository.GetVolunteerByEmail(command.Email).Throws(new Exception("Hello Exception"));
         
-        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository);
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+
+        var handler = new RegisterVolunteerCommandHandler(_logger, _volunteerRepository, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -82,6 +96,9 @@ public class RegisterVolunteerCommandHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
+        result.Errors.Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

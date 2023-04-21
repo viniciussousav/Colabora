@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Colabora.Application.Commons;
+﻿using Colabora.Application.Commons;
 using Colabora.Infrastructure.Auth;
 
 namespace Colabora.Application.Shared;
@@ -19,26 +18,26 @@ public static class ErrorMessages
     public const string InternalError = "An unexpected error happened";
 
     public static Error CreateOrganizationEmailAlreadyExists(string name)
-        => new(nameof(CreateOrganizationConflict), HttpStatusCode.Conflict, CreateOrganizationConflict, name);
+        => Error.Create(nameof(CreateOrganizationConflict), CreateOrganizationConflict, name);
     
     public static Error CreateVolunteerEmailAlreadyExists(string name)
-        => new(nameof(VolunteerEmailConflict), HttpStatusCode.Conflict, VolunteerEmailConflict, name);
+        => Error.Create(nameof(VolunteerEmailConflict), VolunteerEmailConflict, name);
     
     public static Error CreateVolunteerNotFound()
-        => new(nameof(VolunteerNotFound), HttpStatusCode.NotFound, VolunteerNotFound);
+        => Error.Create(nameof(VolunteerNotFound), VolunteerNotFound);
     
     public static Error CreateOrganizationNotFound()
-        => new(nameof(OrganizationNotFound), HttpStatusCode.NotFound, OrganizationNotFound);
+        => Error.Create(nameof(OrganizationNotFound), OrganizationNotFound);
 
     public static Error CreateInternalError(string? message)
-        => new(nameof(InternalError), HttpStatusCode.InternalServerError, message ?? "An unexpected error happened");
+        => Error.Create(nameof(InternalError),  message ?? "An unexpected error happened");
 
     public static Error CreateSocialActionNotFound()
-        => new(nameof(SocialActionNotFound), HttpStatusCode.NotFound, SocialActionNotFound);
+        => Error.Create(nameof(SocialActionNotFound), SocialActionNotFound);
 
     public static Error CreateJoinSocialActionConflict()
-        => new(nameof(JoinSocialActionConflict), HttpStatusCode.Conflict, JoinSocialActionConflict);
+        => Error.Create(nameof(JoinSocialActionConflict), JoinSocialActionConflict);
     
     public static Error CreateInvalidOAuthToken(AuthProvider authProvider, string error = "Empty token")
-        => new(nameof(InvalidOAuthToken), HttpStatusCode.Unauthorized, string.Format(InvalidOAuthToken, authProvider, error));
+        => Error.Create(nameof(InvalidOAuthToken), string.Format(InvalidOAuthToken, authProvider, error));
 }

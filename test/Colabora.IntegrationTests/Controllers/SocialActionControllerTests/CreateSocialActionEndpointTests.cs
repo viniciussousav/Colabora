@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -52,7 +53,8 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
+        var errors = await response.Content.ReadFromJsonAsync<List<Error>>();
+        var errorResponse = errors!.First();
         errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateOrganizationNotFound());
     }
     

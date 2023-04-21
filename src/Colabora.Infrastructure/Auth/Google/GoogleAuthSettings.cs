@@ -6,5 +6,5 @@ public class GoogleAuthSettings
     public string AudienceAndroid { get; init; }
     public string AudienceIOS { get; init; }
     public string AudienceWeb { get; init; }
-    public TimeSpan ExpirationTime { get; init; }
+    public long ExpirationTime { get; init; }
 }

@@ -1,12 +1,16 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Features.SocialAction.CreateSocialAction;
+using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;
@@ -19,13 +23,15 @@ public class CreateSocialActionCommandHandlerTests
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly ISocialActionRepository _socialActionRepository;
-    
+    private readonly IValidator<CreateSocialActionCommand> _validator;
+
     public CreateSocialActionCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<CreateSocialActionCommandHandler>>();
         _volunteerRepository = Substitute.For<IVolunteerRepository>();
         _organizationRepository = Substitute.For<IOrganizationRepository>();
         _socialActionRepository = Substitute.For<ISocialActionRepository>();
+        _validator = Substitute.For<IValidator<CreateSocialActionCommand>>();
     }
 
     [Fact]
@@ -35,16 +41,19 @@ public class CreateSocialActionCommandHandlerTests
         var command = FakeCreateSocialActionCommand.Create();
         
         _organizationRepository.GetOrganizationById(command.OrganizationId).Returns(Organization.None);
-
-        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository);
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
+        
+        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository, _validator);
         
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Code.Should().Be(nameof(ErrorMessages.OrganizationNotFound));
-        result.Error.Message.Should().Be("Organization not found");
+
+        var error = result.Errors.First();
+        error.Code.Should().Be(nameof(ErrorMessages.OrganizationNotFound));
+        error.Message.Should().Be("Organization not found");
     }
     
     [Fact]
@@ -55,16 +64,19 @@ public class CreateSocialActionCommandHandlerTests
         
         _organizationRepository.GetOrganizationById(command.OrganizationId).Returns(FakerOrganization.Create());
         _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(Volunteer.None);
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
 
-        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository);
+        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository, _validator);
         
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Code.Should().Be(nameof(ErrorMessages.VolunteerNotFound));
-        result.Error.Message.Should().Be("Volunteer not found");
+        
+        var error = result.Errors.First();
+        error.Code.Should().Be(nameof(ErrorMessages.VolunteerNotFound));
+        error.Message.Should().Be("Volunteer not found");
     }
     
     [Fact]
@@ -75,11 +87,12 @@ public class CreateSocialActionCommandHandlerTests
         
         _organizationRepository.GetOrganizationById(command.OrganizationId).Returns(FakerOrganization.Create());
         _volunteerRepository.GetVolunteerById(command.VolunteerCreatorId).Returns(FakeVolunteer.Create());
+        _validator.ValidateAsync(command).Returns(new ValidationResult());
 
         var createdSocialAction = command.MapToSocialAction();
         _socialActionRepository.CreateSocialAction(Arg.Is<SocialAction>(action => action.Title == command.Title)).Returns(createdSocialAction);
         
-        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository);
+        var handler = new CreateSocialActionCommandHandler(_logger, _volunteerRepository, _organizationRepository,_socialActionRepository, _validator);
         
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

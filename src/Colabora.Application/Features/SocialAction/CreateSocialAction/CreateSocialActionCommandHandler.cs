@@ -3,6 +3,8 @@ using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.SocialAction.CreateSocialAction;
@@ -13,15 +15,18 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly ISocialActionRepository _socialActionRepository;
-    
+    private readonly IValidator<CreateSocialActionCommand> _validator;
+
     public CreateSocialActionCommandHandler(
         ILogger<CreateSocialActionCommandHandler> logger,
         IVolunteerRepository volunteerRepository,
         IOrganizationRepository organizationRepository,
-        ISocialActionRepository socialActionRepository)
+        ISocialActionRepository socialActionRepository, 
+        IValidator<CreateSocialActionCommand> validator)
     {
         _logger = logger;
         _socialActionRepository = socialActionRepository;
+        _validator = validator;
         _volunteerRepository = volunteerRepository;
         _organizationRepository = organizationRepository;
     }
@@ -30,20 +35,35 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
     {
         try
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return Result.Fail<CreateSocialActionResponse>(validationResult.Errors);
+
             if (!await OrganizationExists(command.OrganizationId))
-                return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateOrganizationNotFound());
-        
+            {
+                return Result.Fail<CreateSocialActionResponse>(
+                    error: ErrorMessages.CreateOrganizationNotFound(),
+                    failureStatusCode: StatusCodes.Status404NotFound);
+            }
+
             if (!await VolunteerCreatorExists(command.VolunteerCreatorId))
-                return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateVolunteerNotFound());
+            {
+                return Result.Fail<CreateSocialActionResponse>(
+                    error: ErrorMessages.CreateVolunteerNotFound(),
+                    failureStatusCode: StatusCodes.Status404NotFound);
+            }
 
             var socialAction = await _socialActionRepository.CreateSocialAction(command.MapToSocialAction());
-        
+
             return Result.Success(socialAction.MapToCreateSocialActionResponse());
         }
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {CreateSocialActionCommandHandler}", nameof(CreateSocialActionCommandHandler));
-            return Result.Fail<CreateSocialActionResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<CreateSocialActionResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
     
