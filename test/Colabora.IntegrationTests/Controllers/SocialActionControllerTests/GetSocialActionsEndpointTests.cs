@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -103,9 +104,11 @@ public partial class SocialActionControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().NotBeNull();
-        errorResponse.Code.Should().Be("InternalError");
-        errorResponse.Message.Should().Be("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+
+        var error = errorResponse!.First();
+        error.Should().NotBeNull();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Hello Exception");
     }
 }

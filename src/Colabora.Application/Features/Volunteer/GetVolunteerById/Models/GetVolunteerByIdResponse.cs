@@ -9,10 +9,10 @@ public record GetVolunteerByIdResponse(
     string Email,
     States State,
     Gender Gender,
-    List<Interests> Interests,
+    IEnumerable<Interests> Interests,
     DateTimeOffset Birthdate,
     DateTimeOffset CreatedAt,
-    List<VolunteerParticipationDetails> Participations);
+    IEnumerable<VolunteerParticipationDetails> Participations);
 
 public record VolunteerParticipationDetails(
     int SocialActionId,

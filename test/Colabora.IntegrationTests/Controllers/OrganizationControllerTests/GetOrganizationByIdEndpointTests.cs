@@ -155,7 +155,7 @@ public partial class RegisterOrganizationEndpointTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var error = await response.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        var error = await response.Content.ReadFromJsonAsync<List<Error>>();
         error.Should().ContainEquivalentOf(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

@@ -13,7 +13,7 @@ public static class FakeCreateSocialActionCommand
     {
         return new CreateSocialActionCommand(
             Title: Faker.Random.Word(),
-            Description: Faker.Random.Word(),
+            Description: Faker.Random.Words(5),
             OrganizationId: organizationId ?? Faker.Random.Int(min: 1),
             VolunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int(min: 1),
             State: Faker.Random.Enum(exclude: States.Undefined),

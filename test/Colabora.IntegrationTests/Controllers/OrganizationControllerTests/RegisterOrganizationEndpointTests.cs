@@ -50,7 +50,7 @@ public partial class RegisterOrganizationEndpointTests :
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
         
         // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var registerOrganizationResponse = await result.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
 
@@ -103,7 +103,7 @@ public partial class RegisterOrganizationEndpointTests :
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Conflict);
 
-        var errors = await result.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+        var errors = await result.Content.ReadFromJsonAsync<List<Error>>();
         var errorResponse = errors!.First();
         errorResponse.Should().NotBeNull();
         errorResponse.Code.Should().Be("CreateOrganizationConflict");

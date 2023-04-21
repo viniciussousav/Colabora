@@ -80,8 +80,8 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        errorResponse.Should().ContainEquivalentOf(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]
@@ -154,10 +154,12 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().NotBeNull();
-        errorResponse.Code.Should().Be("InternalError");
-        errorResponse.Message.Should().Be("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        
+        var error = errorResponse!.First();
+        error.Should().NotBeNull();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Hello Exception");
     }
     
     public async Task InitializeAsync() => await _databaseFixture.ResetDatabase();

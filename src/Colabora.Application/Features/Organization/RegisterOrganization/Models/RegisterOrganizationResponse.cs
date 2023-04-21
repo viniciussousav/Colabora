@@ -6,6 +6,6 @@ public record RegisterOrganizationResponse(
     int OrganizationId,
     string Name,
     States State,
-    List<Interests> Interests,
+    IEnumerable<Interests> Interests,
     int CreatedBy,
     DateTime CreatedAt);

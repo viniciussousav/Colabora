@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -38,9 +40,8 @@ public partial class SocialActionControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
-        body.Should().NotBeNull();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
+        body!.First().Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
     }
     
     [Fact]
@@ -70,9 +71,9 @@ public partial class SocialActionControllerTests
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
         body.Should().NotBeNull();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        body!.First().Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]

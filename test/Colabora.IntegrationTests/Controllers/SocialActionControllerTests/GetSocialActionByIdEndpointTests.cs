@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -126,8 +127,8 @@ public partial class SocialActionControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var getSocialActionBodyResponse = await response.Content.ReadFromJsonAsync<Error>();
-        getSocialActionBodyResponse.Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
+        var getSocialActionBodyResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        getSocialActionBodyResponse!.First().Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
     }
     
     [Fact]
@@ -164,7 +165,7 @@ public partial class SocialActionControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        var getSocialActionBodyResponse = await response.Content.ReadFromJsonAsync<Error>();
-        getSocialActionBodyResponse.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
+        var getSocialActionBodyResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        getSocialActionBodyResponse!.First().Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

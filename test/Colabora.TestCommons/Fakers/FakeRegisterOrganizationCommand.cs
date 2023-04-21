@@ -7,15 +7,17 @@ namespace Colabora.TestCommons.Fakers;
 
 public static class FakeRegisterOrganizationCommand
 {
-    private static readonly Faker Faker = new();
+   
 
     public static RegisterOrganizationCommand Create(int? volunteerCreatorId = null)
     {
+        var faker = new Faker();
+        
         return new RegisterOrganizationCommand(
-            Name: Faker.Company.CompanyName(),
-            Email: Faker.Person.Email,
-            State: Faker.Random.Enum(exclude: States.Undefined),
-            Interests: Faker.Random.EnumValues<Interests>().ToList(),
-            VolunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int());
+            Name: faker.Person.FirstName,
+            Email: faker.Person.Email,
+            State: faker.Random.Enum(exclude: States.Undefined),
+            Interests: faker.Random.EnumValues(exclude: Interests.Undefined),
+            VolunteerCreatorId: volunteerCreatorId ?? faker.Random.Int(min: 1));
     }
 }
