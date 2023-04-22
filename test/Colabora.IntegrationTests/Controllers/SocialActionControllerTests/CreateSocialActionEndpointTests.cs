@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;
@@ -51,7 +53,8 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
+        var errors = await response.Content.ReadFromJsonAsync<List<Error>>();
+        var errorResponse = errors!.First();
         errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateOrganizationNotFound());
     }
     
@@ -61,7 +64,7 @@ public partial class SocialActionControllerTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -77,8 +80,8 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        errorResponse.Should().ContainEquivalentOf(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]
@@ -87,7 +90,7 @@ public partial class SocialActionControllerTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -135,7 +138,7 @@ public partial class SocialActionControllerTests :
             });
         }).CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -151,10 +154,12 @@ public partial class SocialActionControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().NotBeNull();
-        errorResponse.Code.Should().Be("InternalError");
-        errorResponse.Message.Should().Be("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        
+        var error = errorResponse!.First();
+        error.Should().NotBeNull();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Hello Exception");
     }
     
     public async Task InitializeAsync() => await _databaseFixture.ResetDatabase();

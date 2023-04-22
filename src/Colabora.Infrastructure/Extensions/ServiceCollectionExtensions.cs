@@ -1,11 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Colabora.Domain.Repositories;
+using Colabora.Infrastructure.Auth;
+using Colabora.Infrastructure.Auth.Google;
+using Colabora.Infrastructure.Persistence;
 using Colabora.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Colabora.Infrastructure.Persistence.Extensions;
+namespace Colabora.Infrastructure.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
@@ -26,9 +29,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISocialActionRepository, SocialActionRepository>();
     }
 
+    private static void AddAuthServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+        services.AddScoped<IAuthService, AuthService>();
+    }
+    
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDatabasePersistence(configuration);
         services.AddRepositories();
+        services.AddAuthServices(configuration);
     }
 }

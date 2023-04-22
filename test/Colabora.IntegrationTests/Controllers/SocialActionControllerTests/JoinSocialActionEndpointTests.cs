@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using Colabora.Application.Shared;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;
@@ -23,7 +26,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -37,9 +40,8 @@ public partial class SocialActionControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
-        body.Should().NotBeNull();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
+        body!.First().Should().BeEquivalentTo(ErrorMessages.CreateSocialActionNotFound());
     }
     
     [Fact]
@@ -48,7 +50,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -69,9 +71,9 @@ public partial class SocialActionControllerTests
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
         body.Should().NotBeNull();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        body!.First().Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]
@@ -80,7 +82,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         

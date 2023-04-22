@@ -10,6 +10,6 @@ public record RegisterVolunteerCommand(
     string Email,
     States State,
     Gender Gender,
-    List<Interests> Interests,
+    IEnumerable<Interests> Interests,
     DateTime Birthdate
 ) : IRequest<Result<RegisterVolunteerResponse>>;

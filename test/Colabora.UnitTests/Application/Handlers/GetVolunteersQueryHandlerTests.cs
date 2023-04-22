@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.GetVolunteers;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Shared;
@@ -50,7 +49,7 @@ public class GetVolunteersQueryHandlerTests
         
         // Assert
         result.IsValid.Should().BeTrue();
-        result.Error.Should().Be(Error.Empty);
+        result.Errors.Should().BeEmpty();
         result.Value.Should().NotBeNull();
         result.Value!.Volunteers.Should().NotBeEmpty();
     }
@@ -72,7 +71,7 @@ public class GetVolunteersQueryHandlerTests
         
         // Assert
         result.IsValid.Should().BeTrue();
-        result.Error.Should().Be(Error.Empty);
+        result.Errors.Should().BeEmpty();
         result.Value.Should().NotBeNull();
         result.Value!.Volunteers.Should().BeEmpty();
     }
@@ -91,7 +90,7 @@ public class GetVolunteersQueryHandlerTests
         
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Error.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Timeout to database"));
+        result.Errors.Should().ContainEquivalentOf(ErrorMessages.CreateInternalError("Timeout to database"));
         result.Value.Should().BeNull();
     }
 }

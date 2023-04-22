@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -24,7 +25,7 @@ public partial class VolunteerControllerTests
     public async Task Given_A_Register_Volunteer_Request_When_Its_Valid_Then_The_Created_Volunteer_Should_Be_Returned()
     {
         // Arrange
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         var client = _factory.CreateClient();
         
         // Act
@@ -50,10 +51,10 @@ public partial class VolunteerControllerTests
     public async Task Given_A_Register_Volunteer_Request_When_Already_Exists_A_Volunteer_With_Same_Email_Then_A_Conflict_Error_Should_Be_Returned()
     {
         // Arrange
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         var client = _factory.CreateClient();
 
-        var existingVolunteer = FakeRegisterVolunteerCommand.Create(email: command.Email);
+        var existingVolunteer = FakeRegisterVolunteerCommand.CreateValid(email: command.Email);
         await client.PostAsJsonAsync("/api/v1.0/volunteers", existingVolunteer);
         
         // Act
@@ -62,16 +63,15 @@ public partial class VolunteerControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-
-        errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        errorResponse.Should().ContainEquivalentOf(ErrorMessages.CreateVolunteerEmailAlreadyExists(command.Email));
     }
     
     [Fact(DisplayName = "Given a register volunteer request, when an exception occurs, then an error should be returned")]
     public async Task Given_A_Register_Volunteer_Request_When_An_Exceptions_Occurs_Then_An_Error_Should_Be_Returned()
     {
         // Arrange
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         var client = _factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureServices(services =>
@@ -94,8 +94,7 @@ public partial class VolunteerControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-
-        errorResponse.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello"));
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+        errorResponse.Should().ContainEquivalentOf(ErrorMessages.CreateInternalError("Hello"));
     }
 }

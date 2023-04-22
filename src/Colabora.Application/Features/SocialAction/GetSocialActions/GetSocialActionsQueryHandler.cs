@@ -3,6 +3,7 @@ using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.SocialAction.GetSocialActions;
@@ -32,7 +33,9 @@ public class GetSocialActionsQueryHandler : IGetSocialActionsQueryHandler
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {GetSocialActionsQueryHandler}", nameof(GetSocialActionsQueryHandler));
-            return Result.Fail<GetSocialActionsResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<GetSocialActionsResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
 }

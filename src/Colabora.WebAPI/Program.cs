@@ -1,18 +1,18 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Colabora.Application.Shared;
-using Colabora.Infrastructure.Persistence.Extensions;
-using Colabora.WebAPI.Configuration;
+using Colabora.Infrastructure.Extensions;
+using Colabora.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+builder.Services.AddControllers();
+    // .AddJsonOptions(options =>
+    // {
+    //     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    //     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    // });
+
+builder.Services.AddOptionsConfig();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationDependencies();
 
@@ -20,6 +20,15 @@ builder.Services.AddApplicationDependencies();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApiVersioningConfiguration();
+
+builder.Services.AddCors(policyBuilder =>
+    policyBuilder.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    })
+);
     
 var app = builder.Build();
 

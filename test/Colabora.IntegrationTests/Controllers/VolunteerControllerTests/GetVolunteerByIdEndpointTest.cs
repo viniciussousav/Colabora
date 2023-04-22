@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
@@ -34,9 +36,9 @@ public partial class VolunteerControllerTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
         body.Should().NotBeNull();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
+        body.Should().ContainEquivalentOf(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]
@@ -45,7 +47,7 @@ public partial class VolunteerControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
@@ -73,7 +75,7 @@ public partial class VolunteerControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
@@ -117,7 +119,7 @@ public partial class VolunteerControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
@@ -143,7 +145,7 @@ public partial class VolunteerControllerTests
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        var body = await response.Content.ReadFromJsonAsync<Error>();
-        body.Should().BeEquivalentTo(ErrorMessages.CreateInternalError("Hello Exception"));
+        var body = await response.Content.ReadFromJsonAsync<List<Error>>();
+        body.Should().ContainEquivalentOf(ErrorMessages.CreateInternalError("Hello Exception"));
     }
 }

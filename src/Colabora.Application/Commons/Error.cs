@@ -1,33 +1,27 @@
-﻿using System.Net;
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-// ReSharper disable MemberCanBePrivate.Global
-#pragma warning disable CS8618
+﻿using System.Text.Json.Serialization;
 
 namespace Colabora.Application.Commons;
 
+[Serializable]
 public class Error
 {
-    public Error() { }
-    
-    public static readonly Error Empty = new();
-
-    public Error(string code, HttpStatusCode statusCode, string message)
+    [JsonConstructor]
+    public Error(string code, string message)
     {
         Code = code;
         Message = message;
-        StatusCode = (int) statusCode;
     }
 
-    public Error(string code,  HttpStatusCode statusCode, string message, params object[] args)
+    private Error(string code, string message, params object[] args)
     {
         Code = code;
         Message = string.Format(message, args);
-        StatusCode = (int) statusCode;
     }
 
-    public string Code { get; set; }
-    public string Message { get; set; }
-    public int StatusCode { get; set; }
-
-
+    public string Code { get; private set; }
+    
+    public string Message { get; private set; }
+    
+    public static Error Create(string code, string message) => new(code, message);
+    public static Error Create(string code, string message, params object[] args) => new(code, message, args);
 }

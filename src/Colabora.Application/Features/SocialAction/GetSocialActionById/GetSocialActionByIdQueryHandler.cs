@@ -3,6 +3,7 @@ using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.SocialAction.GetSocialActionById;
@@ -25,7 +26,9 @@ public class GetSocialActionByIdQueryHandler : IGetSocialActionByIdQueryHandler
             var socialAction = await _socialActionRepository.GetSocialActionById(query.Id, cancellationToken);
 
             if (socialAction == Domain.Entities.SocialAction.None)
-                return Result.Fail<GetSocialActionByIdResponse>(ErrorMessages.CreateSocialActionNotFound());
+                return Result.Fail<GetSocialActionByIdResponse>(
+                    error: ErrorMessages.CreateSocialActionNotFound(),
+                    failureStatusCode: StatusCodes.Status404NotFound);
 
             var response = socialAction.MapToGetSocialActionByIdResponse();
             return Result.Success(response);
@@ -33,7 +36,9 @@ public class GetSocialActionByIdQueryHandler : IGetSocialActionByIdQueryHandler
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {GetSocialActionByIdQueryHandler}", nameof(GetSocialActionByIdQueryHandler));
-            return Result.Fail<GetSocialActionByIdResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<GetSocialActionByIdResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
 }

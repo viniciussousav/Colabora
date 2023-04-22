@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.SocialActionControllerTests;
@@ -26,7 +28,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -102,9 +104,11 @@ public partial class SocialActionControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().NotBeNull();
-        errorResponse.Code.Should().Be("InternalError");
-        errorResponse.Message.Should().Be("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<IEnumerable<Error>>();
+
+        var error = errorResponse!.First();
+        error.Should().NotBeNull();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Hello Exception");
     }
 }

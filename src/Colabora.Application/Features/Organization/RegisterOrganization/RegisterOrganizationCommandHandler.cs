@@ -3,6 +3,8 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Colabora.Application.Features.Organization.RegisterOrganization;
@@ -12,26 +14,42 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IValidator<RegisterOrganizationCommand> _validator;
 
     public RegisterOrganizationCommandHandler(
         ILogger<RegisterOrganizationCommandHandler> logger,
         IOrganizationRepository organizationRepository, 
-        IVolunteerRepository volunteerRepository)
+        IVolunteerRepository volunteerRepository, 
+        IValidator<RegisterOrganizationCommand> validator)
     {
         _logger = logger;
         _organizationRepository = organizationRepository;
         _volunteerRepository = volunteerRepository;
+        _validator = validator;
     }
 
     public async Task<Result<RegisterOrganizationResponse>> Handle(RegisterOrganizationCommand command, CancellationToken cancellationToken)
     {
         try
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return Result.Fail<RegisterOrganizationResponse>(validationResult.Errors);
+
             if (await OrganizationEmailAlreadyExist(command.Name, command.Email, command.VolunteerCreatorId))
-                return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateOrganizationEmailAlreadyExists(command.Name));
+            {
+                return Result.Fail<RegisterOrganizationResponse>(
+                    error: ErrorMessages.CreateOrganizationEmailAlreadyExists(command.Name), 
+                    failureStatusCode: StatusCodes.Status409Conflict);
+            }
 
             if (await VolunteerCreatorNotExists(command.VolunteerCreatorId))
-                return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateVolunteerNotFound());
+            {
+                return Result.Fail<RegisterOrganizationResponse>(
+                    error: ErrorMessages.CreateVolunteerNotFound(),
+                    failureStatusCode: StatusCodes.Status404NotFound);
+            }
 
             var organization = command.MapToOrganization();
             var createdOrganization = await _organizationRepository.CreateOrganization(organization);
@@ -43,7 +61,9 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
         catch (Exception e)
         {
             _logger.LogError(e, "An exception was throw at {CreateOrganizationHandler}", nameof(RegisterOrganizationCommandHandler));
-            return Result.Fail<RegisterOrganizationResponse>(ErrorMessages.CreateInternalError(e.Message));
+            return Result.Fail<RegisterOrganizationResponse>(
+                error: ErrorMessages.CreateInternalError(e.Message),
+                failureStatusCode: StatusCodes.Status500InternalServerError);
         }
     }
 

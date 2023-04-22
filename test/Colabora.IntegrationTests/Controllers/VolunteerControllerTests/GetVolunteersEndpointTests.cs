@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+
 #pragma warning disable CS8602
 
 namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
@@ -60,7 +61,7 @@ public partial class VolunteerControllerTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         await client.PostAsJsonAsync("api/v1/volunteers", command);
 
         // Act
@@ -98,7 +99,7 @@ public partial class VolunteerControllerTests :
         var volunteersRegistered = new List<RegisterVolunteerCommand>();
         for (var i = 0; i < volunteersRegisteredCount; i++)
         {
-            var command = FakeRegisterVolunteerCommand.Create();
+            var command = FakeRegisterVolunteerCommand.CreateValid();
             await client.PostAsJsonAsync("api/v1/volunteers", command);
             volunteersRegistered.Add(command);
         }
@@ -143,10 +144,13 @@ public partial class VolunteerControllerTests :
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-        var errorResponse = await response.Content.ReadFromJsonAsync<Error>();
-        errorResponse.Should().NotBeNull();
-        errorResponse.Code.Should().Be("InternalError");
-        errorResponse.Message.Should().Be("Hello Exception");
+        var errorResponse = await response.Content.ReadFromJsonAsync<List<Error>>();
+
+        var error = errorResponse!.First();
+        
+        error.Should().NotBeNull();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Hello Exception");
     }
     
     public async Task InitializeAsync() => await _databaseFixture.ResetDatabase();

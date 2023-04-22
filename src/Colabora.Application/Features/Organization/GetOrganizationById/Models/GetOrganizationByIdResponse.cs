@@ -6,7 +6,7 @@ public record GetOrganizationByIdResponse(
     int OrganizationId,
     string Name,
     States State,
-    List<Interests> Interests,
+    IEnumerable<Interests> Interests,
     int CreatedBy,
     DateTime CreatedAt,
     List<OrganizationSocialActionDetails> SocialActions);

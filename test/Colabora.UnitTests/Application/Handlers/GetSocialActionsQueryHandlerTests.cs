@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Colabora.Application.Features.SocialAction.GetSocialActions;
@@ -8,6 +9,7 @@ using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -81,8 +83,10 @@ public class GetSocialActionsQueryHandlerTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.StatusCode.Should().Be(500);
-        result.Error.Code.Should().Be("InternalError");
-        result.Error.Message.Should().Be("Database timeout");
+        result.FailureStatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        
+        var error = result.Errors.First();
+        error.Code.Should().Be("InternalError");
+        error.Message.Should().Be("Database timeout");
     }
 }

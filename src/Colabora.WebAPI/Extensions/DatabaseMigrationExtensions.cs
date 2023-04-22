@@ -1,9 +1,9 @@
 ﻿using Colabora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Colabora.WebAPI.Configuration;
+namespace Colabora.WebAPI.Extensions;
 
-public static class DatabaseMigrationConfiguration
+public static class DatabaseMigrationExtensions
 {
     public static void ApplyMigration(this WebApplication app)
     {

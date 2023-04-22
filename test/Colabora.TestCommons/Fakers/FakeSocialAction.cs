@@ -10,12 +10,12 @@ namespace Colabora.TestCommons.Fakers;
 public static class FakeSocialAction
 {
     private static readonly Faker Faker = new();
-    
+
     public static SocialAction Create(int? organizationId = null, int? volunteerCreatorId = null)
     {
         return new SocialAction(
             title: Faker.Random.Word(),
-            description: Faker.Random.Word(),
+            description: Faker.Random.String(minLength: 10, maxLength: 255),
             organizationId: organizationId ?? Faker.Random.Int(min: 1),
             volunteerCreatorId: volunteerCreatorId ?? Faker.Random.Int(min: 1),
             state: Faker.Random.Enum(exclude: States.Undefined),

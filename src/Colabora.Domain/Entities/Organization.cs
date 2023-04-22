@@ -14,7 +14,7 @@ public class Organization
         string name,
         string email,
         States state,
-        List<Interests> interests,
+        IEnumerable<Interests> interests,
         int createdBy)
     { 
         Name = name;
@@ -28,7 +28,7 @@ public class Organization
     public string Name { get; }
     public string Email { get; }
     public States State { get; }
-    public List<Interests> Interests { get; }
+    public IEnumerable<Interests> Interests { get; }
     public int CreatedBy { get; }
     public DateTime CreatedAt { get; }
     public IEnumerable<SocialAction> SocialActions { get; }

@@ -5,10 +5,10 @@ using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Colabora.WebAPI.Controllers;
+namespace Colabora.WebAPI.Controllers.v1;
 
 [ApiController]
-[ApiVersion("1.0")]
+[ApiVersion("1")]
 [Route("api/v{version:apiVersion}/actions")]
 public class SocialActionController : ControllerBase
 {
@@ -26,7 +26,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     } 
     
     [HttpGet]
@@ -36,7 +36,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpGet("{Id:int}")]
@@ -46,7 +46,7 @@ public class SocialActionController : ControllerBase
 
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpPost("{id:int}/join")]
@@ -59,6 +59,6 @@ public class SocialActionController : ControllerBase
         
         return result.IsValid
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     } 
 }

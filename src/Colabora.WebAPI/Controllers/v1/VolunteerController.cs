@@ -4,10 +4,10 @@ using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Colabora.WebAPI.Controllers;
+namespace Colabora.WebAPI.Controllers.v1;
 
 [ApiController]
-[ApiVersion("1.0")]
+[ApiVersion("1")]
 [Route("api/v{version:apiVersion}/volunteers")]
 public class VolunteerController : ControllerBase
 {
@@ -17,7 +17,7 @@ public class VolunteerController : ControllerBase
     {
         _mediator = mediator;
     }
-
+    
     [HttpGet]
     public async Task<IActionResult> GetVolunteers()
     {
@@ -25,7 +25,7 @@ public class VolunteerController : ControllerBase
 
         return result.IsValid  
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpGet("{id:int}")]
@@ -35,16 +35,16 @@ public class VolunteerController : ControllerBase
 
         return result.IsValid  
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterVolunteer(RegisterVolunteerCommand command)
+    public async Task<IActionResult> RegisterVolunteer([FromBody] RegisterVolunteerCommand command)
     {
         var result = await _mediator.Send(command);
-            
+        
         return result.IsValid  
             ? Ok(result.Value)
-            : StatusCode(result.FailureStatusCode, result.Error);
+            : StatusCode(result.FailureStatusCode, result.Errors);
     }
 }

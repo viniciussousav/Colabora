@@ -9,7 +9,7 @@ public record RegisterVolunteerResponse(
     string Email,
     States State,
     Gender Gender,
-    List<Interests> Interests,
+    IEnumerable<Interests> Interests,
     DateTime Birthdate,
     DateTime CreatedAt
 );
