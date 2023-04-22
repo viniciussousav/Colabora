@@ -39,7 +39,7 @@ public class VolunteerController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterVolunteer([FromBody] RegisterVolunteerCommand command)
+    public async Task<IActionResult> RegisterVolunteer([FromHeader(Name = "OAuthToken")] string oAuthToken, [FromBody] RegisterVolunteerCommand command)
     {
         var result = await _mediator.Send(command);
         

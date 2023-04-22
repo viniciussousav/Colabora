@@ -17,19 +17,12 @@ public class GoogleAuthService : IGoogleAuthService
         var googleAuthSettings = googleAuthSettingsOptions.Value;
         _validationSettings = new GoogleJsonWebSignature.ValidationSettings
         {
-            Audience = new []
-            {   
-                googleAuthSettings.AudienceAndroid,
-                googleAuthSettings.AudienceIOS,
-                googleAuthSettings.AudienceWeb
-            },
             ExpirationTimeClockTolerance = TimeSpan.FromHours(googleAuthSettings.ExpirationTime)
         };
     }
     
     public async Task<UserAuthInfo> Authenticate(string token)
     {
-        _logger.LogInformation("[GOOGLE AUTH SETTINGS]: {0}", string.Join(",", _validationSettings.Audience));
         var payload = await GoogleJsonWebSignature.ValidateAsync(token, _validationSettings);
         return new UserAuthInfo(email: payload.Email, name: payload.Name);
     }
