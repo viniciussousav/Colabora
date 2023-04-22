@@ -6,18 +6,16 @@ namespace Colabora.TestCommons.Fakers;
 
 public static class FakeRegisterVolunteerCommand
 {
-    
-
-    public static RegisterVolunteerCommand Create(string? email = null)
+    public static RegisterVolunteerCommand CreateValid(string? email = null)
     {
-        var  faker = new Faker();
+        var faker = new Faker();
         return new RegisterVolunteerCommand(
             FirstName: faker.Person.FirstName,
             LastName: faker.Person.LastName,
             Email: email ?? faker.Person.Email,
             State: faker.Random.Enum(exclude: States.Undefined),
             Gender: faker.Random.Enum(exclude: Gender.Undefined),
-            Interests: faker.Random.EnumValues(exclude: Interests.Undefined),
+            Interests: faker.Random.EnumValues(exclude: Interests.Undefined, count: faker.Random.Int(1, 5)),
             Birthdate: faker.Date.Past(yearsToGoBack: 20));
     }
 }

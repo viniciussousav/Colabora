@@ -39,7 +39,7 @@ public partial class RegisterOrganizationEndpointTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
 
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
@@ -90,7 +90,7 @@ public partial class RegisterOrganizationEndpointTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         

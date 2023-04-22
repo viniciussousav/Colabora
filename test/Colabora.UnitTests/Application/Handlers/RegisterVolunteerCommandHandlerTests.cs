@@ -35,7 +35,7 @@ public class RegisterVolunteerCommandHandlerTests
     public async Task Given_A_Command_When_It_Succeeds_Then_It_Should_Return_The_Created_Volunteer()
     {
         // Assert
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         _volunteerRepository.GetVolunteerByEmail(command.Email).Returns(Volunteer.None);
 
         var volunteer = FakeVolunteer.Create(command);
@@ -58,7 +58,7 @@ public class RegisterVolunteerCommandHandlerTests
     public async Task Given_A_Command_When_Exists_A_Volunteer_Registered_With_Same_Email_Then_It_Should_Return_Error()
     {
         // Assert
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         
         _validator.ValidateAsync(command).Returns(new ValidationResult());
 
@@ -83,7 +83,7 @@ public class RegisterVolunteerCommandHandlerTests
     public async Task Given_A_Command_When_An_Exception_Occurs_Then_It_Should_Return_Error()
     {
         // Assert
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         _volunteerRepository.GetVolunteerByEmail(command.Email).Throws(new Exception("Hello Exception"));
         
         _validator.ValidateAsync(command).Returns(new ValidationResult());

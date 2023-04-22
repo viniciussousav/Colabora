@@ -17,7 +17,7 @@ public static class FakeRegisterOrganizationCommand
             Name: faker.Person.FirstName,
             Email: faker.Person.Email,
             State: faker.Random.Enum(exclude: States.Undefined),
-            Interests: faker.Random.EnumValues(exclude: Interests.Undefined),
+            Interests: faker.Random.EnumValues(exclude: Interests.Undefined, count: faker.Random.Int(1, 5)),
             VolunteerCreatorId: volunteerCreatorId ?? faker.Random.Int(min: 1));
     }
 }

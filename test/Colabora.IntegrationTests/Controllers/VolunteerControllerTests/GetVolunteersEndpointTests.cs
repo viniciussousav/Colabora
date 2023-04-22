@@ -61,7 +61,7 @@ public partial class VolunteerControllerTests :
         // Arrange
         var client = _factory.CreateClient();
 
-        var command = FakeRegisterVolunteerCommand.Create();
+        var command = FakeRegisterVolunteerCommand.CreateValid();
         await client.PostAsJsonAsync("api/v1/volunteers", command);
 
         // Act
@@ -99,7 +99,7 @@ public partial class VolunteerControllerTests :
         var volunteersRegistered = new List<RegisterVolunteerCommand>();
         for (var i = 0; i < volunteersRegisteredCount; i++)
         {
-            var command = FakeRegisterVolunteerCommand.Create();
+            var command = FakeRegisterVolunteerCommand.CreateValid();
             await client.PostAsJsonAsync("api/v1/volunteers", command);
             volunteersRegistered.Add(command);
         }

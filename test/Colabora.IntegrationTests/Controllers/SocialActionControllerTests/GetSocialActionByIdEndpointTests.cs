@@ -32,7 +32,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -67,7 +67,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -79,7 +79,7 @@ public partial class SocialActionControllerTests
         var socialActionResponse = await client.PostAsJsonAsync("api/v1.0/actions/", createSocialActionCommand);
         var socialAction = await socialActionResponse.Content.ReadFromJsonAsync<CreateSocialActionResponse>();
         
-        var registerVolunteerForParticipationCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerForParticipationCommand = FakeRegisterVolunteerCommand.CreateValid();
         var registerVolunteerForParticipationResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerForParticipationCommand);
         var volunteerForParticipation = await registerVolunteerForParticipationResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -115,7 +115,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -137,7 +137,7 @@ public partial class SocialActionControllerTests
         // Arrange
         var client = _factory.CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.Create();
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
