@@ -39,7 +39,7 @@ public class LoginController : ControllerBase
             if (volunteer == Volunteer.None)
                 return NotFound(new List<Error> {ErrorMessages.CreateVolunteerNotFound()});
 
-            return Ok(authenticationResult.Token);
+            return Ok(authenticationResult);
         }
         catch (Exception e)
         {
