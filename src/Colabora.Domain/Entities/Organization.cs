@@ -30,6 +30,6 @@ public class Organization
     public States State { get; }
     public IEnumerable<Interests> Interests { get; }
     public int CreatedBy { get; }
-    public DateTime CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; }
     public IEnumerable<SocialAction> SocialActions { get; }
 }

@@ -1,6 +1,9 @@
+using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
+using Colabora.Application.Shared;
+using Colabora.Infrastructure.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,38 +15,51 @@ namespace Colabora.WebAPI.Controllers.v1;
 public class VolunteerController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
+
     public VolunteerController(IMediator mediator)
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetVolunteers()
     {
         var result = await _mediator.Send(new GetVolunteersQuery());
 
-        return result.IsValid  
+        return result.IsValid
             ? Ok(result.Value)
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetVolunteerById([FromRoute] int id)
     {
         var result = await _mediator.Send(new GetVolunteerByIdQuery(id));
 
-        return result.IsValid  
+        return result.IsValid
             ? Ok(result.Value)
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> RegisterVolunteer([FromBody] RegisterVolunteerCommand command)
+    public async Task<IActionResult> RegisterVolunteer(
+        [FromServices] IAuthService authService,
+        [FromHeader(Name = "OAuthToken")] string oAuthToken,
+        [FromBody] RegisterVolunteerCommand command)
     {
-        var result = await _mediator.Send(command);
-        
-        return result.IsValid  
+        if (string.IsNullOrWhiteSpace(oAuthToken))
+            return BadRequest(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google)});
+
+        var authenticationResult = await authService.Authenticate(AuthProvider.Google, oAuthToken);
+
+        if (!authenticationResult.IsValid)
+            return Unauthorized(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google, authenticationResult.Error)});
+
+        var commandWithEmail = command with {Email = authenticationResult.Email};
+
+        var result = await _mediator.Send(commandWithEmail);
+
+        return result.IsValid
             ? Ok(result.Value)
             : StatusCode(result.FailureStatusCode, result.Errors);
     }

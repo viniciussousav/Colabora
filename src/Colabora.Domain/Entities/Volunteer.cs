@@ -14,7 +14,7 @@ public class Volunteer
         string firstName, 
         string lastName, 
         string email,
-        DateTime birthdate, 
+        DateTimeOffset birthdate, 
         Gender gender, 
         IEnumerable<Interests> interests,
         States state)
@@ -33,10 +33,10 @@ public class Volunteer
     public string LastName { get; }
     public string FullName => $"{FirstName} {LastName}";
     public string Email { get; }
-    public DateTime Birthdate { get; }
+    public DateTimeOffset Birthdate { get; }
     public Gender Gender { get; }
     public IEnumerable<Interests> Interests { get; }
     public States State { get; }
     public List<Participation> Participations { get; }
-    public DateTime CreateAt { get; }
+    public DateTimeOffset CreateAt { get; }
 }

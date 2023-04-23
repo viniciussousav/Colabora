@@ -10,6 +10,6 @@ public record GetVolunteersItemResponse(
     States State,
     Gender Gender,
     IEnumerable<Interests> Interests,
-    DateTime Birthdate,
-    DateTime CreatedAt
+    DateTimeOffset Birthdate,
+    DateTimeOffset CreatedAt
 );

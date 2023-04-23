@@ -1,4 +1,5 @@
-﻿using Colabora.Application.Shared;
+﻿using Colabora.Application.Commons;
+using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.Infrastructure.Auth;
@@ -13,36 +14,38 @@ public class LoginController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IVolunteerRepository _volunteerRepository;
-    
+
     public LoginController(IAuthService authService, IVolunteerRepository volunteerRepository)
     {
         _authService = authService;
         _volunteerRepository = volunteerRepository;
     }
-    
+
     [HttpPost("google")]
     public async Task<IActionResult> GoogleLogin([FromHeader(Name = "OAuthToken")] string idToken)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(idToken))
-                return BadRequest(ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google));
+                return BadRequest(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google)});
 
             var authenticationResult = await _authService.Authenticate(AuthProvider.Google, idToken);
 
             if (!authenticationResult.IsValid)
-                return Unauthorized(ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google, authenticationResult.Error));
+                return Unauthorized(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google, authenticationResult.Error)});
 
-            var notRegistered = await _volunteerRepository.GetVolunteerByEmail(authenticationResult.Email) == Volunteer.None;
-            
-            if (notRegistered)
-                return NotFound(ErrorMessages.CreateVolunteerNotFound());
-            
-            return Ok(authenticationResult.Token);
+            var volunteer = await _volunteerRepository.GetVolunteerByEmail(authenticationResult.Email);
+
+            if (volunteer == Volunteer.None)
+                return NotFound(new List<Error> {ErrorMessages.CreateVolunteerNotFound()});
+
+            return Ok(authenticationResult);
         }
         catch (Exception e)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.CreateInternalError(e.Message));
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: new List<Error> {ErrorMessages.CreateInternalError(e.Message)});
         }
     }
 }
