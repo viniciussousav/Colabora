@@ -1,10 +1,11 @@
-﻿#nullable disable
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace Colabora.Infrastructure.Persistence.Migrations
 {
-    public partial class InitialTableStructure : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,7 +20,7 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Interests = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -36,11 +37,11 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Birthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Birthdate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Interests = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                    CreateAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {

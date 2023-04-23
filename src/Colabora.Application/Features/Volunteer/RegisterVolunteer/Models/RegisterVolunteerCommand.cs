@@ -1,15 +1,17 @@
-﻿using Colabora.Application.Commons;
+﻿using System.Text.Json.Serialization;
+using Colabora.Application.Commons;
 using Colabora.Domain.Enums;
 using MediatR;
 
 namespace Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 
-public record RegisterVolunteerCommand(
-    string FirstName,
-    string LastName,
-    string Email,
-    States State,
-    Gender Gender,
-    IEnumerable<Interests> Interests,
-    DateTime Birthdate
-) : IRequest<Result<RegisterVolunteerResponse>>;
+public record RegisterVolunteerCommand : IRequest<Result<RegisterVolunteerResponse>>
+{
+    public string FirstName { get; init; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
+    [JsonIgnore] public string Email { get; init; } = string.Empty;
+    public States State { get; init; } = States.Undefined;
+    public Gender Gender { get; init; } = Gender.Undefined;
+    public IEnumerable<Interests> Interests { get; init; } = Enumerable.Empty<Interests>();
+    public DateTimeOffset Birthdate { get; init; } = DateTimeOffset.MinValue;
+}

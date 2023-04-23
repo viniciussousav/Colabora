@@ -8,7 +8,7 @@ public record GetOrganizationByIdResponse(
     States State,
     IEnumerable<Interests> Interests,
     int CreatedBy,
-    DateTime CreatedAt,
+    DateTimeOffset CreatedAt,
     List<OrganizationSocialActionDetails> SocialActions);
     
 public record OrganizationSocialActionDetails(
