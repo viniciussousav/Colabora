@@ -8,7 +8,10 @@ using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -26,7 +29,24 @@ public partial class VolunteerControllerTests
     {
         // Arrange
         var command = FakeRegisterVolunteerCommand.CreateValid();
-        var client = _factory.CreateClient();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(command.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         
         // Act
         var response = await client.PostAsJsonAsync("/api/v1.0/volunteers", command);
@@ -43,7 +63,7 @@ public partial class VolunteerControllerTests
         createVolunteerResponse.Gender.Should().Be(command.Gender);
         createVolunteerResponse.Birthdate.Should().Be(command.Birthdate);
         createVolunteerResponse.State.Should().Be(command.State);
-        createVolunteerResponse.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        createVolunteerResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
         createVolunteerResponse.Interests.Should().BeEquivalentTo(command.Interests);
     }
     
@@ -52,12 +72,32 @@ public partial class VolunteerControllerTests
     {
         // Arrange
         var command = FakeRegisterVolunteerCommand.CreateValid();
-        var client = _factory.CreateClient();
-
         var existingVolunteer = FakeRegisterVolunteerCommand.CreateValid(email: command.Email);
+
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
+                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue2").Returns(FakeAuthResult.Create(existingVolunteer.Email));
+
+                    return authService;
+                });
+            });
+        }).CreateClient();
+
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue2");
         await client.PostAsJsonAsync("/api/v1.0/volunteers", existingVolunteer);
         
         // Act
+        client.DefaultRequestHeaders.Remove("OAuthToken");
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var response = await client.PostAsJsonAsync("/api/v1.0/volunteers", command);
         
         // Assert
@@ -85,8 +125,20 @@ public partial class VolunteerControllerTests
                     volunteerRepositoryMock.GetVolunteerByEmail(Arg.Any<string>()).Throws(new Exception("Hello"));
                     return volunteerRepositoryMock;
                 });
+                
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
+                    return authService;
+                });
             });
         }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         
         // Act
         var response = await client.PostAsJsonAsync("/api/v1.0/volunteers", command);

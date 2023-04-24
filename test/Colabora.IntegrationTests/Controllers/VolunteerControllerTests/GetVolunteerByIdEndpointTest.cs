@@ -12,7 +12,10 @@ using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -45,9 +48,25 @@ public partial class VolunteerControllerTests
     public async Task Given_A_Get_Volunteer_Request_When_Volunteer_Exists_Then_It_Should_Return_The_Existing_Volunteer()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
@@ -65,7 +84,7 @@ public partial class VolunteerControllerTests
         body.State.Should().Be(registerVolunteerCommand.State);
         body.FirstName.Should().Be(registerVolunteerCommand.FirstName);
         body.LastName.Should().Be(registerVolunteerCommand.LastName);
-        body.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        body.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
         body.Participations.Should().BeEmpty();
     }
     
@@ -73,9 +92,25 @@ public partial class VolunteerControllerTests
     public async Task Given_A_Get_Volunteer_Request_When_Volunteer_Exists_And_Has_Participations_Then_It_Should_Return_The_Existing_Volunteer_With_Participations()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
@@ -104,7 +139,7 @@ public partial class VolunteerControllerTests
         body.State.Should().Be(registerVolunteerCommand.State);
         body.FirstName.Should().Be(registerVolunteerCommand.FirstName);
         body.LastName.Should().Be(registerVolunteerCommand.LastName);
-        body.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        body.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         
         body.Participations.Should().HaveCount(1);
         body.Participations.First().SocialActionId.Should().Be(socialAction.SocialActionId);

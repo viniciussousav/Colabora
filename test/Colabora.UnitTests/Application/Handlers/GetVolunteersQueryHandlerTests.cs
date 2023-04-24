@@ -8,6 +8,7 @@ using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Domain;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

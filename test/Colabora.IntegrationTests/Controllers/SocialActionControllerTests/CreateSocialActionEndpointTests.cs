@@ -11,8 +11,11 @@ using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
+using Colabora.Infrastructure.Auth;
 using Colabora.IntegrationTests.Fixtures;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using Colabora.WebAPI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
@@ -62,9 +65,25 @@ public partial class SocialActionControllerTests :
     public async Task Given_A_Command_When_Volunteer_Creator_Not_Exists_Then_It_Should_Return_An_Error()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -88,9 +107,25 @@ public partial class SocialActionControllerTests :
     public async Task Given_A_Command_When_It_Succeeds_Then_It_Should_Return_The_Created_Social_Action()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
@@ -122,12 +157,17 @@ public partial class SocialActionControllerTests :
     public async Task Given_A_Command_When_An_Exception_Occurs_Then_It_Should_Return_An_Error_Response()
     {
         // Arrange
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+
         var client = _factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureServices(services =>
             {
-                var dbContextDescriptor = services.Single(service => service.ServiceType == typeof(ISocialActionRepository));
-                services.Remove(dbContextDescriptor);
+                var socialActionRepositoryServiceDescriptor = services.Single(service => service.ServiceType == typeof(ISocialActionRepository));
+                services.Remove(socialActionRepositoryServiceDescriptor);
+                
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
                 
                 services.AddScoped<ISocialActionRepository>(_ =>
                 {
@@ -135,10 +175,17 @@ public partial class SocialActionControllerTests :
                     socialActionRepository.CreateSocialAction(Arg.Any<SocialAction>()).Throws(new TaskCanceledException("Hello Exception"));
                     return socialActionRepository;
                 });
+                
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
             });
         }).CreateClient();
 
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        client.DefaultRequestHeaders.Add("OAuthToken", "OAuthTokenValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         

@@ -5,7 +5,7 @@ using Bogus;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Enums;
 
-namespace Colabora.TestCommons.Fakers;
+namespace Colabora.TestCommons.Fakers.Domain;
 
 public static class FakeSocialAction
 {

@@ -6,6 +6,7 @@ using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Domain;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;

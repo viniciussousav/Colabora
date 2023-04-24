@@ -3,7 +3,7 @@ using Bogus;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Domain.Enums;
 
-namespace Colabora.TestCommons.Fakers;
+namespace Colabora.TestCommons.Fakers.Commands;
 
 public static class FakeCreateSocialActionCommand
 {

@@ -8,6 +8,7 @@ using Colabora.Application.Mappers;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Domain;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
