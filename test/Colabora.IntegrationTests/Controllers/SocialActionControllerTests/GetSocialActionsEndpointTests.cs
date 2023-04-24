@@ -10,7 +10,6 @@ using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Repositories;
 using Colabora.Infrastructure.Auth;
-using Colabora.TestCommons.Fakers;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
 using FluentAssertions;

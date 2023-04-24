@@ -9,7 +9,6 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Infrastructure.Auth;
 using Colabora.IntegrationTests.Fixtures;
-using Colabora.TestCommons.Fakers;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
 using Colabora.WebAPI;

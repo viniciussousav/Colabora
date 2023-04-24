@@ -7,7 +7,6 @@ using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
-using Colabora.TestCommons.Fakers;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Domain;
 using FluentAssertions;

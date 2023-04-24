@@ -13,7 +13,6 @@ using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
 using Colabora.Infrastructure.Auth;
 using Colabora.IntegrationTests.Fixtures;
-using Colabora.TestCommons.Fakers;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
 using Colabora.WebAPI;
