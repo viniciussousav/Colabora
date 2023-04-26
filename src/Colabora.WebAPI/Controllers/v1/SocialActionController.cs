@@ -3,6 +3,7 @@ using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
 using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colabora.WebAPI.Controllers.v1;
@@ -19,7 +20,7 @@ public class SocialActionController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<IActionResult> CreateSocialAction(CreateSocialActionCommand command)
     {
         var result = await _mediator.Send(command);
@@ -49,7 +50,7 @@ public class SocialActionController : ControllerBase
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
     
-    [HttpPost("{id:int}/join")]
+    [HttpPost("{id:int}/join"), Authorize]
     public async Task<IActionResult> JoinSocialAction([FromRoute]int id, [FromBody] JoinSocialActionCommand command)
     {
         if (id != command.SocialActionId)
