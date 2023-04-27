@@ -1,10 +1,12 @@
 ﻿using Colabora.Application.Features.Organization.GetOrganizationById.Models;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colabora.WebAPI.Controllers.v1;
 
+[Authorize]
 [ApiController]
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/organizations")]
@@ -27,7 +29,7 @@ public class OrganizationController : ControllerBase
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<IActionResult> RegisterOrganization([FromBody] RegisterOrganizationCommand command)
     {
         var result = await _mediator.Send(command);

@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 using Colabora.Application.Commons;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
+using Colabora.Infrastructure.Auth;
 using Colabora.IntegrationTests.Fixtures;
-using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using Colabora.WebAPI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Xunit;
 
 #pragma warning disable CS8602
@@ -22,31 +26,51 @@ namespace Colabora.IntegrationTests.Controllers.OrganizationControllerTests;
 public partial class RegisterOrganizationEndpointTests : 
     IClassFixture<WebApplicationFactory<Program>>, 
     IClassFixture<DatabaseFixture>,
+    IClassFixture<AuthTokenFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly DatabaseFixture _databaseFixture;
+    private readonly AuthTokenFixture _authTokenFixture;
     
-    public RegisterOrganizationEndpointTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
+    public RegisterOrganizationEndpointTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
         _databaseFixture = databaseFixture;
+        _authTokenFixture = authTokenFixture;
     }
 
     [Fact]
     private async Task Given_A_Register_Organization_Request_When_It_Succeeds_Then_It_Should_Return_The_Created_Organizations()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
-
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
         var command = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
         
         // Act
+        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
         
         // Assert
@@ -59,7 +83,7 @@ public partial class RegisterOrganizationEndpointTests :
         registerOrganizationResponse.Name.Should().BeEquivalentTo(command.Name);
         registerOrganizationResponse.State.Should().Be(command.State);
         registerOrganizationResponse.CreatedBy.Should().Be(command.VolunteerCreatorId).And.Be(volunteer.VolunteerId);
-        registerOrganizationResponse.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        registerOrganizationResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
         registerOrganizationResponse.Interests.Should().BeEquivalentTo(command.Interests);
     }
     
@@ -71,6 +95,8 @@ public partial class RegisterOrganizationEndpointTests :
         var command = FakeRegisterOrganizationCommand.Create();
         
         // Act
+        var token  = await _authTokenFixture.GenerateTestJwt("example@email.com");
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
         
         // Assert
@@ -88,15 +114,34 @@ public partial class RegisterOrganizationEndpointTests :
     private async Task Given_A_Register_Organization_Request_When_Organization_Is_Already_Registered_Then_It_Should_Return_An_Error()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
         
         var command = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.VolunteerId);
         
         // Act
+        var token  = await _authTokenFixture.GenerateTestJwt("example@email.com");
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         await client.PostAsJsonAsync("/api/v1.0/organizations", command);
         var result = await client.PostAsJsonAsync("/api/v1.0/organizations", command);
         

@@ -9,7 +9,9 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Repositories;
-using Colabora.TestCommons.Fakers;
+using Colabora.Infrastructure.Auth;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -26,11 +28,31 @@ public partial class SocialActionControllerTests
     public async Task Given_A_Get_Social_Actions_Request_When_Exists_A_Social_Action_Then_It_Should_Be_Returned_With_Status_Code_200()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
+        // Arrange
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var volunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
+        
+        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         
         var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.VolunteerId);
         var organizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);

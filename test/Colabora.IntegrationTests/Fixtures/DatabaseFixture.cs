@@ -10,6 +10,7 @@ namespace Colabora.IntegrationTests.Fixtures;
 public class DatabaseFixture
 {
     private readonly IConfigurationRoot _configuration;
+    
     public DatabaseFixture()
     {
         _configuration = new ConfigurationBuilder()

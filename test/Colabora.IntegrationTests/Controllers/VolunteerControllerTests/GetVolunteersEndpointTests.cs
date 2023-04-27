@@ -8,8 +8,10 @@ using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Repositories;
+using Colabora.Infrastructure.Auth;
 using Colabora.IntegrationTests.Fixtures;
-using Colabora.TestCommons.Fakers;
+using Colabora.TestCommons.Fakers.Commands;
+using Colabora.TestCommons.Fakers.Shared;
 using Colabora.WebAPI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
@@ -26,15 +28,18 @@ namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
     IClassFixture<DatabaseFixture>,
+    IClassFixture<AuthTokenFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly DatabaseFixture _databaseFixture;
+    private readonly AuthTokenFixture _authTokenFixture;
 
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
         _databaseFixture = databaseFixture;
+        _authTokenFixture = authTokenFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
@@ -59,10 +64,26 @@ public partial class VolunteerControllerTests :
     public async Task Given_A_Get_Volunteers_Request_When_There_Is_A_Volunteer_Registered_Then_It_Should_Return_An_Array_With_Registered_Volunteer()
     {
         // Arrange
-        var client = _factory.CreateClient();
-
-        var command = FakeRegisterVolunteerCommand.CreateValid();
-        await client.PostAsJsonAsync("api/v1/volunteers", command);
+        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+   
+                services.AddScoped<IAuthService>(_ =>
+                {
+                    var authService = Substitute.For<IAuthService>();
+                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    return authService;
+                });
+            });
+        }).CreateClient();
+        
+        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
+        await client.PostAsJsonAsync("api/v1/volunteers", registerVolunteerCommand);
 
         // Act
         var response = await client.GetAsync("api/v1/volunteers");
@@ -77,14 +98,14 @@ public partial class VolunteerControllerTests :
 
         var getVolunteersItemResponse = getVolunteersResponse.Volunteers.First();
         getVolunteersItemResponse.VolunteerId.Should().BePositive();
-        getVolunteersItemResponse.Email.Should().Be(command.Email);
-        getVolunteersItemResponse.FirstName.Should().Be(command.FirstName);
-        getVolunteersItemResponse.LastName.Should().Be(command.LastName);
-        getVolunteersItemResponse.State.Should().Be(command.State);
-        getVolunteersItemResponse.Interests.Should().BeEquivalentTo(command.Interests);
-        getVolunteersItemResponse.Birthdate.Should().Be(command.Birthdate);
-        getVolunteersItemResponse.Gender.Should().Be(command.Gender);
-        getVolunteersItemResponse.CreatedAt.AddHours(-3).Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        getVolunteersItemResponse.Email.Should().Be(registerVolunteerCommand.Email);
+        getVolunteersItemResponse.FirstName.Should().Be(registerVolunteerCommand.FirstName);
+        getVolunteersItemResponse.LastName.Should().Be(registerVolunteerCommand.LastName);
+        getVolunteersItemResponse.State.Should().Be(registerVolunteerCommand.State);
+        getVolunteersItemResponse.Interests.Should().BeEquivalentTo(registerVolunteerCommand.Interests);
+        getVolunteersItemResponse.Birthdate.Should().Be(registerVolunteerCommand.Birthdate);
+        getVolunteersItemResponse.Gender.Should().Be(registerVolunteerCommand.Gender);
+        getVolunteersItemResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
     }
     
     [Theory(DisplayName = "Given a get volunteers request, when there are volunteers registered, then it should return an array with registered volunteers")]
@@ -94,14 +115,30 @@ public partial class VolunteerControllerTests :
     public async Task Given_A_Get_Volunteers_Request_When_There_Are_Volunteers_Registered_Then_It_Should_Return_An_Array_With_Registered_Volunteers(int volunteersRegisteredCount)
     {
         // Arrange
-        var client = _factory.CreateClient();
-        
         var volunteersRegistered = new List<RegisterVolunteerCommand>();
+        var authService = Substitute.For<IAuthService>();
         for (var i = 0; i < volunteersRegisteredCount; i++)
         {
             var command = FakeRegisterVolunteerCommand.CreateValid();
-            await client.PostAsJsonAsync("api/v1/volunteers", command);
+            authService.Authenticate(Arg.Any<AuthProvider>(), $"HeaderValue{i}").Returns(FakeAuthResult.Create(command.Email));
             volunteersRegistered.Add(command);
+        }
+        
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
+                services.Remove(authServiceDescriptor);
+                services.AddScoped<IAuthService>(_ => authService);
+            });
+        }).CreateClient();
+
+        for(var i = 0; i < volunteersRegisteredCount; i++)
+        {
+            client.DefaultRequestHeaders.Remove("OAuthToken");
+            client.DefaultRequestHeaders.Add("OAuthToken", $"HeaderValue{i}");
+            await client.PostAsJsonAsync("api/v1/volunteers", volunteersRegistered[i]);
         }
         
         // Act
