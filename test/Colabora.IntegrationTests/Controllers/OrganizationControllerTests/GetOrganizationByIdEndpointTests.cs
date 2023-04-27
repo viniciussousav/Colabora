@@ -33,6 +33,8 @@ public partial class RegisterOrganizationEndpointTests
         var client = _factory.CreateClient();
 
         // Act 
+        var token  = await _authTokenFixture.GenerateTestJwt("example@email.com");
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var response = await client.GetAsync($"/api/v1.0/organizations/{3}");
 
         // Assert
@@ -66,6 +68,9 @@ public partial class RegisterOrganizationEndpointTests
         client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
+
+        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         
         var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
         var registerOrganizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
@@ -92,8 +97,6 @@ public partial class RegisterOrganizationEndpointTests
     [Fact]
     public async Task Given_A_Get_Organization_By_Id_Request_When_Organization_Exists_With_SocialActions_Then_It_Should_Return_The_Existing_Organization()
     {
-        
-        
         // Arrange
         var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
         
@@ -116,6 +119,9 @@ public partial class RegisterOrganizationEndpointTests
         client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
+        
+        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         
         var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
         var registerOrganizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
@@ -175,9 +181,11 @@ public partial class RegisterOrganizationEndpointTests
         var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
         var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
+        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        
         var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
-        var registerOrganizationResponse =
-            await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
+        var registerOrganizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
         var organization = await registerOrganizationResponse.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
 
         client = _factory.WithWebHostBuilder(builder =>
@@ -199,6 +207,7 @@ public partial class RegisterOrganizationEndpointTests
         }).CreateClient();
 
         // Act 
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var response = await client.GetAsync($"/api/v1.0/organizations/{organization.OrganizationId}");
 
         // Assert

@@ -28,15 +28,18 @@ namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
     IClassFixture<DatabaseFixture>,
+    IClassFixture<AuthTokenFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly DatabaseFixture _databaseFixture;
+    private readonly AuthTokenFixture _authTokenFixture;
 
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
         _databaseFixture = databaseFixture;
+        _authTokenFixture = authTokenFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
