@@ -9,6 +9,7 @@ using NSubstitute;
 
 namespace Colabora.IntegrationTests.Fixtures;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class AuthTokenFixture
 {
     private readonly IConfigurationRoot _configuration;
