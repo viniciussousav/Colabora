@@ -1,11 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Colabora.Infrastructure.Persistence.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialStructure : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,14 +14,14 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                 name: "ORGANIZATION",
                 columns: table => new
                 {
-                    OrganizationId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Interests = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETDATE()")
+                    OrganizationId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false),
+                    Interests = table.Column<string>(type: "text", nullable: false),
+                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -32,16 +33,16 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                 name: "VOLUNTEER",
                 columns: table => new
                 {
-                    VolunteerId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Birthdate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Interests = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreateAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETDATE()")
+                    VolunteerId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Birthdate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Gender = table.Column<string>(type: "text", nullable: false),
+                    Interests = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false),
+                    CreateAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -53,16 +54,16 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                 name: "SOCIAL_ACTION",
                 columns: table => new
                 {
-                    SocialActionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
-                    VolunteerCreatorId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Interests = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OccurrenceDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    SocialActionId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    OrganizationId = table.Column<int>(type: "integer", nullable: false),
+                    VolunteerCreatorId = table.Column<int>(type: "integer", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false),
+                    Interests = table.Column<string>(type: "text", nullable: false),
+                    OccurrenceDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -85,9 +86,9 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                 name: "PARTICIPATION",
                 columns: table => new
                 {
-                    SocialActionId = table.Column<int>(type: "int", nullable: false),
-                    VolunteerId = table.Column<int>(type: "int", nullable: false),
-                    JoinedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    SocialActionId = table.Column<int>(type: "integer", nullable: false),
+                    VolunteerId = table.Column<int>(type: "integer", nullable: false),
+                    JoinedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -4,7 +4,6 @@ using System.Text;
 using Colabora.Infrastructure.Auth.Exceptions;
 using Colabora.Infrastructure.Auth.Google;
 using Colabora.Infrastructure.Auth.Shared;
-using Google.Apis.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

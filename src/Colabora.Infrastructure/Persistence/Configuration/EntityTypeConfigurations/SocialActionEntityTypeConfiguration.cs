@@ -18,7 +18,7 @@ public class SocialActionEntityTypeConfiguration : IEntityTypeConfiguration<Soci
         builder.Property(action => action.Description).IsRequired();
         builder.Property(action => action.Interests).IsRequired();
         builder.Property(action => action.OccurrenceDate).IsRequired();
-        builder.Property(action => action.CreatedAt).IsRequired().ValueGeneratedOnAdd();
+        builder.Property(action => action.CreatedAt).IsRequired().HasDefaultValueSql("NOW()");
 
         builder
             .HasOne<Volunteer>()

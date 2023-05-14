@@ -33,7 +33,6 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
 
         builder.Property(organization => organization.CreatedBy).IsRequired();
         
-        builder.Property(organization => organization.CreatedAt)
-            .HasDefaultValueSql("GETDATE()");
+        builder.Property(organization => organization.CreatedAt).HasDefaultValueSql("NOW()");
     }
 }

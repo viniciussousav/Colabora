@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Colabora.Application.Features.Organization.RegisterOrganization;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
+using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
@@ -17,7 +18,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
 
-namespace Colabora.UnitTests.Application.Handlers;
+namespace Colabora.UnitTests.Application.Features;
 
 public class RegisterOrganizationCommandHandlerTests
 {
@@ -25,13 +26,16 @@ public class RegisterOrganizationCommandHandlerTests
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IValidator<RegisterOrganizationCommand> _validator;
-
+    private readonly IEmailVerificationService _emailVerificationService;
+    
     public RegisterOrganizationCommandHandlerTests()
     {
         _logger = Substitute.For<ILogger<RegisterOrganizationCommandHandler>>();
         _organizationRepository = Substitute.For<IOrganizationRepository>();
         _volunteerRepository = Substitute.For<IVolunteerRepository>();
         _validator = Substitute.For<IValidator<RegisterOrganizationCommand>>();
+        _emailVerificationService = Substitute.For<IEmailVerificationService>();
+
     }
     
     [Fact(DisplayName = "Given a command, when it succeeds, then handler should return the organization created")]
@@ -48,7 +52,7 @@ public class RegisterOrganizationCommandHandlerTests
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Task.FromResult(Organization.None));
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _emailVerificationService, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -73,7 +77,7 @@ public class RegisterOrganizationCommandHandlerTests
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(organization);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Returns(organization);
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _emailVerificationService, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -100,7 +104,7 @@ public class RegisterOrganizationCommandHandlerTests
         _organizationRepository.GetOrganization(command.Name, command.Email, command.VolunteerCreatorId).Returns(Organization.None);
         _organizationRepository.CreateOrganization(Arg.Any<Organization>()).Throws(new TimeoutException("error"));
 
-        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _validator);
+        var handler = new RegisterOrganizationCommandHandler(_logger, _organizationRepository, _volunteerRepository, _emailVerificationService, _validator);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

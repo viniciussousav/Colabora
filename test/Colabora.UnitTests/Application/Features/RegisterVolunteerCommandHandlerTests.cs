@@ -17,7 +17,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
 
-namespace Colabora.UnitTests.Application.Handlers;
+namespace Colabora.UnitTests.Application.Features;
 
 public class RegisterVolunteerCommandHandlerTests
 {

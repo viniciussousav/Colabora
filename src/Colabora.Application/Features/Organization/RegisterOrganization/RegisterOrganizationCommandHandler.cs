@@ -1,6 +1,7 @@
 ﻿using Colabora.Application.Commons;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
+using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
 using FluentValidation;
@@ -14,17 +15,20 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IEmailVerificationService _emailVerificationService;
     private readonly IValidator<RegisterOrganizationCommand> _validator;
 
     public RegisterOrganizationCommandHandler(
         ILogger<RegisterOrganizationCommandHandler> logger,
         IOrganizationRepository organizationRepository, 
         IVolunteerRepository volunteerRepository, 
+        IEmailVerificationService emailVerificationService,
         IValidator<RegisterOrganizationCommand> validator)
     {
         _logger = logger;
         _organizationRepository = organizationRepository;
         _volunteerRepository = volunteerRepository;
+        _emailVerificationService = emailVerificationService;
         _validator = validator;
     }
 
@@ -51,9 +55,11 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
                     failureStatusCode: StatusCodes.Status404NotFound);
             }
 
+            await _emailVerificationService.SendEmailVerificationRequest(command.Email, cancellationToken);
+            
             var organization = command.MapToOrganization();
             var createdOrganization = await _organizationRepository.CreateOrganization(organization);
-            
+
             var response = createdOrganization.MapToRegisterOrganizationResponse();
 
             return Result.Success(response);

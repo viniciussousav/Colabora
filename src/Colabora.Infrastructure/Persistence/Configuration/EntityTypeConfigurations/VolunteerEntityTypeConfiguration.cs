@@ -48,7 +48,6 @@ public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunte
             .HasForeignKey(participation => participation.VolunteerId)
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.Property(volunteer => volunteer.CreateAt)
-            .HasDefaultValueSql("GETDATE()");
+        builder.Property(volunteer => volunteer.CreateAt).HasDefaultValueSql("NOW()");
     }
 }

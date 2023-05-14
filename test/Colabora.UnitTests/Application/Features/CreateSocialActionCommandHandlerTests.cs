@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;
 
-namespace Colabora.UnitTests.Application.Handlers;
+namespace Colabora.UnitTests.Application.Features;
 
 public class CreateSocialActionCommandHandlerTests
 {
