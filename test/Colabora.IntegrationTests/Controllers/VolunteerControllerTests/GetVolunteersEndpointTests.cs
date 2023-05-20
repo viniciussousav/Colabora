@@ -37,7 +37,24 @@ public partial class VolunteerControllerTests :
 
     public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
     {
-        _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+        _factory = factory.WithWebHostBuilder(builder =>
+        {
+            /*
+            builder.ConfigureServices(services =>
+            {
+                var dbContextDescriptor = services.Single(service => service.ServiceType == typeof());
+                services.Remove(dbContextDescriptor);
+                
+                services.AddScoped<IVolunteerRepository>(_ =>
+                {
+                    var volunteerRepositoryMock = Substitute.For<IVolunteerRepository>();
+                    volunteerRepositoryMock.GetAllVolunteers().Throws(new Exception("Hello Exception"));
+                    return volunteerRepositoryMock;
+                });
+            })
+            */
+            builder.UseEnvironment("Test");
+        });
         _databaseFixture = databaseFixture;
         _authTokenFixture = authTokenFixture;
     }
@@ -103,7 +120,7 @@ public partial class VolunteerControllerTests :
         getVolunteersItemResponse.LastName.Should().Be(registerVolunteerCommand.LastName);
         getVolunteersItemResponse.State.Should().Be(registerVolunteerCommand.State);
         getVolunteersItemResponse.Interests.Should().BeEquivalentTo(registerVolunteerCommand.Interests);
-        getVolunteersItemResponse.Birthdate.Should().Be(registerVolunteerCommand.Birthdate);
+        getVolunteersItemResponse.Birthdate.Should().BeSameDateAs(registerVolunteerCommand.Birthdate.ToUniversalTime());
         getVolunteersItemResponse.Gender.Should().Be(registerVolunteerCommand.Gender);
         getVolunteersItemResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
     }

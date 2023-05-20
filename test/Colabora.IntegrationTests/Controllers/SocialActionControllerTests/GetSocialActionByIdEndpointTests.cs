@@ -77,8 +77,8 @@ public partial class SocialActionControllerTests
         getSocialActionBodyResponse.Title.Should().Be(socialAction.Title);
         getSocialActionBodyResponse.VolunteerCreatorId.Should().Be(socialAction.VolunteerCreatorId);
         getSocialActionBodyResponse.State.Should().Be(socialAction.State);
-        getSocialActionBodyResponse.CreatedAt.Should().Be(socialAction.CreatedAt);
-        getSocialActionBodyResponse.OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
+        getSocialActionBodyResponse.CreatedAt.Should().BeCloseTo(socialAction.CreatedAt, TimeSpan.FromSeconds(1));
+        getSocialActionBodyResponse.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(1));
         getSocialActionBodyResponse.Interests.Should().BeEquivalentTo(socialAction.Interests);
     }
     
@@ -141,8 +141,8 @@ public partial class SocialActionControllerTests
         getSocialActionBodyResponse.Title.Should().Be(socialAction.Title);
         getSocialActionBodyResponse.VolunteerCreatorId.Should().Be(socialAction.VolunteerCreatorId);
         getSocialActionBodyResponse.State.Should().Be(socialAction.State);
-        getSocialActionBodyResponse.CreatedAt.Should().Be(socialAction.CreatedAt);
-        getSocialActionBodyResponse.OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
+        getSocialActionBodyResponse.CreatedAt.Should().BeCloseTo(socialAction.CreatedAt, TimeSpan.FromSeconds(1));
+        getSocialActionBodyResponse.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(1));
         getSocialActionBodyResponse.Interests.Should().BeEquivalentTo(socialAction.Interests);
         getSocialActionBodyResponse.Participations.Should().HaveCount(1);
         

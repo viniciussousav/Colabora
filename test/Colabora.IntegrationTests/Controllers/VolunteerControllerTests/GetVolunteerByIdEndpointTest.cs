@@ -76,7 +76,7 @@ public partial class VolunteerControllerTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadFromJsonAsync<GetVolunteerByIdResponse>();
         body.VolunteerId.Should().BePositive();
-        body.Birthdate.Should().Be(registerVolunteerCommand.Birthdate);
+        body.Birthdate.Should().BeSameDateAs(registerVolunteerCommand.Birthdate.ToUniversalTime());
         body.Email.Should().Be(registerVolunteerCommand.Email);
         body.Gender.Should().Be(registerVolunteerCommand.Gender);
         body.Interests.Should().BeEquivalentTo(registerVolunteerCommand.Interests);
@@ -114,8 +114,8 @@ public partial class VolunteerControllerTests
         var volunteer = await volunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
         var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteerCreatorId: volunteer.VolunteerId);
         var organizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
         var organization = await organizationResponse.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
@@ -134,7 +134,7 @@ public partial class VolunteerControllerTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadFromJsonAsync<GetVolunteerByIdResponse>();
         body.VolunteerId.Should().BePositive();
-        body.Birthdate.Should().Be(registerVolunteerCommand.Birthdate);
+        body.Birthdate.Should().BeCloseTo(registerVolunteerCommand.Birthdate.ToUniversalTime(), TimeSpan.FromSeconds(1));
         body.Email.Should().Be(registerVolunteerCommand.Email);
         body.Gender.Should().Be(registerVolunteerCommand.Gender);
         body.Interests.Should().BeEquivalentTo(registerVolunteerCommand.Interests);
@@ -146,7 +146,7 @@ public partial class VolunteerControllerTests
         body.Participations.Should().HaveCount(1);
         body.Participations.First().SocialActionId.Should().Be(socialAction.SocialActionId);
         body.Participations.First().SocialActionTitle.Should().Be(socialAction.Title);
-        body.Participations.First().OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
+        body.Participations.First().OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(1));
         body.Participations.First().JoinedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
     }
     

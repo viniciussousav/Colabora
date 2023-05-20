@@ -26,6 +26,8 @@ builder.Services.AddCors(policyBuilder =>
     })
 );
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,9 +42,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (app.Environment.IsEnvironment("Local"))
+if (app.Environment.IsDevelopment())
 {
-    app.ApplyMigration();
+    app.CreateDatabase();
 }
 
 app.Run();

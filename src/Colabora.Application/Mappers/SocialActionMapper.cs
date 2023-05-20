@@ -16,8 +16,8 @@ public static class SocialActionMapper
             state: command.State,
             interests: command.Interests,
             participations: new List<Participation>(),
-            occurrenceDate: command.OccurrenceDate,
-            createdAt: DateTimeOffset.Now);
+            occurrenceDate: command.OccurrenceDate.ToUniversalTime(),
+            createdAt: DateTimeOffset.UtcNow);
     
     public static CreateSocialActionResponse MapToCreateSocialActionResponse(this SocialAction socialAction)
         => new (
@@ -28,8 +28,8 @@ public static class SocialActionMapper
             VolunteerCreatorId: socialAction.VolunteerCreatorId,
             State: socialAction.State,
             Interests: socialAction.Interests,
-            OccurrenceDate: socialAction.OccurrenceDate,
-            CreatedAt: socialAction.CreatedAt);
+            OccurrenceDate: socialAction.OccurrenceDate.ToUniversalTime(),
+            CreatedAt: socialAction.CreatedAt.ToUniversalTime());
     
     public static GetSocialActionsItemResponse MapToGetSocialActionsItem(this SocialAction socialAction)
         => new (
@@ -40,8 +40,8 @@ public static class SocialActionMapper
             VolunteerCreatorId: socialAction.VolunteerCreatorId,
             State: socialAction.State,
             Interests: socialAction.Interests,
-            OccurrenceDate: socialAction.OccurrenceDate,
-            CreatedAt: socialAction.CreatedAt);
+            OccurrenceDate: socialAction.OccurrenceDate.ToUniversalTime(),
+            CreatedAt: socialAction.CreatedAt.ToUniversalTime());
     
     public static GetSocialActionByIdResponse MapToGetSocialActionByIdResponse(this SocialAction socialAction)
         => new (
@@ -52,8 +52,8 @@ public static class SocialActionMapper
             VolunteerCreatorId: socialAction.VolunteerCreatorId,
             State: socialAction.State,
             Interests: socialAction.Interests,
-            OccurrenceDate: socialAction.OccurrenceDate,
-            CreatedAt: socialAction.CreatedAt,
+            OccurrenceDate: socialAction.OccurrenceDate.ToUniversalTime(),
+            CreatedAt: socialAction.CreatedAt.ToUniversalTime(),
             Participations: socialAction.Participations.Select(
                 p => new SocialActionParticipationDetails(
                     VolunteerId: p.VolunteerId, 

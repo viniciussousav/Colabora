@@ -24,7 +24,7 @@ public class DatabaseFixture
         var connectionString = _configuration.GetConnectionString("ColaboraDatabase");
         return new AppDbContext(
             new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(connectionString)
+                .UseNpgsql(connectionString)
                 .Options);
     }
     
@@ -32,6 +32,7 @@ public class DatabaseFixture
     {
         var ctx = CreateContext();
         await ctx.Database.EnsureDeletedAsync();
+        await ctx.Database.EnsureCreatedAsync();
         await ctx.DisposeAsync();
     }
 }

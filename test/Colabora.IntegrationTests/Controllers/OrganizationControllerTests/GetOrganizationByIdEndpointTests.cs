@@ -151,8 +151,8 @@ public partial class RegisterOrganizationEndpointTests
         var firstSocialAction = getOrganizationByIdResponse.SocialActions.First();
         firstSocialAction.SocialActionId.Should().Be(socialAction.SocialActionId);
         firstSocialAction.SocialActionTitle.Should().Be(socialAction.Title);
-        firstSocialAction.CreatedAt.Should().Be(socialAction.CreatedAt);
-        firstSocialAction.OccurrenceDate.Should().Be(socialAction.OccurrenceDate);
+        firstSocialAction.CreatedAt.Should().BeCloseTo(socialAction.CreatedAt, TimeSpan.FromSeconds(1));
+        firstSocialAction.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(1));
     }
 
     [Fact]

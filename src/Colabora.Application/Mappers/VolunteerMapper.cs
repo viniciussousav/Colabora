@@ -18,7 +18,7 @@ public static class VolunteerMapper
             Gender: volunteer.Gender,
             Interests: volunteer.Interests,
             Birthdate: volunteer.Birthdate,
-            CreatedAt: volunteer.CreateAt);
+            CreatedAt: volunteer.CreateAt.ToUniversalTime());
     }
     
     public static RegisterVolunteerResponse MapToRegisterVolunteerResponse(this Volunteer volunteer)
@@ -31,8 +31,8 @@ public static class VolunteerMapper
             State: volunteer.State,
             Gender: volunteer.Gender,
             Interests: volunteer.Interests,
-            Birthdate: volunteer.Birthdate,
-            CreatedAt: volunteer.CreateAt);
+            Birthdate: volunteer.Birthdate.ToUniversalTime(),
+            CreatedAt: volunteer.CreateAt.ToUniversalTime());
     }
 
     public static Volunteer MapToVolunteer(this RegisterVolunteerCommand command)
@@ -44,7 +44,7 @@ public static class VolunteerMapper
             state: command.State,
             gender: command.Gender,
             interests: command.Interests,
-            birthdate: command.Birthdate);
+            birthdate: command.Birthdate.ToUniversalTime());
     }
     
     public static GetVolunteerByIdResponse MapToGetVolunteerByIdResponse(this Volunteer volunteer)
@@ -57,13 +57,13 @@ public static class VolunteerMapper
             State: volunteer.State,
             Gender: volunteer.Gender,
             Interests: volunteer.Interests,
-            Birthdate: volunteer.Birthdate,
-            CreatedAt: volunteer.CreateAt,
+            Birthdate: volunteer.Birthdate.ToUniversalTime(),
+            CreatedAt: volunteer.CreateAt.ToUniversalTime(),
             Participations: volunteer.Participations.Select(
                 participation => new VolunteerParticipationDetails(
                     SocialActionId: participation.SocialActionId,
                     SocialActionTitle: participation.SocialAction.Title,
-                    JoinedAt: participation.JoinedAt,
+                    JoinedAt: participation.JoinedAt.ToUniversalTime(),
                     OccurrenceDate: participation.SocialAction.OccurrenceDate)).ToList());
     }
 }

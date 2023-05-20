@@ -14,7 +14,7 @@ public static class OrganizationMapper
             State: organization.State,
             Interests: organization.Interests,
             CreatedBy: organization.CreatedBy,
-            CreatedAt: organization.CreatedAt);
+            CreatedAt: organization.CreatedAt.ToUniversalTime());
     }
     
     public static Organization MapToOrganization(this RegisterOrganizationCommand organization)
@@ -35,12 +35,12 @@ public static class OrganizationMapper
             State: organization.State,
             Interests: organization.Interests,
             CreatedBy: organization.CreatedBy,
-            CreatedAt: organization.CreatedAt,
+            CreatedAt: organization.CreatedAt.ToUniversalTime(),
             SocialActions: organization.SocialActions.Select(action => 
                 new OrganizationSocialActionDetails(
                     SocialActionId: action.SocialActionId,
                     SocialActionTitle: action.Title,
-                    CreatedAt: action.CreatedAt,
+                    CreatedAt: action.CreatedAt.ToUniversalTime(),
                     OccurrenceDate: action.OccurrenceDate)).ToList());
     }
 }

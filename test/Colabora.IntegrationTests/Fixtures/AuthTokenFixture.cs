@@ -29,7 +29,7 @@ public class AuthTokenFixture
             JwtAudience = _configuration.GetValue<string>("AuthenticationSettings:JwtAudience"),
             JwtIssuer = _configuration.GetValue<string>("AuthenticationSettings:JwtIssuer"),
             JwtKey = _configuration.GetValue<string>("AuthenticationSettings:JwtKey"),
-            ExpirationTime = TimeSpan.FromMinutes(1)
+            ExpirationTime = TimeSpan.FromMinutes(5)
         });
         
         googleService.Authenticate(Arg.Any<string>()).Returns(new UserAuthInfo(email, "test name"));

@@ -1,18 +1,35 @@
 version: "3.2"
 services:
-  sql-server:
-    container_name: sql-server
-    network_mode: bridge
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - "1433:1433"
+  postgres:
+    image: postgres
+    container_name: colabora_postgres
+    restart: always
     environment:
-      - "MSSQL_SA_PASSWORD=Pass@word"
-      - "ACCEPT_EULA=Y"
-  sqs:
-    image: roribio16/alpine-sqs
-    ports:
-      - "9324:9324"
-      - "9325:9325"
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_USER: testuser
+      POSTGRES_DB: COLABORA
+      PGDATA: /data/postgres
     volumes:
-      - ./config/elasticmq.conf:/opt/config/elasticmq.conf
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "viniciussousavilela@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+volumes:
+  postgres:
+  pgadmin:
+#  sqs:
+#    image: roribio16/alpine-sqs
+#    ports:
+#      - "9324:9324"
+#      - "9325:9325"
+#    volumes:
+#      - ./config/elasticmq.conf:/opt/config/elasticmq.conf

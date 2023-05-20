@@ -80,7 +80,7 @@ public partial class SocialActionControllerTests
         getSocialActionItem.Interests.Should().BeEquivalentTo(createSocialActionCommand.Interests);
         getSocialActionItem.State.Should().Be(createSocialActionCommand.State);
         getSocialActionItem.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-        getSocialActionItem.OccurrenceDate.Should().Be(createSocialActionCommand.OccurrenceDate);
+        getSocialActionItem.OccurrenceDate.Should().BeCloseTo(createSocialActionCommand.OccurrenceDate, TimeSpan.FromSeconds(1));
     }
 
     [Fact]
