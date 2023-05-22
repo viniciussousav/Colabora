@@ -1,9 +1,10 @@
-﻿using Colabora.Application.Commons;
-using Colabora.Application.Shared;
-using Colabora.Domain.Entities;
+﻿using Colabora.Domain.Entities;
 using Colabora.Domain.Repositories;
+using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 using Microsoft.AspNetCore.Mvc;
+
+using ErrorMessages = Colabora.Application.Shared.ErrorMessages;
 
 namespace Colabora.WebAPI.Controllers.v1;
 

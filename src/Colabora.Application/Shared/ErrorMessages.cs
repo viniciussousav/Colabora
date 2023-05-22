@@ -1,4 +1,4 @@
-﻿using Colabora.Application.Commons;
+﻿using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 
 namespace Colabora.Application.Shared;

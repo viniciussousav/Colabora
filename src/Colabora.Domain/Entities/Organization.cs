@@ -1,4 +1,5 @@
 ﻿using Colabora.Domain.Enums;
+using Colabora.Domain.Shared;
 
 #pragma warning disable CS8618
 
@@ -15,13 +16,15 @@ public class Organization
         string email,
         States state,
         IEnumerable<Interests> interests,
-        int createdBy)
+        int createdBy,
+        bool verified)
     { 
         Name = name;
         Email = email;
         State = state;
         Interests = interests;
         CreatedBy = createdBy;
+        Verified = verified;
     }
 
     public int OrganizationId { get; }
@@ -32,4 +35,13 @@ public class Organization
     public int CreatedBy { get; }
     public DateTimeOffset CreatedAt { get; }
     public IEnumerable<SocialAction> SocialActions { get; }
+    public bool Verified { get; private set; }
+
+    public void Verify()
+    {
+        if (Verified)
+            throw new DomainException(ErrorMessages.CreateOrganizationAlreadyVerified(OrganizationId));
+        
+        Verified = true;
+    }
 }

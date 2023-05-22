@@ -14,7 +14,8 @@ public static class OrganizationMapper
             State: organization.State,
             Interests: organization.Interests,
             CreatedBy: organization.CreatedBy,
-            CreatedAt: organization.CreatedAt.ToUniversalTime());
+            CreatedAt: organization.CreatedAt.ToUniversalTime(),
+            Verified: organization.Verified);
     }
     
     public static Organization MapToOrganization(this RegisterOrganizationCommand organization)
@@ -24,7 +25,8 @@ public static class OrganizationMapper
             email: organization.Email,
             state: organization.State,
             interests: organization.Interests,
-            createdBy: organization.VolunteerCreatorId);
+            createdBy: organization.VolunteerCreatorId,
+            verified: false);
     }
     
     public static GetOrganizationByIdResponse MapToGetOrganizationByIdResponse(this Organization organization)

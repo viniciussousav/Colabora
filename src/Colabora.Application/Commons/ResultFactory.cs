@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using Colabora.Domain.Shared;
+using FluentValidation.Results;
 
 namespace Colabora.Application.Commons;
 

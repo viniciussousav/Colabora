@@ -1,6 +1,6 @@
 ﻿using Colabora.Domain.Entities;
-using Colabora.Domain.Exceptions;
 using Colabora.Domain.Repositories;
+using Colabora.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace Colabora.Infrastructure.Persistence.Repositories;
@@ -40,7 +40,7 @@ public class SocialActionRepository : ISocialActionRepository
         var socialAction = await _dbContext.SocialActions
                                .Include(action => action.Participations)
                                .FirstOrDefaultAsync(action => action.SocialActionId == socialActionId)
-            ?? throw new InvalidSocialActionException($"Social action with id {socialActionId} not exists");
+            ?? throw new DomainException($"Social action with id {socialActionId} not exists");
 
         socialAction.AddParticipation(participation);
         await _dbContext.SaveChangesAsync();

@@ -21,7 +21,8 @@ namespace Colabora.Infrastructure.Persistence.Migrations
                     State = table.Column<string>(type: "text", nullable: false),
                     Interests = table.Column<string>(type: "text", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    Verified = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

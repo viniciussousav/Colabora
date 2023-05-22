@@ -8,4 +8,5 @@ public record RegisterOrganizationResponse(
     States State,
     IEnumerable<Interests> Interests,
     int CreatedBy,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    bool Verified);

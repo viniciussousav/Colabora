@@ -17,7 +17,8 @@ public static class FakerOrganization
             email: Faker.Person.Email,
             state: Faker.Random.Enum(exclude: States.Undefined),
             interests: Faker.Random.EnumValues(exclude: Interests.Undefined).ToList(),
-            createdBy: Faker.Random.Int(min: 1));
+            createdBy: Faker.Random.Int(min: 1),
+            verified: false);
     }
     
     public static Organization Create(RegisterOrganizationCommand command)
@@ -27,6 +28,7 @@ public static class FakerOrganization
             email: command.Email,
             state: command.State,
             interests: command.Interests,
-            createdBy: command.VolunteerCreatorId);
+            createdBy: command.VolunteerCreatorId,
+            verified: false);
     }
 }

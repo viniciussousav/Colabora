@@ -15,15 +15,16 @@ public class OrganizationTests
     public void Given_A_New_Volunteer_Instance_When_All_Parameters_Are_Passed_It_Should_Be_Succeed()
     {
         // Arrange
-        var (name, email, state, interests, createdBy) = (
+        var (name, email, state, interests, createdBy, verified) = (
             Faker.Company.CompanyName(),
             Faker.Person.Email,
             Faker.Random.Enum(exclude: States.Undefined),
             Faker.Random.EnumValues<Interests>().ToList(),
-            Faker.Random.Int());
+            Faker.Random.Int(),
+            Faker.Random.Bool());
 
         // Act
-        var organization = new Organization(name, email, state, interests, createdBy);
+        var organization = new Organization(name, email, state, interests, createdBy, verified);
         
         // Assert
         organization.Name.Should().Be(name);
@@ -31,5 +32,6 @@ public class OrganizationTests
         organization.State.Should().Be(state);
         organization.Interests.Should().BeEquivalentTo(interests);
         organization.CreatedBy.Should().Be(createdBy);
+        organization.Verified.Should().Be(verified);
     }
 }

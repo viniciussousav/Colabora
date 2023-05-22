@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
@@ -18,6 +18,8 @@ using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 #pragma warning disable CS8602
+
+using ErrorMessages = Colabora.Application.Shared.ErrorMessages;
 
 namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 

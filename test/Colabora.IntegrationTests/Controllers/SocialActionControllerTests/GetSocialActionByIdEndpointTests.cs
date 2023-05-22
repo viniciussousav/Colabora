@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Commons;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
@@ -13,6 +12,7 @@ using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Shared;
 using Colabora.Domain.Repositories;
+using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
@@ -21,6 +21,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
+
+using ErrorMessages = Colabora.Application.Shared.ErrorMessages;
 
 #pragma warning disable CS8602
 
