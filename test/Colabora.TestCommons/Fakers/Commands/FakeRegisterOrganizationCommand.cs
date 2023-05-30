@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
 
 namespace Colabora.TestCommons.Fakers.Commands;
 

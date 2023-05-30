@@ -1,5 +1,5 @@
 ﻿using Colabora.Application.Features.Organization.RegisterOrganization.Models;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
 using FluentValidation;
 
 namespace Colabora.Application.Validation;

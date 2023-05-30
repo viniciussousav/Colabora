@@ -2,7 +2,7 @@
 using Colabora.Application.Features.Organization.GetOrganizationById.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Organization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +26,7 @@ public class GetOrganizationByIdQueryHandler : IGetOrganizationByIdQueryHandler
         {
             var organization = await _organizationRepository.GetOrganizationById(query.Id, true);
 
-            if (organization == Domain.Entities.Organization.None)
+            if (organization == Domain.Organization.Organization.None)
             {
                 return Result.Fail<GetOrganizationByIdResponse>(
                     error: ErrorMessages.CreateOrganizationNotFound(),

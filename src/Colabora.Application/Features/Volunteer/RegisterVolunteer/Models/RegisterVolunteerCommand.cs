@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Colabora.Application.Commons;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
+using Colabora.Domain.Volunteer;
 using MediatR;
 
 namespace Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;

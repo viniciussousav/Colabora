@@ -1,7 +1,6 @@
 using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Application.Shared;
 using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 using MediatR;

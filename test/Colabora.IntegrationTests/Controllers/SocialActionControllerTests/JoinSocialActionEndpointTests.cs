@@ -8,7 +8,6 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Application.Shared;
 using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers.Commands;

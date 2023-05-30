@@ -2,7 +2,7 @@
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Volunteer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

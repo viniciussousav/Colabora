@@ -2,7 +2,7 @@
 using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Volunteer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +25,7 @@ public class GetVolunteerByIdQueryHandler : IGetVolunteerByIdQueryHandler
         {
             var volunteer = await _volunteerRepository.GetVolunteerById(query.Id, includeParticipations: true);
 
-            if (volunteer == Domain.Entities.Volunteer.None)
+            if (volunteer == Domain.Volunteer.Volunteer.None)
             {
                 return Result.Fail<GetVolunteerByIdResponse>(
                     error: ErrorMessages.CreateVolunteerNotFound(),

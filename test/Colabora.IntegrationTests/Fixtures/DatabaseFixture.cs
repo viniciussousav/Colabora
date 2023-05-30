@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Colabora.Infrastructure.Persistence;
+using Colabora.Infrastructure.Persistence.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

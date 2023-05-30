@@ -1,5 +1,6 @@
 ﻿using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
+using Colabora.Domain.Volunteer;
 using FluentValidation;
 
 namespace Colabora.Application.Validation;

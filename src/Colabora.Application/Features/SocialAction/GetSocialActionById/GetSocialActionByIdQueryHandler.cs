@@ -2,7 +2,7 @@
 using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.SocialAction;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +25,7 @@ public class GetSocialActionByIdQueryHandler : IGetSocialActionByIdQueryHandler
         {
             var socialAction = await _socialActionRepository.GetSocialActionById(query.Id, cancellationToken);
 
-            if (socialAction == Domain.Entities.SocialAction.None)
+            if (socialAction == Domain.SocialAction.SocialAction.None)
                 return Result.Fail<GetSocialActionByIdResponse>(
                     error: ErrorMessages.CreateSocialActionNotFound(),
                     failureStatusCode: StatusCodes.Status404NotFound);

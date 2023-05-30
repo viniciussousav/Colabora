@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Bogus;
-using Colabora.Domain.Entities;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Organization;
+using Colabora.Domain.Shared.Enums;
 using FluentAssertions;
 using Xunit;
 

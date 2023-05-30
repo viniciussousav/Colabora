@@ -1,7 +1,7 @@
 ﻿using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Domain.Entities;
+using Colabora.Domain.Volunteer;
 
 namespace Colabora.Application.Mappers;
 

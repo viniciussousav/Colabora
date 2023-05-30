@@ -1,8 +1,9 @@
 ﻿using Colabora.Application.Commons;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Shared;
-using Colabora.Domain.Entities;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Participation;
+using Colabora.Domain.SocialAction;
+using Colabora.Domain.Volunteer;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -39,7 +40,7 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
             
             var socialAction = await _socialActionRepository.GetSocialActionById(command.SocialActionId, cancellationToken);
 
-            if (socialAction == Domain.Entities.SocialAction.None)
+            if (socialAction == Domain.SocialAction.SocialAction.None)
             {
                 return Result.Fail<JoinSocialActionResponse>(
                     error: ErrorMessages.CreateSocialActionNotFound(),
@@ -48,7 +49,7 @@ public class JoinSocialActionCommandHandler : IJoinSocialActionCommandHandler
 
             var volunteer = await _volunteerRepository.GetVolunteerById(command.VolunteerId);
 
-            if (volunteer == Domain.Entities.Volunteer.None)
+            if (volunteer == Domain.Volunteer.Volunteer.None)
             {
                 return Result.Fail<JoinSocialActionResponse>(
                     error: ErrorMessages.CreateVolunteerNotFound(),

@@ -1,5 +1,5 @@
 ﻿using Amazon.SQS;
-using Colabora.Infrastructure.Messaging.Shared;
+using Colabora.Infrastructure.Messaging.Configuration;
 
 namespace Colabora.Infrastructure.Messaging.Producer;
 

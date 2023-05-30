@@ -1,4 +1,4 @@
-﻿using Colabora.Domain.Enums;
+﻿using Colabora.Domain.Shared.Enums;
 
 namespace Colabora.Application.Features.Organization.GetOrganizationById.Models;
 

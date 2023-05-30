@@ -1,5 +1,5 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
 using MediatR;
 
 namespace Colabora.Application.Features.Organization.RegisterOrganization.Models;

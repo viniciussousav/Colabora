@@ -1,6 +1,5 @@
-﻿using Colabora.Domain.Entities;
-using Colabora.Domain.Repositories;
-using Colabora.Domain.Shared;
+﻿using Colabora.Domain.Shared;
+using Colabora.Domain.Volunteer;
 using Colabora.Infrastructure.Auth;
 using Microsoft.AspNetCore.Mvc;
 

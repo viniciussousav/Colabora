@@ -2,7 +2,7 @@
 using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.SocialAction;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

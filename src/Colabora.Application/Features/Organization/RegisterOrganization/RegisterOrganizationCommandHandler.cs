@@ -1,9 +1,11 @@
 ﻿using Colabora.Application.Commons;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
-using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Organization;
+using Colabora.Domain.Volunteer;
+using Colabora.Infrastructure.Messaging;
+using Colabora.Infrastructure.Messaging.Producer;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -15,20 +17,20 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
     private readonly ILogger<RegisterOrganizationCommandHandler> _logger;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly IEmailVerificationService _emailVerificationService;
     private readonly IValidator<RegisterOrganizationCommand> _validator;
+    private readonly IMessageProducer _messageProducer;
 
     public RegisterOrganizationCommandHandler(
         ILogger<RegisterOrganizationCommandHandler> logger,
         IOrganizationRepository organizationRepository, 
         IVolunteerRepository volunteerRepository, 
-        IEmailVerificationService emailVerificationService,
+        IMessageProducer messageProducer,
         IValidator<RegisterOrganizationCommand> validator)
     {
         _logger = logger;
         _organizationRepository = organizationRepository;
         _volunteerRepository = volunteerRepository;
-        _emailVerificationService = emailVerificationService;
+        _messageProducer = messageProducer;
         _validator = validator;
     }
 
@@ -54,13 +56,11 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
                     error: ErrorMessages.CreateVolunteerNotFound(),
                     failureStatusCode: StatusCodes.Status404NotFound);
             }
-
-            await _emailVerificationService.SendEmailVerificationRequest(command.Email, cancellationToken);
             
-            var organization = command.MapToOrganization();
-            var createdOrganization = await _organizationRepository.CreateOrganization(organization);
-
-            var response = createdOrganization.MapToRegisterOrganizationResponse();
+            var organization = await _organizationRepository.CreateOrganization(command.MapToOrganization());
+            var response = organization.MapToRegisterOrganizationResponse();
+            
+            await _messageProducer.Produce(Queues.OrganizationRegistered, response, cancellationToken);
 
             return Result.Success(response);
         }
@@ -74,9 +74,9 @@ public class RegisterOrganizationCommandHandler : IRegisterOrganizationCommandHa
     }
 
     private async Task<bool> VolunteerCreatorNotExists(int volunteerId)
-        => await _volunteerRepository.GetVolunteerById(volunteerId) == Domain.Entities.Volunteer.None;
+        => await _volunteerRepository.GetVolunteerById(volunteerId) == Domain.Volunteer.Volunteer.None;
     
     private async Task<bool> OrganizationEmailAlreadyExist(string name, string email, int volunteerCreator)
-        => await _organizationRepository.GetOrganization(name, email, volunteerCreator) != Domain.Entities.Organization.None;
+        => await _organizationRepository.GetOrganization(name, email, volunteerCreator) != Domain.Organization.Organization.None;
 
 }

@@ -1,6 +1,6 @@
 ﻿using Colabora.Application.Features.Organization.GetOrganizationById.Models;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
-using Colabora.Domain.Entities;
+using Colabora.Domain.Organization;
 
 namespace Colabora.Application.Mappers;
 
@@ -11,6 +11,7 @@ public static class OrganizationMapper
         return new RegisterOrganizationResponse(
             OrganizationId: organization.OrganizationId,
             Name: organization.Name,
+            Email: organization.Email,
             State: organization.State,
             Interests: organization.Interests,
             CreatedBy: organization.CreatedBy,

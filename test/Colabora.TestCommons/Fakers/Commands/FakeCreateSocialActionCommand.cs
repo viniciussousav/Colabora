@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Bogus;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Shared.Enums;
 
 namespace Colabora.TestCommons.Fakers.Commands;
 

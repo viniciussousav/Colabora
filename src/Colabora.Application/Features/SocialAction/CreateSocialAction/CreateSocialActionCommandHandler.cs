@@ -2,7 +2,9 @@
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Organization;
+using Colabora.Domain.SocialAction;
+using Colabora.Domain.Volunteer;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -68,8 +70,8 @@ public class CreateSocialActionCommandHandler : ICreateSocialActionCommandHandle
     }
     
     private async Task<bool> OrganizationExists(int organizationId) =>
-        await _organizationRepository.GetOrganizationById(organizationId) != Domain.Entities.Organization.None;
+        await _organizationRepository.GetOrganizationById(organizationId) != Domain.Organization.Organization.None;
 
     private async Task<bool> VolunteerCreatorExists(int volunteerId) =>
-        await _volunteerRepository.GetVolunteerById(volunteerId) != Domain.Entities.Volunteer.None;
+        await _volunteerRepository.GetVolunteerById(volunteerId) != Domain.Volunteer.Volunteer.None;
 }

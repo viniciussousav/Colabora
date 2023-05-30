@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
-using Colabora.Domain.Entities;
-using Colabora.Domain.Enums;
+using Colabora.Domain.Participation;
+using Colabora.Domain.Shared.Enums;
+using Colabora.Domain.SocialAction;
 
 namespace Colabora.TestCommons.Fakers.Domain;
 

@@ -2,7 +2,7 @@
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
-using Colabora.Domain.Repositories;
+using Colabora.Domain.Volunteer;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -54,5 +54,5 @@ public class RegisterVolunteerCommandHandler : IRegisterVolunteerCommandHandler
     }
 
     private async Task<bool> IsEmailRegistered(string email) => 
-        await _volunteerRepository.GetVolunteerByEmail(email) != Domain.Entities.Volunteer.None;
+        await _volunteerRepository.GetVolunteerByEmail(email) != Domain.Volunteer.Volunteer.None;
 }
