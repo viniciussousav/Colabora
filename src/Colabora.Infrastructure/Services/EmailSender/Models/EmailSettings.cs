@@ -2,11 +2,13 @@
 
 public class EmailSettings
 {
-    public const string Key = "Smtp:Email";
+    public const string ConfigKey = "EmailSettings::Google";
     
-    public string ServiceAccount { get; init; }
-    public string SmtpHost { get; init; }
-    public int SmtpPort { get; init; }
-    public string SmtpUser { get; init; }
-    public string SmtpPass { get; init; }
+    public string SmtpHost { get; set; }
+
+    public int SmtpPort { get; set; }
+    
+    public string SmtpUser { get; set; }
+    
+    public string SmtpPass { get; set; }
 }

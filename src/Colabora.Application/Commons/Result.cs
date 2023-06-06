@@ -58,3 +58,8 @@ public class Result<T> : Result
 
     public T? Value { get; }
 }
+
+public class EmptyResult
+{
+    public static readonly EmptyResult Empty = new();
+}

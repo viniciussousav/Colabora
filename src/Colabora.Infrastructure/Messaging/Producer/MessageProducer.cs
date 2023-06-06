@@ -16,7 +16,8 @@ public class MessageProducer : IMessageProducer
     {
         if (message is null)
             throw new ArgumentNullException(nameof(message));
-
-        await _sqs.SendMessageAsync(SendMessageRequestBuilder.Build(queueUrl, message), cancellationToken);
+        
+        var urlResponse = await _sqs.GetQueueUrlAsync(queueUrl, cancellationToken);
+        await _sqs.SendMessageAsync(SendMessageRequestBuilder.Build(urlResponse.QueueUrl, message), cancellationToken);
     }
 }

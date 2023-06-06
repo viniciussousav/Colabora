@@ -5,11 +5,9 @@ namespace Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerific
 public class EmailVerificationRequest
 {
     public Guid Code { get; init; }
-    
-    public string Email { get; init; }
-    
-    public DateTimeOffset ExpirationTime { get; init; }
 
+    public string Email { get; init; } = string.Empty;
+    
     [JsonPropertyName("pk")] 
     public string Pk => Code.ToString();
 

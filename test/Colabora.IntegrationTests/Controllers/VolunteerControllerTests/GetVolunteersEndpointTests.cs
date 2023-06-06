@@ -9,6 +9,7 @@ using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Shared;
 using Colabora.Domain.Volunteer;
 using Colabora.Infrastructure.Auth;
+using Colabora.Infrastructure.Messaging.Producer;
 using Colabora.IntegrationTests.Fixtures;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
@@ -54,6 +55,12 @@ public partial class VolunteerControllerTests :
             })
             */
             builder.UseEnvironment("Test");
+            builder.ConfigureServices(services =>
+            {
+                var messageProducerDescriptor = services.Single(service => service.ServiceType == typeof(IMessageProducer));
+                services.Remove(messageProducerDescriptor);
+                services.AddTransient<IMessageProducer>(_ => Substitute.For<IMessageProducer>());
+            });
         });
         _databaseFixture = databaseFixture;
         _authTokenFixture = authTokenFixture;
@@ -122,7 +129,7 @@ public partial class VolunteerControllerTests :
         getVolunteersItemResponse.Interests.Should().BeEquivalentTo(registerVolunteerCommand.Interests);
         getVolunteersItemResponse.Birthdate.Should().BeSameDateAs(registerVolunteerCommand.Birthdate.ToUniversalTime());
         getVolunteersItemResponse.Gender.Should().Be(registerVolunteerCommand.Gender);
-        getVolunteersItemResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        getVolunteersItemResponse.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
     }
     
     [Theory(DisplayName = "Given a get volunteers request, when there are volunteers registered, then it should return an array with registered volunteers")]

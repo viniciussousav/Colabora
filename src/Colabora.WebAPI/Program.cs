@@ -42,7 +42,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsEnvironment("Local"))
 {
     app.CreateDatabase();
 }

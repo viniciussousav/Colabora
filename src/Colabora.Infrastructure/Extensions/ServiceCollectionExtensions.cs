@@ -29,20 +29,20 @@ public static class ServiceCollectionExtensions
 
     private static void AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-        services.AddScoped<IVolunteerRepository, VolunteerRepository>();
-        services.AddScoped<ISocialActionRepository, SocialActionRepository>();
-        services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+        services.AddTransient<IOrganizationRepository, OrganizationRepository>();
+        services.AddTransient<IVolunteerRepository, VolunteerRepository>();
+        services.AddTransient<ISocialActionRepository, SocialActionRepository>();
+        services.AddTransient<IEmailVerificationRepository, EmailVerificationRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
     {
         // Auth
-        services.AddScoped<IGoogleAuthService, GoogleAuthService>();
-        services.AddScoped<IAuthService, AuthService>();
+        services.AddTransient<IGoogleAuthService, GoogleAuthService>();
+        services.AddTransient<IAuthService, AuthService>();
 
-        services.AddScoped<IMessageProducer, MessageProducer>();
-        services.AddScoped<IEmailSender, EmailSender>();
+        services.AddTransient<IMessageProducer, MessageProducer>();
+        services.AddTransient<IEmailSender, EmailSender>();
     }
     
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

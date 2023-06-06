@@ -10,6 +10,6 @@ public static class OptionsConfigExtensions
     {
         serviceCollection.AddOptions<JwtSettings>().BindConfiguration(JwtSettings.Key);
         serviceCollection.AddOptions<GoogleAuthSettings>().BindConfiguration(GoogleAuthSettings.Key);
-        serviceCollection.AddOptions<EmailSettings>().BindConfiguration(EmailSettings.Key);
+        serviceCollection.AddOptions<EmailSettings>().BindConfiguration(EmailSettings.ConfigKey);
     }
 }

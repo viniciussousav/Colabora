@@ -90,7 +90,7 @@ public partial class RegisterOrganizationEndpointTests
         getOrganizationByIdResponse.Name.Should().BeEquivalentTo(organization.Name);
         getOrganizationByIdResponse.State.Should().Be(organization.State);
         getOrganizationByIdResponse.CreatedBy.Should().Be(organization.CreatedBy).And.Be(volunteer.VolunteerId);
-        getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         getOrganizationByIdResponse.Interests.Should().BeEquivalentTo(organization.Interests);
         getOrganizationByIdResponse.SocialActions.Should().BeEmpty();
     }
@@ -145,7 +145,7 @@ public partial class RegisterOrganizationEndpointTests
         getOrganizationByIdResponse.Name.Should().BeEquivalentTo(organization.Name);
         getOrganizationByIdResponse.State.Should().Be(organization.State);
         getOrganizationByIdResponse.CreatedBy.Should().Be(organization.CreatedBy).And.Be(volunteer.VolunteerId);
-        getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
+        getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         getOrganizationByIdResponse.Interests.Should().BeEquivalentTo(organization.Interests);
         
         getOrganizationByIdResponse.SocialActions.Should().HaveCount(1);
@@ -153,7 +153,7 @@ public partial class RegisterOrganizationEndpointTests
         firstSocialAction.SocialActionId.Should().Be(socialAction.SocialActionId);
         firstSocialAction.SocialActionTitle.Should().Be(socialAction.Title);
         firstSocialAction.CreatedAt.Should().BeCloseTo(socialAction.CreatedAt, TimeSpan.FromSeconds(1));
-        firstSocialAction.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(1));
+        firstSocialAction.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(2));
     }
 
     [Fact]

@@ -1,34 +1,28 @@
-﻿using System.Net.Mail;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Amazon.SQS;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+using Colabora.Application.Mappers;
+using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Infrastructure.Messaging;
 using Colabora.Infrastructure.Messaging.Configuration;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
-using Colabora.Infrastructure.Services.EmailSender;
 
 namespace Colabora.Workers.Consumers;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public class EmailVerificationRequestConsumer : BackgroundService
 {
     private readonly ILogger<EmailVerificationRequestConsumer> _logger;
     private readonly IAmazonSQS _sqs;
-    private readonly IEmailSender _emailSender;
-    private readonly IEmailVerificationRepository _emailVerificationRepository;
-
+    private readonly IEmailVerificationService _emailVerificationService;
+    
     public EmailVerificationRequestConsumer(
         ILogger<EmailVerificationRequestConsumer> logger,
-        IAmazonSQS sqs,
-        IEmailSender emailSender,
-        IEmailVerificationRepository emailVerificationRepository)
+        IAmazonSQS sqs, 
+        IEmailVerificationService emailVerificationService)
     {
         _logger = logger;
         _sqs = sqs;
-        _emailSender = emailSender;
-        _emailVerificationRepository = emailVerificationRepository;
+        _emailVerificationService = emailVerificationService;
     }
 
     private const string ConsumedQueue = Queues.OrganizationRegistered;
@@ -45,33 +39,27 @@ public class EmailVerificationRequestConsumer : BackgroundService
 
                 foreach (var message in response.Messages)
                 {
-                    var request = JsonSerializer.Deserialize<RegisterOrganizationResponse>(message.Body, Defaults.JsonSerializerOptions);
-                    _logger.LogInformation("Organization registered event received for email {Email}", request?.Email);
+                    var organization = JsonSerializer.Deserialize<RegisterOrganizationResponse>(message.Body, Defaults.JsonSerializerOptions)
+                        ?? throw new JsonException("Received message is not a valid JSON object");
+                    
+                    _logger.LogInformation("Organization registered event received for email {Email}", organization.Email);
 
-                    if (!IsValidEmail(request?.Email))
+                    var result = await _emailVerificationService.SendEmailVerification(organization.MapToEmailVerificationRequest());
+
+                    if (!result.IsValid)
                     {
-                        var emailVerificationRequest = new EmailVerificationRequest
-                        {
-                            Code = Guid.NewGuid(),
-                            Email = request!.Email,
-                            ExpirationTime = DateTimeOffset.UtcNow.AddHours(2)
-                        };
-
-                        await _emailVerificationRepository.CreateEmailVerificationRequest(emailVerificationRequest);
-                        await _emailSender.SendEmail(request.Email, "Valide seu email", "Test");
+                        _logger.LogWarning("Error while sending email verification to {Email}, skipping delete.", organization.Email);
+                        continue;   
                     }
-
+                    
+                    _logger.LogInformation("Email verification sent to {Email}", organization.Email);
                     await _sqs.DeleteMessageAsync(urlResponse.QueueUrl, message.ReceiptHandle, cancellationToken);
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "An exception occurred at {EmailVerificationRequestConsumer}", nameof(EmailVerificationRequestConsumer));
-                throw;
             }
         }
     }
-
-    private static bool IsValidEmail(string? email) =>
-        !string.IsNullOrWhiteSpace(email) || !MailAddress.TryCreate(email!, out _);
 }

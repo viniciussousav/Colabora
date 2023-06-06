@@ -4,6 +4,7 @@ using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
+using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Validation;
 using Colabora.Infrastructure.Auth.Google;
 using FluentValidation;
@@ -25,7 +26,8 @@ public static class ServiceCollectionExtensions
 
     private static void AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+        services.AddTransient<IGoogleAuthService, GoogleAuthService>();
+        services.AddTransient<IEmailVerificationService, EmailVerificationService>();
     }
 
     private static void AddValidators(this IServiceCollection services)

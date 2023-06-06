@@ -8,6 +8,7 @@ using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Shared;
 using Colabora.Infrastructure.Auth;
+using Colabora.Infrastructure.Messaging.Producer;
 using Colabora.IntegrationTests.Fixtures;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
@@ -35,7 +36,16 @@ public partial class RegisterOrganizationEndpointTests :
     
     public RegisterOrganizationEndpointTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
     {
-        _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+        _factory = factory.WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Test");
+            builder.ConfigureServices(services =>
+            {
+                var messageProducerDescriptor = services.Single(service => service.ServiceType == typeof(IMessageProducer));
+                services.Remove(messageProducerDescriptor);
+                services.AddTransient<IMessageProducer>(_ => Substitute.For<IMessageProducer>());
+            });
+        });
         _databaseFixture = databaseFixture;
         _authTokenFixture = authTokenFixture;
     }

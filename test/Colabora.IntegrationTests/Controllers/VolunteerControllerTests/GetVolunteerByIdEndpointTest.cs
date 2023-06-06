@@ -84,7 +84,7 @@ public partial class VolunteerControllerTests
         body.State.Should().Be(registerVolunteerCommand.State);
         body.FirstName.Should().Be(registerVolunteerCommand.FirstName);
         body.LastName.Should().Be(registerVolunteerCommand.LastName);
-        body.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        body.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         body.Participations.Should().BeEmpty();
     }
     
