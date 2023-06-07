@@ -33,4 +33,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Run Unit Test
-      run:  dotnet test ./test/Colabora.UnitTests.csproj --no-restore --verbosity normal
+      run:  dotnet test --filter FullyQualifiedName~Colabora.UnitTests --no-restore --verbosity normal

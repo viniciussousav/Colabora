@@ -4,8 +4,8 @@ public class JwtSettings
 {
     public const string Key = "AuthenticationSettings";
     
-    public string JwtKey { get; init; }
-    public string JwtIssuer { get; init; }
-    public string JwtAudience { get; init; }
-    public TimeSpan ExpirationTime { get; init; }
+    public string JwtKey { get; init; } = string.Empty;
+    public string JwtIssuer { get; init; } = string.Empty;
+    public string JwtAudience { get; init; } = string.Empty;
+    public TimeSpan ExpirationTime { get; init; } = TimeSpan.FromHours(1);
 }
