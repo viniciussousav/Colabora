@@ -13,8 +13,9 @@ env:
 
 jobs:
   
-  build:
-    name: Build
+  build-and-test:
+    
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,11 +27,5 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
-  
-  unit-test:
-    needs: build
-    name: Run Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run Unit Test
-      run:  dotnet test --filter FullyQualifiedName~Colabora.UnitTests --no-restore --verbosity normal
+      - name: Run Unit Test
+        run: dotnet test --filter FullyQualifiedName~Colabora.UnitTests --no-restore --verbosity normal
