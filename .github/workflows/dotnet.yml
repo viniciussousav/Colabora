@@ -9,7 +9,7 @@ on:
     - '**.csproj'
 
 env:
-  DOTNET_VERSION: '6.0.401' # The .NET SDK version to use
+  DOTNET_VERSION: '6.0.408' # The .NET SDK version to use
 
 jobs:
   
@@ -17,18 +17,19 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
   
   unit-test:
+    needs: build
     name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
     - name: Install dependencies
       run: dotnet restore
     - name: Run Unit Test
