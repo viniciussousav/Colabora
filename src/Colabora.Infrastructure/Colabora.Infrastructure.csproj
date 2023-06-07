@@ -28,4 +28,8 @@
     <ItemGroup>
       <Folder Include="Services\EmailSender\Templates" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 </Project>
