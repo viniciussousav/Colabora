@@ -1,9 +1,9 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification;
 
@@ -30,7 +30,7 @@ public class EmailVerificationRepository : IEmailVerificationRepository
 
         var response = await _dynamoDb.PutItemAsync(createItemRequest);
 
-        if ((int) response.HttpStatusCode != StatusCodes.Status200OK)
+        if (response.HttpStatusCode != HttpStatusCode.OK)
             throw new AmazonDynamoDBException(message:"Error while saving email verification request");
     }
     
