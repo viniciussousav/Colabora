@@ -1,7 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Colabora.Application.Features.Organization.GetOrganizationById.Models;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+using Colabora.Application.Features.Organization.VerifyOrganization.Models;
 using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
+using Colabora.Application.Features.SocialAction.GetSocialActionById.Models;
+using Colabora.Application.Features.SocialAction.GetSocialActions.Models;
 using Colabora.Application.Features.SocialAction.JoinSocialAction.Models;
+using Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Application.Services.EmailVerification;
@@ -18,10 +23,18 @@ public static class ServiceCollectionExtensions
 {
     private static void AddMediatrAssemblies(this IServiceCollection services)
     {
+        services.AddMediatR(typeof(GetVolunteerByIdQuery));
         services.AddMediatR(typeof(GetVolunteersQuery));
-        services.AddMediatR(typeof(RegisterOrganizationCommand));
         services.AddMediatR(typeof(RegisterVolunteerCommand));
+
+        services.AddMediatR(typeof(GetOrganizationByIdQuery));
+        services.AddMediatR(typeof(RegisterOrganizationCommand));
+        services.AddMediatR(typeof(VerifyOrganizationCommand));
+
         services.AddMediatR(typeof(CreateSocialActionCommand));
+        services.AddMediatR(typeof(GetSocialActionByIdQuery));
+        services.AddMediatR(typeof(GetSocialActionsQuery));
+        services.AddMediatR(typeof(JoinSocialActionCommand));
     }
 
     private static void AddServices(this IServiceCollection services)

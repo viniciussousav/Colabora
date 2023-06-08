@@ -6,6 +6,7 @@ using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Infrastructure.Messaging;
 using Colabora.Infrastructure.Messaging.Configuration;
+using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
 
 namespace Colabora.Workers.Consumers;
 
@@ -44,7 +45,7 @@ public class EmailVerificationRequestConsumer : BackgroundService
                     
                     _logger.LogInformation("Organization registered event received for email {Email}", organization.Email);
 
-                    var result = await _emailVerificationService.SendEmailVerification(organization.MapToEmailVerificationRequest());
+                    var result = await _emailVerificationService.SendEmailVerification(new EmailVerificationRequest(organization.Email));
 
                     if (!result.IsValid)
                     {

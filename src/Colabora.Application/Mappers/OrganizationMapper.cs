@@ -1,7 +1,6 @@
 ﻿using Colabora.Application.Features.Organization.GetOrganizationById.Models;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Domain.Organization;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
 
 namespace Colabora.Application.Mappers;
 
@@ -40,20 +39,12 @@ public static class OrganizationMapper
             Interests: organization.Interests,
             CreatedBy: organization.CreatedBy,
             CreatedAt: organization.CreatedAt.ToUniversalTime(),
+            Verified: organization.Verified,
             SocialActions: organization.SocialActions.Select(action => 
                 new OrganizationSocialActionDetails(
                     SocialActionId: action.SocialActionId,
                     SocialActionTitle: action.Title,
                     CreatedAt: action.CreatedAt.ToUniversalTime(),
                     OccurrenceDate: action.OccurrenceDate)).ToList());
-    }
-
-    public static EmailVerificationRequest MapToEmailVerificationRequest(this RegisterOrganizationResponse response)
-    {
-        return new EmailVerificationRequest
-        {
-            Email = response.Email,
-            Code = Guid.NewGuid()
-        };
     }
 }

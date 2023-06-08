@@ -54,8 +54,7 @@ public class CreateSocialActionCommandHandlerTests
         result.IsValid.Should().BeFalse();
 
         var error = result.Errors.First();
-        error.Code.Should().Be(nameof(ErrorMessages.OrganizationNotFound));
-        error.Message.Should().Be("Organization not found");
+        error.Should().BeEquivalentTo(ErrorMessages.CreateOrganizationNotFound());
     }
     
     [Fact]
@@ -77,8 +76,7 @@ public class CreateSocialActionCommandHandlerTests
         result.IsValid.Should().BeFalse();
         
         var error = result.Errors.First();
-        error.Code.Should().Be(nameof(ErrorMessages.VolunteerNotFound));
-        error.Message.Should().Be("Volunteer not found");
+        error.Should().BeEquivalentTo(ErrorMessages.CreateVolunteerNotFound());
     }
     
     [Fact]

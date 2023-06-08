@@ -26,7 +26,7 @@ public partial class Result
 
     public IEnumerable<Error> Errors { get; } = Enumerable.Empty<Error>();
 
-    public bool IsValid => !Errors.Any();
+    public virtual bool IsValid => !Errors.Any();
 
     public int FailureStatusCode
     {
@@ -57,6 +57,8 @@ public class Result<T> : Result
     }
 
     public T? Value { get; }
+
+    public override bool IsValid => !Errors.Any() && Value is not null;
 }
 
 public class EmptyResult

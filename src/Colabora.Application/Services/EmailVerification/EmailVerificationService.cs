@@ -30,7 +30,7 @@ public class EmailVerificationService : IEmailVerificationService
         try
         {
             if (!IsValidEmail(request.Email))
-                return Result.Fail<EmptyResult>(Error.Create("Email", "Invalid email verification request"));
+                return Result.Fail<EmptyResult>(ErrorMessages.CreateInvalidEmail(request.Email));
 
             await _emailVerificationRepository.CreateEmailVerificationRequest(request);
             await _emailSender.SendEmail(request.Email, "Valide seu email", "Test");
@@ -41,6 +41,25 @@ public class EmailVerificationService : IEmailVerificationService
         {
             _logger.LogError(e, "Error sending email verification at {EmailVerificationService}", nameof(EmailVerificationService));
             return Result.Fail<EmptyResult>(ErrorMessages.CreateInternalError(e.Message));
+        }
+    }
+    
+    public async Task ValidateEmailVerification(Guid verificationCode)
+    {
+        try
+        {
+            var emailVerification = await _emailVerificationRepository.GetAsync(verificationCode);
+
+            if (emailVerification is null)
+                throw new DomainException(ErrorMessages.CreateEmailVerificationNotFound());
+            
+            if (emailVerification.RequestedAt.AddHours(2) < DateTimeOffset.UtcNow)
+                throw new DomainException(ErrorMessages.CreateEmailVerificationExpired());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error validating email verification at {EmailVerificationService}", nameof(EmailVerificationService));
+            throw;
         }
     }
 

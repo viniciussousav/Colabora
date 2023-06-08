@@ -19,5 +19,5 @@ public class DomainException : Exception
         Error = error;
     }
 
-    private Error Error { get; }
+    public Error Error { get; }
 }

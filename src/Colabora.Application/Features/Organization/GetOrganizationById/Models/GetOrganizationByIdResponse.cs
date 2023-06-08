@@ -9,6 +9,7 @@ public record GetOrganizationByIdResponse(
     IEnumerable<Interests> Interests,
     int CreatedBy,
     DateTimeOffset CreatedAt,
+    bool Verified,
     List<OrganizationSocialActionDetails> SocialActions);
     
 public record OrganizationSocialActionDetails(
