@@ -1,6 +1,5 @@
 ﻿using Colabora.Infrastructure.Services.EmailSender.Models;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;

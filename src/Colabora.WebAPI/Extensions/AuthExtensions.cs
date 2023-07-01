@@ -1,8 +1,6 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.Text;
 using Colabora.Infrastructure.Auth.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 

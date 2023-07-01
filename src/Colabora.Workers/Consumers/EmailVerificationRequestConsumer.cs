@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using Amazon.SQS;
 using Colabora.Application.Features.Organization.RegisterOrganization.Models;
-using Colabora.Application.Mappers;
 using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Infrastructure.Messaging;
