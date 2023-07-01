@@ -2,5 +2,6 @@
 
 public interface IAuthService
 {
-    Task<AuthResult> Authenticate(AuthProvider authProvider, string token);
+    Task<AuthResult> AuthenticateUser(AuthProvider authProvider, string token);
+    AuthResult GenerateEmailVerificationToken();
 }

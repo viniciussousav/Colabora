@@ -45,7 +45,7 @@ public partial class SocialActionControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
                     return authService;
                 });
             });
@@ -100,8 +100,8 @@ public partial class SocialActionControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
-                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue2").Returns(FakeAuthResult.Create(registerVolunteerForParticipationCommand.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), "HeaderValue2").Returns(FakeAuthResult.Create(registerVolunteerForParticipationCommand.Email));
                     return authService;
                 });
             });

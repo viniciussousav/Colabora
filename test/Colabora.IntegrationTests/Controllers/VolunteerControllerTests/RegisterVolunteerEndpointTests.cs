@@ -40,7 +40,7 @@ public partial class VolunteerControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(command.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(command.Email));
                     return authService;
                 });
             });
@@ -84,8 +84,8 @@ public partial class VolunteerControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
-                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue2").Returns(FakeAuthResult.Create(existingVolunteer.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), "HeaderValue2").Returns(FakeAuthResult.Create(existingVolunteer.Email));
 
                     return authService;
                 });
@@ -132,7 +132,7 @@ public partial class VolunteerControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), "HeaderValue").Returns(FakeAuthResult.Create(command.Email));
                     return authService;
                 });
             });

@@ -38,7 +38,7 @@ public static class ServiceCollectionExtensions
     private static void AddServices(this IServiceCollection services)
     {
         // Auth
-        services.AddTransient<IGoogleAuthService, GoogleAuthService>();
+        services.AddTransient<IGoogleAuthProvider, GoogleAuthProvider>();
         services.AddTransient<IAuthService, AuthService>();
 
         services.AddTransient<IMessageProducer, MessageProducer>();

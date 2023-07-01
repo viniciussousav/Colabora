@@ -29,7 +29,7 @@ public class LoginController : ControllerBase
             if (string.IsNullOrWhiteSpace(idToken))
                 return BadRequest(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google)});
 
-            var authenticationResult = await _authService.Authenticate(AuthProvider.Google, idToken);
+            var authenticationResult = await _authService.AuthenticateUser(AuthProvider.Google, idToken);
 
             if (!authenticationResult.IsValid)
                 return Unauthorized(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google, authenticationResult.Error)});

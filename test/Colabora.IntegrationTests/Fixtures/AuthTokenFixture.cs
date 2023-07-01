@@ -22,7 +22,7 @@ public class AuthTokenFixture
     
     public async Task<string> GenerateTestJwt(string email,AuthProvider authProvider = AuthProvider.Google)
     {
-        var googleService = Substitute.For<IGoogleAuthService>();
+        var googleService = Substitute.For<IGoogleAuthProvider>();
         var securityOptions = Substitute.For<IOptions<JwtSettings>>();
         securityOptions.Value.Returns(new JwtSettings
         {
@@ -35,7 +35,7 @@ public class AuthTokenFixture
         googleService.Authenticate(Arg.Any<string>()).Returns(new UserAuthInfo(email, "test name"));
         
         var authService = new AuthService(googleService, securityOptions);
-        var authResult = await authService.Authenticate(authProvider, "fake token");
+        var authResult = await authService.AuthenticateUser(authProvider, "fake token");
         return authResult.Token;
     }
 }

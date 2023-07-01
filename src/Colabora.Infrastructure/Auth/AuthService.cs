@@ -11,22 +11,22 @@ namespace Colabora.Infrastructure.Auth;
 
 public class AuthService : IAuthService
 {
-    private readonly IGoogleAuthService _googleAuthService;
+    private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly JwtSettings _jwtSettings;
 
-    public AuthService(IGoogleAuthService googleAuthService, IOptions<JwtSettings> securityCredentialOptions)
+    public AuthService(IGoogleAuthProvider googleAuthProvider, IOptions<JwtSettings> securityCredentialOptions)
     {
-        _googleAuthService = googleAuthService;
+        _googleAuthProvider = googleAuthProvider;
         _jwtSettings = securityCredentialOptions.Value;
     }
 
-    public async Task<AuthResult> Authenticate(AuthProvider authProvider, string token)
+    public async Task<AuthResult> AuthenticateUser(AuthProvider authProvider, string token)
     {
         try
         {
             var userInfo = authProvider switch
             {
-                AuthProvider.Google => await _googleAuthService.Authenticate(token),
+                AuthProvider.Google => await _googleAuthProvider.Authenticate(token),
                 AuthProvider.Undefined or _ => throw new InvalidAuthProviderException("The given provider is invalid")
             };
 
@@ -39,13 +39,40 @@ public class AuthService : IAuthService
                 claims: new List<Claim>
                 {
                     new(ClaimTypes.Email, userInfo.Email),
-                    new(ClaimTypes.Name, userInfo.Name)
+                    new(ClaimTypes.Name, userInfo.Name),
+                    new(ClaimTypes.Role, Roles.EmailVerification)
                 },
                 signingCredentials: new SigningCredentials(credentials, SecurityAlgorithms.HmacSha256));
 
             var stringJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return new AuthResult {Email = userInfo.Email, Token = stringJwt};
+        }
+        catch (Exception e)
+        {
+            return new AuthResult {Error = e.Message};
+        }
+    }
+    
+    public AuthResult GenerateEmailVerificationToken()
+    {
+        try
+        {
+            var credentials = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.JwtKey));
+
+            var jwt = new JwtSecurityToken(
+                issuer: _jwtSettings.JwtIssuer,
+                audience: _jwtSettings.JwtAudience,
+                expires: DateTime.Now.Add(_jwtSettings.ExpirationTime),
+                claims: new List<Claim>
+                {
+                    new(ClaimTypes.Role, Roles.EmailVerification)
+                },
+                signingCredentials: new SigningCredentials(credentials, SecurityAlgorithms.HmacSha256));
+
+            var stringJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return new AuthResult { Token = stringJwt };
         }
         catch (Exception e)
         {

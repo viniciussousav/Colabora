@@ -5,12 +5,12 @@ using Microsoft.Extensions.Options;
 
 namespace Colabora.Infrastructure.Auth.Google;
 
-public class GoogleAuthService : IGoogleAuthService
+public class GoogleAuthProvider : IGoogleAuthProvider
 {
-    private readonly ILogger<GoogleAuthService> _logger;
+    private readonly ILogger<GoogleAuthProvider> _logger;
     private readonly GoogleJsonWebSignature.ValidationSettings _validationSettings;
 
-    public GoogleAuthService(ILogger<GoogleAuthService> logger, IOptions<GoogleAuthSettings> googleAuthSettingsOptions)
+    public GoogleAuthProvider(ILogger<GoogleAuthProvider> logger, IOptions<GoogleAuthSettings> googleAuthSettingsOptions)
     {
         _logger = logger;
         

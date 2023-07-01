@@ -51,7 +51,7 @@ public class VolunteerController : ControllerBase
         if (string.IsNullOrWhiteSpace(oAuthToken))
             return BadRequest(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google)});
 
-        var authenticationResult = await authService.Authenticate(AuthProvider.Google, oAuthToken);
+        var authenticationResult = await authService.AuthenticateUser(AuthProvider.Google, oAuthToken);
 
         if (!authenticationResult.IsValid)
             return Unauthorized(new List<Error> {ErrorMessages.CreateInvalidOAuthToken(AuthProvider.Google, authenticationResult.Error)});

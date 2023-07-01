@@ -60,7 +60,7 @@ public partial class VolunteerControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
                     return authService;
                 });
             });
@@ -104,7 +104,7 @@ public partial class VolunteerControllerTests
                 services.AddScoped<IAuthService>(_ =>
                 {
                     var authService = Substitute.For<IAuthService>();
-                    authService.Authenticate(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
+                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
                     return authService;
                 });
             });

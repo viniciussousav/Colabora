@@ -2,7 +2,7 @@
 
 namespace Colabora.Infrastructure.Auth.Google;
 
-public interface IGoogleAuthService
+public interface IGoogleAuthProvider
 {
     Task<UserAuthInfo> Authenticate(string token);
 }

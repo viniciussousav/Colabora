@@ -4,6 +4,7 @@ using Colabora.Application.Features.Organization.VerifyOrganization.Models;
 using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Domain.Organization;
+using Colabora.Infrastructure.Auth.Shared;
 using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Colabora.WebAPI.Controllers.v1;
 
-[Authorize]
 [ApiController]
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/organizations")]
@@ -24,6 +24,7 @@ public class OrganizationController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Policy = PolicyNames.User)]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetOrganizationById([FromRoute] int id)
     {
@@ -34,6 +35,7 @@ public class OrganizationController : ControllerBase
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
 
+    [Authorize(Policy = PolicyNames.User)]
     [HttpPost]
     public async Task<IActionResult> RegisterOrganization([FromBody] RegisterOrganizationCommand command)
     {
@@ -45,6 +47,7 @@ public class OrganizationController : ControllerBase
         return CreatedAtAction(nameof(GetOrganizationById), new {Id = result.Value?.OrganizationId}, result.Value);
     }
 
+    [Authorize(Policy = PolicyNames.EmailVerification)]
     [HttpPut("{id:int}/verification/confirm")]
     public async Task<IActionResult> ConfirmOrganizationVerification([FromRoute] int id, [FromQuery] Guid verificationCode)
     {
@@ -56,6 +59,7 @@ public class OrganizationController : ControllerBase
         return Ok();
     }
     
+    [Authorize(Policy = PolicyNames.EmailVerification)]
     [HttpPut("{id:int}/verification/resend")]
     public async Task<IActionResult> ResendOrganizationVerification(
         [FromRoute] int id, 
