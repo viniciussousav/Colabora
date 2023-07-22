@@ -10,7 +10,6 @@ using Colabora.Infrastructure.Persistence.SqlServer;
 using Colabora.Infrastructure.Persistence.SqlServer.Repositories;
 using Colabora.Infrastructure.Services.EmailSender;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Colabora.Infrastructure.Extensions;

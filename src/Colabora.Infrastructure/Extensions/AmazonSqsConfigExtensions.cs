@@ -2,7 +2,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
 using Amazon.SQS;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Colabora.Infrastructure.Extensions;
