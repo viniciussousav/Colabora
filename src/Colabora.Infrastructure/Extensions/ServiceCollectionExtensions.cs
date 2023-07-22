@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
             .AddDbContext<AppDbContext>(options =>
             {
                 var sqlConnectionString = Environment.GetEnvironmentVariable("ColaboraSqlDatabase");
+                ArgumentNullException.ThrowIfNull(sqlConnectionString, nameof(sqlConnectionString));
                 options.UseNpgsql(sqlConnectionString);
             })
             .AddHealthChecks()
