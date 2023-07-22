@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
         services
             .AddDbContext<AppDbContext>(options =>
             {
-                var sqlConnectionString = Environment.GetEnvironmentVariable("ColaboraSqlDatabase");
+                var sqlConnectionString = Environment.GetEnvironmentVariable("SQL_COLABORA_DATABASE");
                 ArgumentNullException.ThrowIfNull(sqlConnectionString, nameof(sqlConnectionString));
                 options.UseNpgsql(sqlConnectionString);
             })

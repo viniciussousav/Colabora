@@ -20,6 +20,12 @@ jobs:
       name: Build and Test
       runs-on: ubuntu-latest
       
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+        AWS_COLABORA_ACCESS_KEY: access-key
+        AWS_COLABORA_SECRET_KEY: secret
+        SQL_COLABORA_DATABASE: Host=localhost;Port=5432;Database=COLABORA;User Id=testuser;Password=testpassword
+      
       steps:
       - uses: actions/checkout@v3
       

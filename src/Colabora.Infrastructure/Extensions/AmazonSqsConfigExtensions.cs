@@ -11,8 +11,8 @@ public static class AmazonSqsConfigExtensions
     private static void AddDynamoDb(this IServiceCollection serviceCollection)
     {
         var credentials = new BasicAWSCredentials(
-            accessKey: Environment.GetEnvironmentVariable("AwsAccessKey"),
-            secretKey: Environment.GetEnvironmentVariable("AwsSecretKey"));
+            accessKey: Environment.GetEnvironmentVariable("AWS_COLABORA_ACCESS_KEY"),
+            secretKey: Environment.GetEnvironmentVariable("AWS_COLABORA_SECRET_KEY"));
 
         serviceCollection.AddSingleton<IAmazonDynamoDB>(new AmazonDynamoDBClient(credentials, RegionEndpoint.SAEast1));
     }
@@ -20,8 +20,8 @@ public static class AmazonSqsConfigExtensions
     private static void AddSqs(this IServiceCollection serviceCollection)
     {
         var credentials = new BasicAWSCredentials(
-            accessKey: Environment.GetEnvironmentVariable("AwsAccessKey"),
-            secretKey: Environment.GetEnvironmentVariable("AwsSecretKey"));
+            accessKey: Environment.GetEnvironmentVariable("AWS_COLABORA_ACCESS_KEY"),
+            secretKey: Environment.GetEnvironmentVariable("AWS_COLABORA_SECRET_KEY"));
 
         serviceCollection.AddSingleton<IAmazonSQS>(new AmazonSQSClient(credentials, RegionEndpoint.SAEast1));
     }
