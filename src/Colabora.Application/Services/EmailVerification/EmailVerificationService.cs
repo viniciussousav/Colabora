@@ -33,6 +33,7 @@ public class EmailVerificationService : IEmailVerificationService
                 return Result.Fail<EmptyResult>(ErrorMessages.CreateInvalidEmail(request.Email));
 
             await _emailVerificationRepository.CreateEmailVerificationRequest(request);
+            
             await _emailSender.SendEmail(
                 to: request.Email, 
                 subject: "Bem-vindo ao Colabora! Valide seu email", 

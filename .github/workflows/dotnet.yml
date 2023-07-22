@@ -9,7 +9,9 @@ on:
     - '**.csproj'
 
 env:
-  DOTNET_VERSION: '6.0.408' # The .NET SDK version to use
+  DOTNET_VERSION: '6.0.x'
+  AWS_LAMBDA_ACCESS_KEY_ID: ${{ secrets.AWS_LAMBDA_ACCESS_KEY_ID }}
+  AWS_LAMBDA_SECRET_ACCESS_KEY: ${{ secrets.AWS_LAMBDA_SECRET_ACCESS_KEY }}
 
 jobs:
   
@@ -31,13 +33,29 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       
-      - name: Run Unit Test
+      - name: Run Unit Tests
         run: dotnet test --filter FullyQualifiedName~Colabora.UnitTests --no-restore --verbosity normal
         
-  deploy-hml:
-    - name: Deploy HML
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Run Integration Tests
+        run: dotnet test --filter FullyQualifiedName~Colabora.IntegrationTests --no-restore --verbosity normal
+        
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
+        
+  deploy-api-hml:
+    
+    - name: Deploy API in HML
       runs-on: ubuntu-latest
       needs: [ build-and-test ]
+      
+      env:
+        working-directory: ./src/Colabora.WebAPI
+        ASPNETCORE_ENVIRONMENT: Staging
+      
       steps:
         - uses: actions/checkout@v3
 
@@ -46,27 +64,14 @@ jobs:
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
 
+        - name: AWS CLI
+          run: dotnet tool install -g Amazon.Lambda.Tools
+  
         - name: Install dependencies
           run: dotnet restore
 
         - name: Build
-          run: dotnet build --configuration Release --no-restore
-        
-        - name: Publish
-          run: dotnet publish -c Release -o '${{ github.workspace }}/out'
-        
-        - name: Zip Package
-          run: |
-            cd ${{ github.workspace }}/out
-            zip -r ${{ github.workspace }}/out.zip *
-        
-        - name: Publish to AWS Beanstalk
-          uses: einaregilsson/beanstalk-deploy@v21
-          with:
-            aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            application_name: Colabora
-            environment_name: colabora-hml
-            version_label: 00001
-            region: sa-east-1
-            deployment_package: deploy.zip
+          run: dotnet build --configuration Release --no-restore        
+          
+        - name: Deploy to Lambda
+          run: dotnet lambda deploy-serverless

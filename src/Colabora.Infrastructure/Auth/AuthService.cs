@@ -40,7 +40,7 @@ public class AuthService : IAuthService
                 {
                     new(ClaimTypes.Email, userInfo.Email),
                     new(ClaimTypes.Name, userInfo.Name),
-                    new(ClaimTypes.Role, Roles.EmailVerification)
+                    new(ClaimTypes.Role, Roles.Volunteer)
                 },
                 signingCredentials: new SigningCredentials(credentials, SecurityAlgorithms.HmacSha256));
 
