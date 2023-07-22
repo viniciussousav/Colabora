@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 builder.Services.AddControllers();
 builder.Services.AddOptionsConfig();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure();
 builder.Services.AddApplicationDependencies();
 builder.Services.AddSecuritySettings(builder.Configuration);
 
@@ -34,7 +34,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -42,7 +41,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (app.Environment.IsEnvironment("Local"))
+if (app.Environment.IsDevelopment())
 {
     app.CreateDatabase();
 }

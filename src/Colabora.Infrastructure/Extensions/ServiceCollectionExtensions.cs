@@ -18,13 +18,16 @@ namespace Colabora.Infrastructure.Extensions;
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
-    private static void AddDatabasePersistence(this IServiceCollection services, IConfiguration configuration)
+    private static void AddDatabasePersistence(this IServiceCollection services)
     {
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            var sqlConnectionString = configuration.GetConnectionString("ColaboraDatabase");
-            options.UseNpgsql(sqlConnectionString);
-        });
+        services
+            .AddDbContext<AppDbContext>(options =>
+            {
+                var sqlConnectionString = Environment.GetEnvironmentVariable("ColaboraSqlDatabase");
+                options.UseNpgsql(sqlConnectionString);
+            })
+            .AddHealthChecks()
+            .AddDbContextCheck<AppDbContext>();
     }
 
     private static void AddRepositories(this IServiceCollection services)
@@ -45,11 +48,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IEmailSender, EmailSender>();
     }
     
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services)
     {
-        services.AddDatabasePersistence(configuration);
+        services.AddDatabasePersistence();
         services.AddRepositories();
-        services.AddAwsServices(configuration);
+        services.AddAwsServices();
         services.AddServices();
     }
 }
