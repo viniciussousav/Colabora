@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Colabora.Infrastructure.Persistence.SqlServer;
+using Colabora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable ClassNeverInstantiated.Global

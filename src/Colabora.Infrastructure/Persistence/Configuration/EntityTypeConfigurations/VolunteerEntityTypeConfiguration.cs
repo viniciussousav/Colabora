@@ -3,7 +3,7 @@ using Colabora.Domain.Volunteer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Colabora.Infrastructure.Persistence.SqlServer.Configuration.EntityTypeConfigurations;
+namespace Colabora.Infrastructure.Persistence.Configuration.EntityTypeConfigurations;
 
 public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunteer>
 {

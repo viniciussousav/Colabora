@@ -1,6 +1,6 @@
-﻿using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+﻿using Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 
-namespace Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification;
+namespace Colabora.Infrastructure.Persistence.Repositories.EmailVerification;
 
 public interface IEmailVerificationRepository
 {

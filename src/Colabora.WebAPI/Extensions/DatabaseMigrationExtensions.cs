@@ -1,4 +1,4 @@
-﻿using Colabora.Infrastructure.Persistence.SqlServer;
+﻿using Colabora.Infrastructure.Persistence;
 
 namespace Colabora.WebAPI.Extensions;
 

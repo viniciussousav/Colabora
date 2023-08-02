@@ -3,7 +3,7 @@ using Colabora.Application.Services.EmailVerification;
 using Colabora.Application.Shared;
 using Colabora.Domain.Organization;
 using Colabora.Infrastructure.Auth.Shared;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+using Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

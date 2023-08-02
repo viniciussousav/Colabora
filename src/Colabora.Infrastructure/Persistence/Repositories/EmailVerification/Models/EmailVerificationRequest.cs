@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+namespace Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 
 public class EmailVerificationRequest
 {

@@ -1,8 +1,8 @@
 ﻿using System.Net.Mail;
 using Colabora.Application.Commons;
 using Colabora.Domain.Shared;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+using Colabora.Infrastructure.Persistence.Repositories.EmailVerification;
+using Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 using Colabora.Infrastructure.Services.EmailSender;
 using Microsoft.Extensions.Logging;
 using ErrorMessages = Colabora.Application.Shared.ErrorMessages;

@@ -3,7 +3,7 @@ using Colabora.Domain.Shared;
 using Colabora.Domain.SocialAction;
 using Microsoft.EntityFrameworkCore;
 
-namespace Colabora.Infrastructure.Persistence.SqlServer.Repositories;
+namespace Colabora.Infrastructure.Persistence.Repositories;
 
 public class SocialActionRepository : ISocialActionRepository
 {

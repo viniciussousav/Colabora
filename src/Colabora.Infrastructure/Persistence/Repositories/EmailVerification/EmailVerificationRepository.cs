@@ -3,9 +3,9 @@ using System.Text.Json;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+using Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 
-namespace Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification;
+namespace Colabora.Infrastructure.Persistence.Repositories.EmailVerification;
 
 public class EmailVerificationRepository : IEmailVerificationRepository
 {

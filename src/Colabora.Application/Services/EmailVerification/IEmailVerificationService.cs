@@ -1,5 +1,5 @@
 ﻿using Colabora.Application.Commons;
-using Colabora.Infrastructure.Persistence.DynamoDb.Repositories.EmailVerification.Models;
+using Colabora.Infrastructure.Persistence.Repositories.EmailVerification.Models;
 
 namespace Colabora.Application.Services.EmailVerification;
 

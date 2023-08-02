@@ -1,7 +1,7 @@
 ﻿using Colabora.Domain.Organization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Colabora.Infrastructure.Persistence.SqlServer.Repositories;
+namespace Colabora.Infrastructure.Persistence.Repositories;
 
 public class OrganizationRepository : IOrganizationRepository
 {
