@@ -31,11 +31,7 @@ public record CreateSocialActionResponse
     public string Description { get; init; }
     public int OrganizationId { get; init; }
     public int VolunteerCreatorId { get; init; }
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public States State { get; init; }
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public List<Interests> Interests { get; init; }
     public DateTimeOffset OccurrenceDate { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
