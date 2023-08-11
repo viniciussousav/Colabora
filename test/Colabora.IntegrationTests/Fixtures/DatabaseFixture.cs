@@ -22,7 +22,7 @@ public class DatabaseFixture
     
     private AppDbContext CreateContext()
     {
-        var connectionString = _configuration.GetConnectionString("SQL_COLABORA_DATABASE");
+        var connectionString = _configuration.GetValue<string>("SQL_COLABORA_DATABASE");
         return new AppDbContext(
             new DbContextOptionsBuilder<AppDbContext>()
                 .UseNpgsql(connectionString)

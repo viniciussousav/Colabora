@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
         services
             .AddDbContext<AppDbContext>(options =>
             {
-                var sqlConnectionString = configuration.GetConnectionString("SQL_COLABORA_DATABASE");
+                var sqlConnectionString = configuration.GetValue<string>("SQL_COLABORA_DATABASE");
                 options.UseNpgsql(sqlConnectionString);
             })
             .AddHealthChecks()

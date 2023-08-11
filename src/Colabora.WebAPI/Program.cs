@@ -4,18 +4,15 @@ using Colabora.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder
-    .Configuration
-    .AddEnvironmentVariables()
-    .Build();
+builder.Configuration.AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 builder.Services.AddControllers();
 builder.Services.AddOptionsConfig();
-builder.Services.AddInfrastructure(configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationDependencies();
-builder.Services.AddSecuritySettings(configuration);
+builder.Services.AddSecuritySettings(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
