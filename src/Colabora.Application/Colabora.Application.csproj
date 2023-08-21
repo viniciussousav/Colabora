@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\SocialAction" />
       <Folder Include="Features\Volunteer" />
     </ItemGroup>
 

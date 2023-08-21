@@ -18,40 +18,29 @@ public class OrganizationRepository : IOrganizationRepository
         await _appDbContext.SaveChangesAsync();
         return entry.Entity;
     }
-
-    public async Task<List<Organization>> GetAllOrganizations()
-    {
-        return await _appDbContext.Organizations.AsNoTracking().ToListAsync();
-    }
     
-    public async Task<Organization> GetOrganization(string name, string email, int volunteerCreatorId)
+    public async Task<Organization> GetOrganization(string name, string email, Guid volunteerCreatorId)
     {
         return await _appDbContext.Organizations
             .AsNoTracking()
             .FirstOrDefaultAsync(o => 
                 o.Name == name &&
                 o.Email == email &&
-                o.CreatedBy == volunteerCreatorId) ?? Organization.None;
+                o.VolunteerCreatorId == volunteerCreatorId) ?? Organization.None;
     }
 
-    public async Task<Organization> GetOrganizationById(int organizationId, bool includeSocialActions = false)
+    public async Task<Organization> GetOrganizationById(Guid organizationId, bool includeSocialActions = false)
     {
         if (includeSocialActions)
         {
             return await _appDbContext.Organizations
                 .AsNoTracking()
                 .Include(organization => organization.SocialActions)
-                .FirstOrDefaultAsync(o => o.OrganizationId == organizationId) ?? Organization.None;
+                .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.None;
         }
         
         return await _appDbContext.Organizations
             .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.OrganizationId == organizationId) ?? Organization.None;
-    }
-
-    public async Task UpdateOrganization(Organization organization)
-    {
-         _appDbContext.Organizations.Update(organization);
-         await _appDbContext.SaveChangesAsync();
+            .FirstOrDefaultAsync(o => o.Id == organizationId) ?? Organization.None;
     }
 }

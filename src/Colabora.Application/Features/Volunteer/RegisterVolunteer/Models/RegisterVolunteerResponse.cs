@@ -4,7 +4,7 @@ using Colabora.Domain.Volunteer;
 namespace Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 
 public record RegisterVolunteerResponse(
-    int VolunteerId,
+    Guid VolunteerId,
     string FirstName,
     string LastName,
     string Email,

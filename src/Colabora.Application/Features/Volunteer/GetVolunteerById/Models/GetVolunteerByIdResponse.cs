@@ -4,7 +4,7 @@ using Colabora.Domain.Volunteer;
 namespace Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 
 public record GetVolunteerByIdResponse(
-    int VolunteerId,
+    Guid VolunteerId,
     string FirstName,
     string LastName,
     string Email,

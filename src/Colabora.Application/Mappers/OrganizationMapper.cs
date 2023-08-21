@@ -1,5 +1,5 @@
 ﻿using Colabora.Application.Features.Organization.GetOrganizationById.Models;
-using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+using Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 using Colabora.Domain.Organization;
 
 namespace Colabora.Application.Mappers;
@@ -9,14 +9,13 @@ public static class OrganizationMapper
     public static RegisterOrganizationResponse MapToRegisterOrganizationResponse(this Organization organization)
     {
         return new RegisterOrganizationResponse(
-            OrganizationId: organization.OrganizationId,
+            OrganizationId: organization.Id,
             Name: organization.Name,
             Email: organization.Email,
             State: organization.State,
             Interests: organization.Interests,
-            CreatedBy: organization.CreatedBy,
-            CreatedAt: organization.CreatedAt.ToUniversalTime(),
-            Verified: organization.Verified);
+            VolunteerCreatorId: organization.VolunteerCreatorId,
+            CreatedAt: organization.CreatedAt.ToUniversalTime());
     }
     
     public static Organization MapToOrganization(this RegisterOrganizationCommand organization)
@@ -26,25 +25,18 @@ public static class OrganizationMapper
             email: organization.Email,
             state: organization.State,
             interests: organization.Interests,
-            createdBy: organization.VolunteerCreatorId,
-            verified: false);
+            volunteerCreatorId: organization.VolunteerCreatorId);
     }
     
     public static GetOrganizationByIdResponse MapToGetOrganizationByIdResponse(this Organization organization)
     {
         return new GetOrganizationByIdResponse(
-            OrganizationId: organization.OrganizationId,
+            OrganizationId: organization.Id,
             Name: organization.Name,
+            Email: organization.Email,
             State: organization.State,
             Interests: organization.Interests,
-            CreatedBy: organization.CreatedBy,
-            CreatedAt: organization.CreatedAt.ToUniversalTime(),
-            Verified: organization.Verified,
-            SocialActions: organization.SocialActions.Select(action => 
-                new OrganizationSocialActionDetails(
-                    SocialActionId: action.SocialActionId,
-                    SocialActionTitle: action.Title,
-                    CreatedAt: action.CreatedAt.ToUniversalTime(),
-                    OccurrenceDate: action.OccurrenceDate)).ToList());
+            VolunteerCreatorId: organization.VolunteerCreatorId,
+            CreatedAt: organization.CreatedAt.ToUniversalTime());
     }
 }

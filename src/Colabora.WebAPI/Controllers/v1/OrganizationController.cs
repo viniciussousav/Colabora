@@ -1,5 +1,4 @@
 ﻿using Colabora.Application.Features.Organization.GetOrganizationById.Models;
-using Colabora.Application.Features.Organization.RegisterOrganization.Models;
 using Colabora.Infrastructure.Auth.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,26 +18,16 @@ public class OrganizationController : ControllerBase
         _mediator = mediator;
     }
 
-    [Authorize(Policy = PolicyNames.User)]
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetOrganizationById([FromRoute] int id)
+    [Authorize(Policy = Policies.User)]
+    [HttpGet("{organizationId:guid}", Name = "GetOrganizationById")]
+    public async Task<IActionResult> GetOrganizationById([FromRoute] Guid organizationId)
     {
-        var result = await _mediator.Send(new GetOrganizationByIdQuery(id));
+        var result = await _mediator.Send(new GetOrganizationByIdQuery(organizationId));
 
         return result.IsValid
             ? Ok(result.Value)
             : StatusCode(result.FailureStatusCode, result.Errors);
     }
 
-    [Authorize(Policy = PolicyNames.User)]
-    [HttpPost]
-    public async Task<IActionResult> RegisterOrganization([FromBody] RegisterOrganizationCommand command)
-    {
-        var result = await _mediator.Send(command);
-
-        if (!result.IsValid)
-            return StatusCode(result.FailureStatusCode, result.Errors);
-
-        return CreatedAtAction(nameof(GetOrganizationById), new {Id = result.Value?.OrganizationId}, result.Value);
-    }
+    
 }

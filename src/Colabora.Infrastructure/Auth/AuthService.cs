@@ -27,7 +27,7 @@ public class AuthService : IAuthService
             var userInfo = authProvider switch
             {
                 AuthProvider.Google => await _googleAuthProvider.Authenticate(token),
-                AuthProvider.Undefined or _ => throw new InvalidAuthProviderException("The given provider is invalid")
+                _ => throw new InvalidAuthProviderException("The given provider is invalid")
             };
 
             var credentials = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.JwtKey));
@@ -39,7 +39,6 @@ public class AuthService : IAuthService
                 claims: new List<Claim>
                 {
                     new(ClaimTypes.Email, userInfo.Email),
-                    new(ClaimTypes.Name, userInfo.Name),
                     new(ClaimTypes.Role, Roles.Volunteer)
                 },
                 signingCredentials: new SigningCredentials(credentials, SecurityAlgorithms.HmacSha256));
@@ -47,32 +46,6 @@ public class AuthService : IAuthService
             var stringJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return new AuthResult {Email = userInfo.Email, Token = stringJwt};
-        }
-        catch (Exception e)
-        {
-            return new AuthResult {Error = e.Message};
-        }
-    }
-    
-    public AuthResult GenerateEmailVerificationToken()
-    {
-        try
-        {
-            var credentials = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.JwtKey));
-
-            var jwt = new JwtSecurityToken(
-                issuer: _jwtSettings.JwtIssuer,
-                audience: _jwtSettings.JwtAudience,
-                expires: DateTime.Now.Add(_jwtSettings.ExpirationTime),
-                claims: new List<Claim>
-                {
-                    new(ClaimTypes.Role, Roles.EmailVerification)
-                },
-                signingCredentials: new SigningCredentials(credentials, SecurityAlgorithms.HmacSha256));
-
-            var stringJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return new AuthResult { Token = stringJwt };
         }
         catch (Exception e)
         {

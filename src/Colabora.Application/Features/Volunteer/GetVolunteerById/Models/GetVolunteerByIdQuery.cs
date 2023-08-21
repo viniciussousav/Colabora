@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Colabora.Application.Features.Volunteer.GetVolunteerById.Models;
 
-public record GetVolunteerByIdQuery(int Id) : IRequest<Result<GetVolunteerByIdResponse>>;
+public record GetVolunteerByIdQuery(Guid Id) : IRequest<Result<GetVolunteerByIdResponse>>;

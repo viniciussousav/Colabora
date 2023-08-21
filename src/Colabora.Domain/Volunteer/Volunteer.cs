@@ -1,13 +1,14 @@
 ﻿using Colabora.Domain.Shared.Enums;
+using Colabora.Domain.Shared.Interfaces;
 
 #pragma warning disable CS8618
 
 namespace Colabora.Domain.Volunteer;
 
-public class Volunteer
+public class Volunteer : EntityBase<Guid>, IAggregateRoot
 {
     public static readonly Volunteer None = new();
-
+    
     private Volunteer() { }
     
     public Volunteer(
@@ -28,10 +29,8 @@ public class Volunteer
         State = state;
     }
 
-    public int VolunteerId { get; }
     public string FirstName { get; }
     public string LastName { get; }
-    public string FullName => $"{FirstName} {LastName}";
     public string Email { get; }
     public DateTimeOffset Birthdate { get; }
     public Gender Gender { get; }

@@ -1,4 +1,4 @@
-﻿using Colabora.Domain.Shared;
+﻿using Colabora.Domain.Shared.Errors;
 using FluentValidation.Results;
 
 namespace Colabora.Application.Commons;

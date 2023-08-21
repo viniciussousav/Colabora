@@ -1,10 +1,10 @@
-﻿namespace Colabora.Domain.Organization;
+﻿using Colabora.Domain.Shared.Interfaces;
 
-public interface IOrganizationRepository
+namespace Colabora.Domain.Organization;
+
+public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> CreateOrganization(Organization organization);
-    Task<List<Organization>> GetAllOrganizations();
-    Task<Organization> GetOrganization(string name, string email, int volunteerCreatorId);
-    Task<Organization> GetOrganizationById(int organizationId, bool includeSocialActions = false);
-    Task UpdateOrganization(Organization organization);
+    Task<Organization> GetOrganization(string name, string email, Guid volunteerCreatorId);
+    Task<Organization> GetOrganizationById(Guid organizationId, bool includeSocialActions = false);
 }

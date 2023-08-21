@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Colabora.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +22,8 @@ public class DatabaseFixture
     private AppDbContext CreateContext()
     {
         var connectionString = _configuration.GetValue<string>("SQL_COLABORA_DATABASE");
-        return new AppDbContext(
-            new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(connectionString)
-                .Options);
+        var dbOptions = new DbContextOptionsBuilder<AppDbContext>().UseNpgsql(connectionString).Options;
+        return new AppDbContext(dbOptions);
     }
     
     public async Task ResetDatabase()

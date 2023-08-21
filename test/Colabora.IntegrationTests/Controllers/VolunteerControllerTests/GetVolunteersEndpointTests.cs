@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Features.Volunteer.GetVolunteers.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Domain.Shared;
+using Colabora.Domain.Shared.Errors;
 using Colabora.Domain.Volunteer;
 using Colabora.Infrastructure.Auth;
 using Colabora.Infrastructure.Messaging.Producer;
@@ -29,14 +29,12 @@ namespace Colabora.IntegrationTests.Controllers.VolunteerControllerTests;
 public partial class VolunteerControllerTests : 
     IClassFixture<WebApplicationFactory<Program>>,
     IClassFixture<DatabaseFixture>,
-    IClassFixture<AuthTokenFixture>,
     IAsyncLifetime
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly DatabaseFixture _databaseFixture;
-    private readonly AuthTokenFixture _authTokenFixture;
 
-    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture, AuthTokenFixture authTokenFixture)
+    public VolunteerControllerTests(WebApplicationFactory<Program> factory, DatabaseFixture databaseFixture)
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
@@ -63,7 +61,6 @@ public partial class VolunteerControllerTests :
             });
         });
         _databaseFixture = databaseFixture;
-        _authTokenFixture = authTokenFixture;
     }
     
     [Fact(DisplayName = "Given a get volunteers request, when any volunteer is registered, then it should return an empty array of volunteers")]
@@ -121,7 +118,7 @@ public partial class VolunteerControllerTests :
         getVolunteersResponse.Volunteers.Should().NotBeEmpty();
 
         var getVolunteersItemResponse = getVolunteersResponse.Volunteers.First();
-        getVolunteersItemResponse.VolunteerId.Should().BePositive();
+        getVolunteersItemResponse.VolunteerId.Should().NotBe(Guid.Empty);
         getVolunteersItemResponse.Email.Should().Be(registerVolunteerCommand.Email);
         getVolunteersItemResponse.FirstName.Should().Be(registerVolunteerCommand.FirstName);
         getVolunteersItemResponse.LastName.Should().Be(registerVolunteerCommand.LastName);

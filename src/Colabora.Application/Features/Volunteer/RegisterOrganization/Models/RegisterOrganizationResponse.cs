@@ -1,8 +1,8 @@
 ﻿using Colabora.Domain.Shared.Enums;
 
-namespace Colabora.Application.Features.Organization.GetOrganizationById.Models;
+namespace Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 
-public record GetOrganizationByIdResponse(
+public record RegisterOrganizationResponse(
     Guid OrganizationId,
     string Name,
     string Email,

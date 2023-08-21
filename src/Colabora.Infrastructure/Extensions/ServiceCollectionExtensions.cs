@@ -7,7 +7,6 @@ using Colabora.Infrastructure.Auth.Google;
 using Colabora.Infrastructure.Messaging.Producer;
 using Colabora.Infrastructure.Persistence;
 using Colabora.Infrastructure.Persistence.Repositories;
-using Colabora.Infrastructure.Persistence.Repositories.EmailVerification;
 using Colabora.Infrastructure.Services.EmailSender;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +34,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IOrganizationRepository, OrganizationRepository>();
         services.AddTransient<IVolunteerRepository, VolunteerRepository>();
         services.AddTransient<ISocialActionRepository, SocialActionRepository>();
-        services.AddTransient<IEmailVerificationRepository, EmailVerificationRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+using Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Domain.Shared;
+using Colabora.Domain.Shared.Errors;
 using Colabora.Infrastructure.Auth;
 using Colabora.Infrastructure.Messaging.Producer;
 using Colabora.IntegrationTests.Fixtures;
@@ -89,10 +89,10 @@ public partial class RegisterOrganizationEndpointTests :
         var registerOrganizationResponse = await result.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
 
         registerOrganizationResponse.Should().NotBeNull();
-        registerOrganizationResponse.OrganizationId.Should().BeGreaterThan(0);
+        registerOrganizationResponse.OrganizationId.Should().NotBe(Guid.Empty);
         registerOrganizationResponse.Name.Should().BeEquivalentTo(command.Name);
         registerOrganizationResponse.State.Should().Be(command.State);
-        registerOrganizationResponse.CreatedBy.Should().Be(command.VolunteerCreatorId).And.Be(volunteer.VolunteerId);
+        registerOrganizationResponse.VolunteerCreatorId.Should().Be(command.VolunteerCreatorId).And.Be(volunteer.VolunteerId);
         registerOrganizationResponse.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
         registerOrganizationResponse.Interests.Should().BeEquivalentTo(command.Interests);
     }

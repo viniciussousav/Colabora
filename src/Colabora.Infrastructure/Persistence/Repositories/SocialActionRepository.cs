@@ -1,5 +1,5 @@
 ﻿using Colabora.Domain.Participation;
-using Colabora.Domain.Shared;
+using Colabora.Domain.Shared.Errors;
 using Colabora.Domain.SocialAction;
 using Microsoft.EntityFrameworkCore;
 

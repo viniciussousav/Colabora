@@ -5,11 +5,10 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Features.Organization.GetOrganizationById.Models;
-using Colabora.Application.Features.Organization.RegisterOrganization.Models;
-using Colabora.Application.Features.SocialAction.CreateSocialAction.Models;
+using Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
 using Colabora.Domain.Organization;
-using Colabora.Domain.Shared;
+using Colabora.Domain.Shared.Errors;
 using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers.Commands;
 using Colabora.TestCommons.Fakers.Shared;
@@ -89,73 +88,11 @@ public partial class RegisterOrganizationEndpointTests
         getOrganizationByIdResponse.OrganizationId.Should().Be(organization.OrganizationId);
         getOrganizationByIdResponse.Name.Should().BeEquivalentTo(organization.Name);
         getOrganizationByIdResponse.State.Should().Be(organization.State);
-        getOrganizationByIdResponse.CreatedBy.Should().Be(organization.CreatedBy).And.Be(volunteer.VolunteerId);
+        getOrganizationByIdResponse.VolunteerCreatorId.Should().Be(organization.VolunteerCreatorId).And.Be(volunteer.VolunteerId);
         getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         getOrganizationByIdResponse.Interests.Should().BeEquivalentTo(organization.Interests);
-        getOrganizationByIdResponse.SocialActions.Should().BeEmpty();
     }
     
-    [Fact]
-    public async Task Given_A_Get_Organization_By_Id_Request_When_Organization_Exists_With_SocialActions_Then_It_Should_Return_The_Existing_Organization()
-    {
-        // Arrange
-        var registerVolunteerCommand = FakeRegisterVolunteerCommand.CreateValid();
-        
-        var client = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                var authServiceDescriptor = services.Single(service => service.ServiceType == typeof(IAuthService));
-                services.Remove(authServiceDescriptor);
-   
-                services.AddScoped<IAuthService>(_ =>
-                {
-                    var authService = Substitute.For<IAuthService>();
-                    authService.AuthenticateUser(Arg.Any<AuthProvider>(), Arg.Any<string>()).Returns(FakeAuthResult.Create(registerVolunteerCommand.Email));
-                    return authService;
-                });
-            });
-        }).CreateClient();
-        
-        client.DefaultRequestHeaders.Add("OAuthToken", "HeaderValue");
-        var registerVolunteerResponse = await client.PostAsJsonAsync("/api/v1.0/volunteers", registerVolunteerCommand);
-        var volunteer = await registerVolunteerResponse.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
-        
-        var token  = await _authTokenFixture.GenerateTestJwt(volunteer.Email);
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        
-        var registerOrganizationCommand = FakeRegisterOrganizationCommand.Create(volunteer.VolunteerId);
-        var registerOrganizationResponse = await client.PostAsJsonAsync("/api/v1.0/organizations", registerOrganizationCommand);
-        var organization = await registerOrganizationResponse.Content.ReadFromJsonAsync<RegisterOrganizationResponse>();
-        
-        var createSocialActionCommand = FakeCreateSocialActionCommand.Create(organization.OrganizationId, volunteer.VolunteerId);
-        var createSocialActionResponse = await client.PostAsJsonAsync("api/v1.0/actions/", createSocialActionCommand);
-        var socialAction = await createSocialActionResponse.Content.ReadFromJsonAsync<CreateSocialActionResponse>();
-        
-        // Act 
-        var response = await client.GetAsync($"/api/v1.0/organizations/{organization.OrganizationId}");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var getOrganizationByIdResponse = await response.Content.ReadFromJsonAsync<GetOrganizationByIdResponse>();
-
-        getOrganizationByIdResponse.Should().NotBeNull();
-        getOrganizationByIdResponse.OrganizationId.Should().Be(organization.OrganizationId);
-        getOrganizationByIdResponse.Name.Should().BeEquivalentTo(organization.Name);
-        getOrganizationByIdResponse.State.Should().Be(organization.State);
-        getOrganizationByIdResponse.CreatedBy.Should().Be(organization.CreatedBy).And.Be(volunteer.VolunteerId);
-        getOrganizationByIdResponse.CreatedAt.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
-        getOrganizationByIdResponse.Interests.Should().BeEquivalentTo(organization.Interests);
-        
-        getOrganizationByIdResponse.SocialActions.Should().HaveCount(1);
-        var firstSocialAction = getOrganizationByIdResponse.SocialActions.First();
-        firstSocialAction.SocialActionId.Should().Be(socialAction.SocialActionId);
-        firstSocialAction.SocialActionTitle.Should().Be(socialAction.Title);
-        firstSocialAction.CreatedAt.Should().BeCloseTo(socialAction.CreatedAt, TimeSpan.FromSeconds(1));
-        firstSocialAction.OccurrenceDate.Should().BeCloseTo(socialAction.OccurrenceDate, TimeSpan.FromSeconds(2));
-    }
-
     [Fact]
     public async Task Given_A_Get_Organization_By_Id_Request_When_An_Exception_Occurs_Then_It_Should_Return_An_Error_With_500_Status_Code()
     {
@@ -200,7 +137,7 @@ public partial class RegisterOrganizationEndpointTests
                 services.AddScoped<IOrganizationRepository>(_ =>
                 {
                     var mockRepository = Substitute.For<IOrganizationRepository>();
-                    mockRepository.GetOrganizationById(Arg.Any<int>(), Arg.Any<bool>())
+                    mockRepository.GetOrganizationById(Arg.Any<Guid>(), Arg.Any<bool>())
                         .Throws(new TaskCanceledException("Hello Exception"));
                     return mockRepository;
                 });

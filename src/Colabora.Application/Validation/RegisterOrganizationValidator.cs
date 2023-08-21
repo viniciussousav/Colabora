@@ -1,4 +1,4 @@
-﻿using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+﻿using Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 using Colabora.Domain.Shared.Enums;
 using FluentValidation;
 
@@ -25,6 +25,6 @@ public class RegisterOrganizationValidator : AbstractValidator<RegisterOrganizat
             .NotEqual(States.Undefined);
         
         RuleFor(command => command.VolunteerCreatorId)
-            .GreaterThan(0);
+            .NotEqual(Guid.Empty);
     }
 }

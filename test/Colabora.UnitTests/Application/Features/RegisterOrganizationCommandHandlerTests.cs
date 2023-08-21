@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Colabora.Application.Features.Organization.RegisterOrganization;
-using Colabora.Application.Features.Organization.RegisterOrganization.Models;
+using Colabora.Application.Features.Volunteer.RegisterOrganization;
+using Colabora.Application.Features.Volunteer.RegisterOrganization.Models;
 using Colabora.Application.Mappers;
 using Colabora.Application.Shared;
 using Colabora.Domain.Organization;

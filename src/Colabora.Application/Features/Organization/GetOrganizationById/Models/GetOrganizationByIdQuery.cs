@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Colabora.Application.Features.Organization.GetOrganizationById.Models;
 
-public record GetOrganizationByIdQuery(int Id) : IRequest<Result<GetOrganizationByIdResponse>>;
+public record GetOrganizationByIdQuery(Guid Id) : IRequest<Result<GetOrganizationByIdResponse>>;

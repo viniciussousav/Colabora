@@ -1,47 +1,35 @@
-﻿using Colabora.Domain.Shared;
-using Colabora.Domain.Shared.Enums;
+﻿using Colabora.Domain.Shared.Enums;
+using Colabora.Domain.Shared.Interfaces;
 
 #pragma warning disable CS8618
 
 namespace Colabora.Domain.Organization;
 
-public class Organization
+public class Organization : EntityBase<Guid>, IAggregateRoot
 {
     public static readonly Organization None = new ();
-    
-    private Organization() { }
-    
+
     public Organization(
+        Guid volunteerCreatorId,
         string name,
         string email,
         States state,
-        IEnumerable<Interests> interests,
-        int createdBy,
-        bool verified)
-    { 
+        IEnumerable<Interests> interests)
+    {
+        VolunteerCreatorId = volunteerCreatorId;
         Name = name;
         Email = email;
         State = state;
         Interests = interests;
-        CreatedBy = createdBy;
-        Verified = verified;
     }
 
-    public int OrganizationId { get; }
+    private Organization() { }
     public string Name { get; }
     public string Email { get; }
     public States State { get; }
     public IEnumerable<Interests> Interests { get; }
-    public int CreatedBy { get; }
+    public Guid VolunteerCreatorId { get; }
     public DateTimeOffset CreatedAt { get; }
     public IEnumerable<SocialAction.SocialAction> SocialActions { get; }
-    public bool Verified { get; private set; }
-
-    public void Verify()
-    {
-        if (Verified)
-            throw new DomainException(ErrorMessages.CreateOrganizationAlreadyVerified(OrganizationId));
-        
-        Verified = true;
-    }
+    public bool Verified { get; private set; } = false;
 }

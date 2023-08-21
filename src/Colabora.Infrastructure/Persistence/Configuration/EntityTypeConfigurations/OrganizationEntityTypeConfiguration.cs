@@ -11,8 +11,8 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
     {
         builder.ToTable("ORGANIZATION");
 
-        builder.HasKey(organization => organization.OrganizationId);
-        builder.Property(organization => organization.OrganizationId).IsRequired().ValueGeneratedOnAdd();
+        builder.HasKey(organization => organization.Id);
+        builder.Property(organization => organization.Id).IsRequired().ValueGeneratedOnAdd();
 
         builder.HasAlternateKey(organization => organization.Email);
         builder.Property(organization => organization.Email).IsRequired();
@@ -31,7 +31,7 @@ public class OrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Orga
                 interests => string.Join(",", interests.Select(i => i.ToString())),
                 interests => interests.Split(",", StringSplitOptions.None).Select(i => (Interests) Enum.Parse(typeof(Interests), i)).ToList());
 
-        builder.Property(organization => organization.CreatedBy).IsRequired();
+        builder.Property(organization => organization.VolunteerCreatorId).IsRequired();
         
         builder.Property(organization => organization.CreatedAt).HasDefaultValueSql("NOW()");
     }

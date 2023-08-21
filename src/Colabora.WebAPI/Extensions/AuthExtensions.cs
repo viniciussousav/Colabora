@@ -37,11 +37,8 @@ public static class AuthExtensions
     {
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(PolicyNames.User, policy => 
+            options.AddPolicy(Policies.User, policy => 
                 policy.Requirements.Add(new RolesAuthorizationRequirement(new []{ Roles.Volunteer })));
-            
-            options.AddPolicy(PolicyNames.EmailVerification, policy => 
-                policy.Requirements.Add(new RolesAuthorizationRequirement(new []{ Roles.EmailVerification })));
         });
     }
 

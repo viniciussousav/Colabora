@@ -10,7 +10,7 @@ public static class VolunteerMapper
     public static GetVolunteersItemResponse MapToGetVolunteerItemResponse(this Volunteer volunteer)
     {
         return new GetVolunteersItemResponse(
-            VolunteerId: volunteer.VolunteerId,
+            VolunteerId: volunteer.Id,
             FirstName: volunteer.FirstName,
             LastName: volunteer.LastName,
             Email: volunteer.Email,
@@ -24,7 +24,7 @@ public static class VolunteerMapper
     public static RegisterVolunteerResponse MapToRegisterVolunteerResponse(this Volunteer volunteer)
     {
         return new RegisterVolunteerResponse(
-            VolunteerId: volunteer.VolunteerId,
+            VolunteerId: volunteer.Id,
             FirstName: volunteer.FirstName,
             LastName: volunteer.LastName,
             Email: volunteer.Email,
@@ -50,7 +50,7 @@ public static class VolunteerMapper
     public static GetVolunteerByIdResponse MapToGetVolunteerByIdResponse(this Volunteer volunteer)
     {
         return new GetVolunteerByIdResponse(
-            VolunteerId: volunteer.VolunteerId,
+            VolunteerId: volunteer.Id,
             FirstName: volunteer.FirstName,
             LastName: volunteer.LastName,
             Email: volunteer.Email,

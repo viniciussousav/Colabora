@@ -32,7 +32,7 @@ public class AuthTokenFixture
             ExpirationTime = TimeSpan.FromMinutes(5)
         });
         
-        googleService.Authenticate(Arg.Any<string>()).Returns(new UserAuthInfo(email, "test name"));
+        googleService.Authenticate(Arg.Any<string>()).Returns(new UserAuthInfo{ Email = email });
         
         var authService = new AuthService(googleService, securityOptions);
         var authResult = await authService.AuthenticateUser(authProvider, "fake token");

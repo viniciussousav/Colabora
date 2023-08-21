@@ -24,7 +24,7 @@ public class GoogleAuthProvider : IGoogleAuthProvider
     public async Task<UserAuthInfo> Authenticate(string token)
     {
         var payload = await GoogleJsonWebSignature.ValidateAsync(token, _validationSettings);
-        return new UserAuthInfo(email: payload.Email, name: payload.Name);
+        return new UserAuthInfo { Email = payload.Email };
     }
 }
 

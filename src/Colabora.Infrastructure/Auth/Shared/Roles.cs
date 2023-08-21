@@ -3,5 +3,4 @@
 public static class Roles
 {
     public const string Volunteer = "volunteer";
-    public const string EmailVerification = "email-verification";
 }

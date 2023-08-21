@@ -11,8 +11,8 @@ public class VolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volunte
     {
         builder.ToTable("VOLUNTEER");
 
-        builder.HasKey(volunteer => volunteer.VolunteerId);
-        builder.Property(volunteer => volunteer.VolunteerId).IsRequired().ValueGeneratedOnAdd();
+        builder.HasKey(volunteer => volunteer.Id);
+        builder.Property(volunteer => volunteer.Id).IsRequired().ValueGeneratedOnAdd();
         
         builder.HasAlternateKey(volunteer => volunteer.Email);
         builder.Property(volunteer => volunteer.Email).IsRequired();

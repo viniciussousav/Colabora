@@ -26,21 +26,21 @@ public class VolunteerRepository : IVolunteerRepository
             .FirstOrDefaultAsync(v => v.Email == email) ?? Volunteer.None;
     }
     
-    public async Task<Volunteer> GetVolunteerById(int volunteerId, bool includeParticipations = false)
+    public async Task<Volunteer> GetVolunteerById(Guid volunteerId, bool includeParticipations = false)
     {
         if (!includeParticipations)
         {
             return await _appDbContext.Volunteers
                 .AsNoTracking()
                 .Include(volunteer => volunteer.Participations)
-                .FirstOrDefaultAsync(v => v.VolunteerId == volunteerId) ?? Volunteer.None;
+                .FirstOrDefaultAsync(v => v.Id == volunteerId) ?? Volunteer.None;
         }
         
         return await _appDbContext.Volunteers
             .AsNoTracking()
             .Include(volunteer => volunteer.Participations)
             .ThenInclude(participation => participation.SocialAction)
-            .FirstOrDefaultAsync(v => v.VolunteerId == volunteerId) ?? Volunteer.None;
+            .FirstOrDefaultAsync(v => v.Id == volunteerId) ?? Volunteer.None;
     }
     
     public async Task<List<Volunteer>> GetAllVolunteers()

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Colabora.Application.Features.Volunteer.RegisterVolunteer.Models;
-using Colabora.Domain.Shared;
+using Colabora.Domain.Shared.Errors;
 using Colabora.Domain.Volunteer;
 using Colabora.Infrastructure.Auth;
 using Colabora.TestCommons.Fakers.Commands;
@@ -56,7 +56,7 @@ public partial class VolunteerControllerTests
 
         var createVolunteerResponse = await response.Content.ReadFromJsonAsync<RegisterVolunteerResponse>();
 
-        createVolunteerResponse.VolunteerId.Should().BePositive();
+        createVolunteerResponse.VolunteerId.Should().NotBe(Guid.Empty);
         createVolunteerResponse.FirstName.Should().Be(command.FirstName);
         createVolunteerResponse.LastName.Should().Be(command.LastName);
         createVolunteerResponse.Email.Should().Be(command.Email);
